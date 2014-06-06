@@ -1,0 +1,7 @@
+logs/
+target/
+.idea/
+*.iml
+
+src/main/resources/log4j.properties
+src/main/resources/PostalsoftService.properties

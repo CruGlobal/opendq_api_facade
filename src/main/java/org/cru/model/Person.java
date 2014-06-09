@@ -5,7 +5,30 @@ package org.cru.model;
  */
 public class Person
 {
-    Address address;
+    private String firstName;
+    private String lastName;
+    private Address address;
+    private String rowId;
+
+    public String getFirstName()
+    {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName)
+    {
+        this.firstName = firstName;
+    }
+
+    public String getLastName()
+    {
+        return lastName;
+    }
+
+    public void setLastName(String lastName)
+    {
+        this.lastName = lastName;
+    }
 
     public Address getAddress()
     {
@@ -15,5 +38,15 @@ public class Person
     public void setAddress(Address address)
     {
         this.address = address;
+    }
+
+    public String getRowId()
+    {
+        return rowId;
+    }
+
+    public void setRowId(String rowId)
+    {
+        this.rowId = rowId;
     }
 }

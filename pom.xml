@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>global_registry_matcher</groupId>
-    <artifactId>global_registry_matcher</artifactId>
+    <groupId>opendq_api_facade</groupId>
+    <artifactId>opendq_api_facade</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <dependencyManagement>

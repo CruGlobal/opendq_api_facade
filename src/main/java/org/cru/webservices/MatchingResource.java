@@ -13,6 +13,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
+ * Endpoint for clients to do matching
+ *
  * Created by William.Randall on 6/6/14.
  */
 @Path("/")

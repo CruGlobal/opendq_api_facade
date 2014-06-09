@@ -30,7 +30,7 @@ public class MatchingServiceTest
     @Test
     public void testFindMatch() throws Exception
     {
-        assertEquals(matchingService.findMatch(createTestPerson()), "TEST_ID");
+        assertEquals(matchingService.findMatch(createTestPerson(), "test1"), "TEST_ID");
     }
 
     private Person createTestPerson()

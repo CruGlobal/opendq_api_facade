@@ -5,7 +5,6 @@ import com.infosolvetech.rtmatch.pdi4.RuntimeMatchWSService;
 import com.infosolvetech.rtmatch.pdi4.ServiceResult;
 import org.cru.model.Person;
 import org.cru.util.OpenDQProperties;
-import org.joda.time.DateTime;
 
 import javax.inject.Inject;
 import java.net.ConnectException;
@@ -26,8 +25,9 @@ public class AddService
     private String transformationFileLocation;
     private String step;
 
-    public void addPerson(Person person) throws ConnectException
+    public void addPerson(Person person, String slotName) throws ConnectException
     {
+        this.slotName = slotName;
         callRuntimeMatchService(person);
     }
 
@@ -62,7 +62,6 @@ public class AddService
 
     private RuntimeMatchWS configureRuntimeService()
     {
-        slotName = "Add_" + new DateTime().getMillis();  //TODO: What does this need to be?
         transformationFileLocation = openDQProperties.getProperty("transformationFileLocation");
         step = "RtMatch";
 

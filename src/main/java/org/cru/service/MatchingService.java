@@ -28,8 +28,9 @@ public class MatchingService
     private String step;
 
 
-    public String findMatch(Person person) throws ConnectException
+    public String findMatch(Person person, String slotName) throws ConnectException
     {
+        this.slotName = slotName;
         callRuntimeMatchService(person);
         //TODO: only set the match Id if the confidence level > ?? else null
         matchId = "TEST_ID";
@@ -84,7 +85,6 @@ public class MatchingService
 
     private RuntimeMatchWS configureRuntimeService()
     {
-        slotName = "Match_" + new DateTime().getMillis();  //TODO: What does this need to be?
         transformationFileLocation = openDQProperties.getProperty("transformationFileLocation");
         step = "RtMatch";
 

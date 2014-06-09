@@ -3,6 +3,7 @@ package org.cru.webservices;
 import org.cru.model.Address;
 import org.cru.model.Person;
 import org.cru.service.AddressNormalizationService;
+import org.cru.service.MatchingService;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -19,13 +20,33 @@ public class MatchingResource
 {
     @Inject
     private AddressNormalizationService addressNormalizationService;
+    @Inject
+    private MatchingService matchingService;
 
     @GET
     @Path("/match")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response findMatchingPerson(Person person)
     {
-        boolean addressNormalized = addressNormalizationService.normalizeAddress(person.getAddress());
+        if(addressNormalizationService.normalizeAddress(person.getAddress()))
+        {
+            //We have a clean address, person's address is already updated
+            String matchId = matchingService.findMatch(person);
+
+            if(matchId != null)
+            {
+                //Send the matching ID back to the client
+                return Response.ok().entity(matchId).build();
+            }
+            else
+            {
+                //TODO: Return no match to the client
+            }
+        }
+        else
+        {
+            //TODO: Do we want to fail here or just use the address given to us?
+        }
         return Response.ok().build();
     }
 }

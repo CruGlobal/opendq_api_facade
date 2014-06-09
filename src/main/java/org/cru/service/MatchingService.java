@@ -37,6 +37,14 @@ public class MatchingService
         RuntimeMatchWSService runtimeMatchWSService = new RuntimeMatchWSService();
         RuntimeMatchWS runtimeMatchWS = runtimeMatchWSService.getRuntimeMatchWSPort();
 
+        configureSlot(runtimeMatchWS);
+        ServiceResult searchResponse = searchSlot(runtimeMatchWS, person);
+
+        List<Object> searchResults = searchResponse.getValues();
+    }
+
+    private void configureSlot(RuntimeMatchWS runtimeMatchWS)
+    {
         String slotName = "test1";
         String transformationFileLocation = openDQProperties.getProperty("transformationFileLocation");
         String step = "RtMatch";
@@ -47,15 +55,19 @@ public class MatchingService
         {
             throw new RuntimeException(configurationResponse.getMessage());
         }
+    }
 
+    private ServiceResult searchSlot(RuntimeMatchWS runtimeMatchWS, Person person)
+    {
+        String slotName = "test1";
         ServiceResult searchResponse = runtimeMatchWS.searchSlot(slotName, createSearchValuesFromPerson(person));
 
         if(searchResponse.isError())
         {
-            //throw exception with searchResponse.getMessage()
+            throw new RuntimeException(searchResponse.getMessage());
         }
 
-        List<Object> searchResults = searchResponse.getValues();
+        return searchResponse;
     }
 
     private List<String> createSearchValuesFromPerson(Person person)

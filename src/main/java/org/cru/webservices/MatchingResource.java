@@ -1,6 +1,5 @@
 package org.cru.webservices;
 
-import org.cru.model.Address;
 import org.cru.model.Person;
 import org.cru.service.AddressNormalizationService;
 import org.cru.service.MatchingService;
@@ -9,8 +8,10 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.net.ConnectException;
 
 /**
  * Endpoint for clients to do matching
@@ -32,17 +33,28 @@ public class MatchingResource
     {
         if(addressNormalizationService.normalizeAddress(person.getAddress()))
         {
-            //We have a clean address, person's address is already updated
-            String matchId = matchingService.findMatch(person);
+            try
+            {
+                //We have a clean address, person's address is already updated
+                String matchId = matchingService.findMatch(person);
 
-            if(matchId != null)
-            {
-                //Send the matching ID back to the client
-                return Response.ok().entity(matchId).build();
+                if(matchId != null)
+                {
+                    //Send the matching ID back to the client
+                    return Response.ok().entity(matchId).build();
+                }
+                else
+                {
+                    return Response.status(Response.Status.NO_CONTENT).build();
+                }
             }
-            else
+            catch(ConnectException ce)
             {
-                //TODO: Return no match to the client
+                //TODO: log error
+                throw new WebApplicationException(
+                    Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(ce.getMessage())
+                    .build());
             }
         }
         else

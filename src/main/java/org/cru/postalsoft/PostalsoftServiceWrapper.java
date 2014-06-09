@@ -46,8 +46,8 @@ public class PostalsoftServiceWrapper
             String postalsoftPassword = postalsoftServiceProperties.getProperty("postalsoftLoginPassword");
             CorrectionResult correctionResult = postalsoftService.correctAddress(postalsoftUsername, postalsoftPassword, pa);
 
-			/* if we successfully found a match and cleansed the address, update the mailing address in 
-			 * the cart with the result back from PostalSoft
+			/* if we successfully found a match and cleansed the address, update the person's address
+			 * with the result back from PostalSoft
 			 */
             if("SUCCESS".equals(correctionResult.getResultStatus().getValue()))
             {

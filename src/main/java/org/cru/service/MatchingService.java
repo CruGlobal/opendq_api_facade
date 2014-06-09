@@ -5,6 +5,7 @@ import com.infosolvetech.rtmatch.pdi4.RuntimeMatchWSService;
 import com.infosolvetech.rtmatch.pdi4.ServiceResult;
 import org.cru.model.Person;
 import org.cru.util.OpenDQProperties;
+import org.joda.time.DateTime;
 
 import javax.inject.Inject;
 import java.net.ConnectException;
@@ -22,6 +23,9 @@ public class MatchingService
     private OpenDQProperties openDQProperties;
 
     private String matchId;     // Global Registry ID that matches data given
+    private String slotName;
+    private String transformationFileLocation;
+    private String step;
 
 
     public String findMatch(Person person) throws ConnectException
@@ -34,8 +38,7 @@ public class MatchingService
 
     private void callRuntimeMatchService(Person person) throws ConnectException
     {
-        RuntimeMatchWSService runtimeMatchWSService = new RuntimeMatchWSService();
-        RuntimeMatchWS runtimeMatchWS = runtimeMatchWSService.getRuntimeMatchWSPort();
+        RuntimeMatchWS runtimeMatchWS = configureRuntimeService();
 
         configureSlot(runtimeMatchWS);
         ServiceResult searchResponse = searchSlot(runtimeMatchWS, person);
@@ -45,10 +48,6 @@ public class MatchingService
 
     private void configureSlot(RuntimeMatchWS runtimeMatchWS)
     {
-        String slotName = "test1";
-        String transformationFileLocation = openDQProperties.getProperty("transformationFileLocation");
-        String step = "RtMatch";
-
         ServiceResult configurationResponse = runtimeMatchWS.configureSlot(slotName, transformationFileLocation, step);
 
         if(configurationResponse.isError())
@@ -59,7 +58,6 @@ public class MatchingService
 
     private ServiceResult searchSlot(RuntimeMatchWS runtimeMatchWS, Person person)
     {
-        String slotName = "test1";
         ServiceResult searchResponse = runtimeMatchWS.searchSlot(slotName, createSearchValuesFromPerson(person));
 
         if(searchResponse.isError())
@@ -82,6 +80,16 @@ public class MatchingService
         searchValues.add(person.getRowId());
 
         return searchValues;
+    }
+
+    private RuntimeMatchWS configureRuntimeService()
+    {
+        slotName = "Match_" + new DateTime().getMillis();  //TODO: What does this need to be?
+        transformationFileLocation = openDQProperties.getProperty("transformationFileLocation");
+        step = "RtMatch";
+
+        RuntimeMatchWSService runtimeMatchWSService = new RuntimeMatchWSService();
+        return runtimeMatchWSService.getRuntimeMatchWSPort();
     }
 
     public String getMatchId()

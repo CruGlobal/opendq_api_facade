@@ -13,6 +13,8 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
 /**
+ * Wrapper for the Postalsoft Service, which allows us to normalize addresses
+ *
  * Created by William.Randall on 6/6/14.
  */
 public class PostalsoftServiceWrapper

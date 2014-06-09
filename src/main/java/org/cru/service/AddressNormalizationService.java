@@ -18,7 +18,7 @@ public class AddressNormalizationService
         return postalsoftServiceWrapper.normalizeAddress(address);
     }
 
-    public void setPostalsoftServiceWrapper(PostalsoftServiceWrapper postalsoftServiceWrapper)
+    void setPostalsoftServiceWrapper(PostalsoftServiceWrapper postalsoftServiceWrapper)
     {
         this.postalsoftServiceWrapper = postalsoftServiceWrapper;
     }

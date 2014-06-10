@@ -30,7 +30,7 @@ public class MatchingServiceTest
     @Test
     public void testFindMatch() throws Exception
     {
-        assertEquals(matchingService.findMatch(createTestPerson(), "test1"), "TEST_ID");
+        assertEquals(matchingService.findMatch(createTestPerson(), "test4"), "3");
     }
 
     private Person createTestPerson()
@@ -38,7 +38,7 @@ public class MatchingServiceTest
         Person testPerson = new Person();
         Address testAddress = new Address();
 
-        testAddress.setAddressLine1("100 Lake Hart Dr");
+        testAddress.setAddressLine1("1211 Wee Dr");
         testAddress.setCity("Orlando");
 
         testPerson.setFirstName("Test");

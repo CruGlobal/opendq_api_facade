@@ -5,7 +5,6 @@ import com.infosolvetech.rtmatch.pdi4.RuntimeMatchWSService;
 import com.infosolvetech.rtmatch.pdi4.ServiceResult;
 import org.cru.model.Person;
 import org.cru.util.OpenDQProperties;
-import org.joda.time.DateTime;
 
 import javax.inject.Inject;
 import java.net.ConnectException;
@@ -78,7 +77,6 @@ public class MatchingService
         searchValues.add(person.getLastName());
         searchValues.add(person.getAddress().getAddressLine1());
         searchValues.add(person.getAddress().getCity());
-        searchValues.add(person.getRowId());
 
         return searchValues;
     }

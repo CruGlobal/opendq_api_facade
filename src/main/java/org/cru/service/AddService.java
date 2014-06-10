@@ -52,7 +52,7 @@ public class AddService
     private void addSlot(RuntimeMatchWS runtimeMatchWS, Person person)
     {
         //while updateSlot sounds like an update, it is actually inserting an entry into the index
-        ServiceResult addResponse = runtimeMatchWS.updateSlot(slotName, generateFieldNames(),  generateFieldValues(person));
+        ServiceResult addResponse = runtimeMatchWS.updateSlot(slotName, generateFieldNames(), generateFieldValues(person));
 
         if(addResponse.isError())
         {

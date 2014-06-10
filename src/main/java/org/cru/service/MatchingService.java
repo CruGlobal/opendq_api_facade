@@ -30,20 +30,23 @@ public class MatchingService
     public String findMatch(Person person, String slotName) throws ConnectException
     {
         this.slotName = slotName;
-        callRuntimeMatchService(person);
+        List<Object> searchResultValues = callRuntimeMatchService(person);
         //TODO: only set the match Id if the confidence level > ?? else null
-        matchId = "TEST_ID";
+        if(searchResultValues != null && !searchResultValues.isEmpty())
+        {
+            matchId = (String)searchResultValues.get(4);
+        }
         return matchId;
     }
 
-    private void callRuntimeMatchService(Person person) throws ConnectException
+    private List<Object> callRuntimeMatchService(Person person) throws ConnectException
     {
         RuntimeMatchWS runtimeMatchWS = configureRuntimeService();
 
         configureSlot(runtimeMatchWS);
         ServiceResult searchResponse = searchSlot(runtimeMatchWS, person);
 
-        List<Object> searchResults = searchResponse.getValues();
+        return searchResponse.getValues();
     }
 
     private void configureSlot(RuntimeMatchWS runtimeMatchWS)

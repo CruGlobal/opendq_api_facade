@@ -4,12 +4,15 @@ import com.infosolvetech.rtmatch.pdi4.RuntimeMatchWS;
 import com.infosolvetech.rtmatch.pdi4.RuntimeMatchWSService;
 import com.infosolvetech.rtmatch.pdi4.ServiceResult;
 import org.cru.model.Person;
+import org.cru.model.SearchResponse;
 import org.cru.util.OpenDQProperties;
 
 import javax.inject.Inject;
 import java.net.ConnectException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Service to handle the complexity of matching person fields
@@ -30,23 +33,21 @@ public class MatchingService
     public String findMatch(Person person, String slotName) throws ConnectException
     {
         this.slotName = slotName;
-        List<Object> searchResultValues = callRuntimeMatchService(person);
-        //TODO: only set the match Id if the confidence level > ?? else null
-        if(searchResultValues != null && !searchResultValues.isEmpty())
+        SearchResponse searchResponse = callRuntimeMatchService(person);
+
+        if(searchResponse.getScore() >= 0.95D)
         {
-            matchId = (String)searchResultValues.get(4);
+            matchId = searchResponse.getRowId();
         }
         return matchId;
     }
 
-    private List<Object> callRuntimeMatchService(Person person) throws ConnectException
+    private SearchResponse callRuntimeMatchService(Person person) throws ConnectException
     {
         RuntimeMatchWS runtimeMatchWS = configureRuntimeService();
 
         configureSlot(runtimeMatchWS);
-        ServiceResult searchResponse = searchSlot(runtimeMatchWS, person);
-
-        return searchResponse.getValues();
+        return searchSlot(runtimeMatchWS, person);
     }
 
     private void configureSlot(RuntimeMatchWS runtimeMatchWS)
@@ -59,7 +60,7 @@ public class MatchingService
         }
     }
 
-    private ServiceResult searchSlot(RuntimeMatchWS runtimeMatchWS, Person person)
+    private SearchResponse searchSlot(RuntimeMatchWS runtimeMatchWS, Person person)
     {
         ServiceResult searchResponse = runtimeMatchWS.searchSlot(slotName, createSearchValuesFromPerson(person));
 
@@ -68,7 +69,7 @@ public class MatchingService
             throw new RuntimeException(searchResponse.getMessage());
         }
 
-        return searchResponse;
+        return buildSearchResponse(searchResponse);
     }
 
     private List<String> createSearchValuesFromPerson(Person person)
@@ -101,5 +102,29 @@ public class MatchingService
     void setOpenDQProperties(OpenDQProperties openDQProperties)
     {
         this.openDQProperties = openDQProperties;
+    }
+
+    SearchResponse buildSearchResponse(ServiceResult searchResult)
+    {
+        SearchResponse searchResponse = new SearchResponse();
+        List<Object> searchResultValues = searchResult.getValues();
+
+        searchResponse.setScore(searchResult.getScore());
+        searchResponse.setRowId((String)searchResultValues.get(4));
+        searchResponse.setResultValues(buildResultValues(searchResultValues));
+
+        return searchResponse;
+    }
+
+    Map<String, Object> buildResultValues(List<Object> searchResultValues)
+    {
+        Map<String, Object> valueMap = new HashMap<String, Object>();
+
+        valueMap.put("firstName", searchResultValues.get(0));
+        valueMap.put("lastName", searchResultValues.get(1));
+        valueMap.put("address1", searchResultValues.get(2));
+        valueMap.put("city", searchResultValues.get(3));
+
+        return valueMap;
     }
 }

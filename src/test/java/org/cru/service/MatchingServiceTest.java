@@ -46,7 +46,7 @@ public class MatchingServiceTest
     public void testFindMatch(Person person, String matchId) throws Exception
     {
         setup();
-        assertEquals(matchingService.findMatch(person, "test1"), matchId);
+        assertEquals(matchingService.findMatch(person, "Match"), matchId);
     }
 
     private Person generatePersonWithDataExactMatchFromSoapUI()

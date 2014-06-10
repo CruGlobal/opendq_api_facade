@@ -25,7 +25,7 @@ public class DeleteResource
     {
         try
         {
-            deleteService.deletePerson(globalRegistryId, "test5");
+            deleteService.deletePerson(globalRegistryId, "Delete");
         }
         catch(ConnectException ce)
         {

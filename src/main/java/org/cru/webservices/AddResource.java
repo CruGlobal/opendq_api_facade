@@ -36,7 +36,7 @@ public class AddResource
             //TODO: Do we want to check for a match here before adding?
             try
             {
-                addService.addPerson(person, "test1");
+                addService.addPerson(person, "Add");
             }
             catch(ConnectException ce)
             {

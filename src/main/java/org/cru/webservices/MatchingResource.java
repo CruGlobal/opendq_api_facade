@@ -38,7 +38,7 @@ public class MatchingResource
             try
             {
                 //We have a clean address, person's address is already updated
-                String matchId = matchingService.findMatch(person, "test1");
+                String matchId = matchingService.findMatch(person, "Match");
 
                 if(matchId != null)
                 {

@@ -17,7 +17,7 @@ public class MatchOrAddService
 
     public String matchOrAddPerson(Person person) throws ConnectException
     {
-        String slotName = "test1";
+        String slotName = "AddOrMatch";
         String matchId = matchingService.findMatch(person, slotName);
 
         if(matchId != null) return matchId;

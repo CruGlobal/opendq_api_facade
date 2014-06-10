@@ -34,7 +34,7 @@ public class AddServiceTest
     {
         try
         {
-            addService.addPerson(createTestPerson(), "test1");
+            addService.addPerson(createTestPerson(), "Add");
         }
         catch(ConnectException ce)
         {

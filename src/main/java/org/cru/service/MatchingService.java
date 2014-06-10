@@ -35,6 +35,7 @@ public class MatchingService
         this.slotName = slotName;
         SearchResponse searchResponse = callRuntimeMatchService(person);
 
+        //TODO: determine this logic
         if(searchResponse.getScore() >= 0.95D)
         {
             matchId = searchResponse.getRowId();

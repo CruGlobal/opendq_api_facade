@@ -5,7 +5,7 @@ import java.util.Map;
 /**
  * Object to hold information that comes back from OpenDQ about the match found
  * in a more easily maintainable manner
- * 
+ *
  * Created by William.Randall on 6/10/14.
  */
 public class SearchResponse

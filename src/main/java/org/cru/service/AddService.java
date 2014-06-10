@@ -63,7 +63,7 @@ public class AddService
     private RuntimeMatchWS configureRuntimeService()
     {
         transformationFileLocation = openDQProperties.getProperty("transformationFileLocation");
-        step = "RtMatch";
+        step = "RtIndex";
 
         RuntimeMatchWSService runtimeMatchWSService = new RuntimeMatchWSService();
         return runtimeMatchWSService.getRuntimeMatchWSPort();

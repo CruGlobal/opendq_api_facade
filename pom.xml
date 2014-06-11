@@ -77,6 +77,8 @@
     </dependencies>
 
     <build>
+        <finalName>${project.short.name}</finalName>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -89,5 +91,9 @@
             </plugin>
         </plugins>
     </build>
+
+    <properties>
+        <project.short.name>oaf</project.short.name>
+    </properties>
 
 </project>

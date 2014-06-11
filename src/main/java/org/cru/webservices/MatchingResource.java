@@ -1,5 +1,6 @@
 package org.cru.webservices;
 
+import org.cru.model.MatchResponse;
 import org.cru.model.Person;
 import org.cru.service.AddressNormalizationService;
 import org.cru.service.MatchingService;
@@ -37,12 +38,12 @@ public class MatchingResource
         try
         {
             //We have a clean address, person's address is already updated
-            String matchId = matchingService.findMatch(person, "Match");
+            MatchResponse matchResponse = matchingService.findMatch(person, "Match");
 
-            if(matchId != null)
+            if(matchResponse != null)
             {
                 //Send the matching ID back to the client
-                return Response.ok().entity(matchId).build();
+                return Response.ok().entity(matchResponse).build();
             }
             else
             {

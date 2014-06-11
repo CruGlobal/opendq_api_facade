@@ -3,6 +3,7 @@ package org.cru.service;
 import com.infosolvetech.rtmatch.pdi4.RuntimeMatchWS;
 import com.infosolvetech.rtmatch.pdi4.RuntimeMatchWSService;
 import com.infosolvetech.rtmatch.pdi4.ServiceResult;
+import org.cru.model.MatchResponse;
 import org.cru.model.Person;
 import org.cru.model.SearchResponse;
 import org.cru.util.OpenDQProperties;
@@ -30,7 +31,7 @@ public class MatchingService
     private String step;
 
 
-    public String findMatch(Person person, String slotName) throws ConnectException
+    public MatchResponse findMatch(Person person, String slotName) throws ConnectException
     {
         this.slotName = slotName;
         SearchResponse searchResponse = callRuntimeMatchService(person);
@@ -42,7 +43,11 @@ public class MatchingService
         {
             matchId = searchResponse.getRowId();
         }
-        return matchId;
+
+        MatchResponse matchResponse = new MatchResponse();
+        matchResponse.setConfidenceLevel(searchResponse.getScore());
+        matchResponse.setMatchId(matchId);
+        return matchResponse;
     }
 
     private SearchResponse callRuntimeMatchService(Person person) throws ConnectException

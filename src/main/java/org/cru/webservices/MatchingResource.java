@@ -42,7 +42,7 @@ public class MatchingResource
 
             if(matchResponse != null)
             {
-                //Send the matching ID back to the client
+                //Send the match back to the client
                 return Response.ok().entity(matchResponse).build();
             }
             else

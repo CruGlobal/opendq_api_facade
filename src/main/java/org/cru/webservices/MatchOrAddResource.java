@@ -1,5 +1,6 @@
 package org.cru.webservices;
 
+import org.cru.model.MatchResponse;
 import org.cru.model.Person;
 import org.cru.service.MatchOrAddService;
 
@@ -33,7 +34,17 @@ public class MatchOrAddResource
     {
         try
         {
-            matchOrAddService.matchOrAddPerson(person);
+            MatchResponse matchResponse = matchOrAddService.matchOrAddPerson(person);
+
+            if(matchResponse != null)
+            {
+                //Send the match back to the client
+                return Response.ok().entity(matchResponse).build();
+            }
+            else
+            {
+                return Response.status(Response.Status.NO_CONTENT).build();
+            }
         }
         catch(ConnectException ce)
         {
@@ -42,6 +53,5 @@ public class MatchOrAddResource
                 .entity(ce.getMessage())
                 .build());
         }
-        return Response.ok().build();
     }
 }

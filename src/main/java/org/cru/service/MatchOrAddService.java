@@ -1,5 +1,6 @@
 package org.cru.service;
 
+import org.cru.model.MatchResponse;
 import org.cru.model.Person;
 
 import javax.inject.Inject;
@@ -17,12 +18,12 @@ public class MatchOrAddService
     @Inject
     private MatchingService matchingService;
 
-    public String matchOrAddPerson(Person person) throws ConnectException
+    public MatchResponse matchOrAddPerson(Person person) throws ConnectException
     {
         String slotName = "AddOrMatch";
-        String matchId = matchingService.findMatch(person, slotName);
+        MatchResponse matchResponse = matchingService.findMatch(person, slotName);
 
-        if(matchId != null) return matchId;
+        if(matchResponse != null) return matchResponse;
 
         addService.addPerson(person, slotName);
         return null;

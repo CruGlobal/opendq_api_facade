@@ -36,6 +36,8 @@ public class MatchingService
         SearchResponse searchResponse = callRuntimeMatchService(person);
 
         //TODO: determine this logic
+        if(searchResponse == null) return null;
+
         if(searchResponse.getScore() >= 0.95D)
         {
             matchId = searchResponse.getRowId();
@@ -109,6 +111,11 @@ public class MatchingService
     {
         SearchResponse searchResponse = new SearchResponse();
         List<Object> searchResultValues = searchResult.getValues();
+
+        if(searchResultValues == null || searchResultValues.isEmpty())
+        {
+            return null;
+        }
 
         searchResponse.setScore(searchResult.getScore());
         searchResponse.setRowId((String)searchResultValues.get(4));

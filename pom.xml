@@ -6,6 +6,7 @@
 
     <groupId>opendq_api_facade</groupId>
     <artifactId>opendq_api_facade</artifactId>
+    <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
 
     <dependencyManagement>

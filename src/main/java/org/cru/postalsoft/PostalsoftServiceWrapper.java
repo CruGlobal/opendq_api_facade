@@ -22,13 +22,14 @@ public class PostalsoftServiceWrapper
     final PostalsoftService postalsoftService;
     final String namespaceURI;
 
-    @Inject
     private PostalsoftServiceProperties postalsoftServiceProperties;
 
-    public PostalsoftServiceWrapper(PostalsoftService postalsoftService, String namespaceURI)
+    public PostalsoftServiceWrapper(PostalsoftService postalsoftService, String namespaceURI,
+        PostalsoftServiceProperties postalsoftServiceProperties)
     {
         this.postalsoftService = postalsoftService;
         this.namespaceURI = namespaceURI;
+        this.postalsoftServiceProperties = postalsoftServiceProperties;
     }
 
     public boolean normalizeAddress(Address address)

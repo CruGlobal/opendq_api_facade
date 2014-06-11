@@ -25,7 +25,6 @@ public class AddressNormalizationServiceTest
     public void setup()
     {
         PostalsoftServiceProperties postalsoftServiceProperties = new PostalsoftServiceProperties();
-        postalsoftServiceProperties.init();
 
         PostalsoftServiceWrapperProducer postalsoftServiceWrapperProducer = new PostalsoftServiceWrapperProducer();
         postalsoftServiceWrapperProducer.setPostalsoftServiceProperties(postalsoftServiceProperties);

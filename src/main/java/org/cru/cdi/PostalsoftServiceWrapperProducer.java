@@ -37,7 +37,7 @@ public class PostalsoftServiceWrapperProducer
         initProperties();
         postalsoftServiceWrapper =
                 new PostalsoftServiceWrapper(new Util_002fPostalSoft(wsdlUrl, serviceName).
-                        getUtil_002fPostalSoftHttpPort(), namespace);
+                        getUtil_002fPostalSoftHttpPort(), namespace, postalsoftServiceProperties);
     }
 
     @Produces

@@ -2,8 +2,6 @@ package org.cru.cdi;
 
 import org.cru.postalsoft.PostalsoftServiceWrapper;
 import org.cru.util.PostalsoftServiceProperties;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -24,7 +22,6 @@ public class PostalsoftServiceWrapperProducerTest
     public void setup()
     {
         properties = new PostalsoftServiceProperties();
-        properties.init();
     }
 
     @Test

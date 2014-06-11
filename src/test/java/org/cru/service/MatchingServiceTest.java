@@ -1,6 +1,7 @@
 package org.cru.service;
 
 import org.cru.model.Address;
+import org.cru.model.MatchResponse;
 import org.cru.model.Person;
 import org.cru.util.OpenDQProperties;
 import org.testng.annotations.BeforeClass;
@@ -8,6 +9,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Test the {@link MatchingService} class with exact and near matches
@@ -47,7 +49,9 @@ public class MatchingServiceTest
     public void testFindMatch(Person person, String matchId) throws Exception
     {
         setup();
-        assertEquals(matchingService.findMatch(person, "Match"), matchId);
+        MatchResponse matchResponse = matchingService.findMatch(person, "Match");
+        assertEquals(matchResponse.getMatchId(), matchId);
+        assertTrue(matchResponse.getConfidenceLevel() >= 0.95D);
     }
 
     private Person generatePersonWithDataExactMatchFromSoapUI()

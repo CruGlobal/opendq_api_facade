@@ -1,12 +1,14 @@
 package org.cru.service;
 
 import org.cru.model.Address;
+import org.cru.model.MatchResponse;
 import org.cru.model.Person;
 import org.cru.util.OpenDQProperties;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Test for {@link MatchOrAddService} which can currently only be run once successfully
@@ -42,10 +44,11 @@ public class MatchOrAddServiceTest
     {
         setup();
         Person testPerson = createTestPerson();
-        String matchId = matchOrAddService.matchOrAddPerson(testPerson);
-        assertNull(matchId); //it should add it first
-        matchId = matchOrAddService.matchOrAddPerson(testPerson);
-        assertEquals(matchId, testPerson.getRowId());  //now it should find it
+        MatchResponse matchResponse = matchOrAddService.matchOrAddPerson(testPerson);
+        assertNull(matchResponse); //it should add it first
+        matchResponse = matchOrAddService.matchOrAddPerson(testPerson);
+        assertEquals(matchResponse.getMatchId(), testPerson.getRowId());  //now it should find it
+        assertTrue(matchResponse.getConfidenceLevel() >= 0.95D);
     }
 
     private Person createTestPerson()

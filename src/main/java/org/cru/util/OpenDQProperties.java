@@ -9,6 +9,8 @@ import java.io.InputStream;
 import java.util.Properties;
 
 /**
+ * This is a class to make opendq.properties more accessible and injectable
+ *
  * Created by William.Randall on 6/9/14.
  */
 public class OpenDQProperties

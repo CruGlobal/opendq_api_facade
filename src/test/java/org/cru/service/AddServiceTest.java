@@ -11,6 +11,8 @@ import java.net.ConnectException;
 import static org.testng.Assert.fail;
 
 /**
+ * Test the {@link AddService} class.
+ *
  * Created by William.Randall on 6/9/14.
  */
 @Test

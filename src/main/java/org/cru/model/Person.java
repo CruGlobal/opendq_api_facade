@@ -1,6 +1,8 @@
 package org.cru.model;
 
 /**
+ * This object holds information that is contained within the index about a person
+ *
  * Created by William.Randall on 6/6/14.
  */
 public class Person

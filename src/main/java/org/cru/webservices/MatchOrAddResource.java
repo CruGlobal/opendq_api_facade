@@ -14,6 +14,9 @@ import javax.ws.rs.core.Response;
 import java.net.ConnectException;
 
 /**
+ * Endpoint to first try to find a matching {@link Person}.  If found, return the found person.
+ * Otherwise, add the {@link Person} to the index.
+ *
  * Created by William.Randall on 6/9/14.
  */
 @Path("/")

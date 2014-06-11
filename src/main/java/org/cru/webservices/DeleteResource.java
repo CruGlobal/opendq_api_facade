@@ -9,8 +9,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.net.ConnectException;
+import org.cru.model.Person;
 
 /**
+ * Endpoint to delete a {@link Person} from the index
+ *
  * Created by William.Randall on 6/10/14.
  */
 @Path("/")

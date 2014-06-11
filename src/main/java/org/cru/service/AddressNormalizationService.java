@@ -6,6 +6,8 @@ import org.cru.postalsoft.PostalsoftServiceWrapper;
 import javax.inject.Inject;
 
 /**
+ * This service handles the logic of normalizing the given {@link Address}
+ *
  * Created by William.Randall on 6/6/14.
  */
 public class AddressNormalizationService

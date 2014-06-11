@@ -14,6 +14,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
+ * This is a producer for {@link PostalsoftServiceWrapper}
+ * 
  * Created by William.Randall on 6/6/14.
  */
 @ApplicationScoped

@@ -11,6 +11,8 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 /**
+ * Test the {@link AddressNormalizationService} class
+ *
  * Created by William.Randall on 6/6/14.
  */
 

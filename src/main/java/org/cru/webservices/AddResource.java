@@ -14,7 +14,7 @@ import javax.ws.rs.core.Response;
 import java.net.ConnectException;
 
 /**
- * Endpoint to add a person to the index
+ * Endpoint to add a {@link Person} to the index
  *
  * Created by William.Randall on 6/9/14.
  */

@@ -1,6 +1,8 @@
 package org.cru.model;
 
 /**
+ * This object holds different address information that we capture for normalization and matching purposes
+ *
  * Created by William.Randall on 6/6/14.
  */
 public class Address

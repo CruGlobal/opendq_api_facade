@@ -10,6 +10,8 @@ import java.io.InputStream;
 import java.util.Properties;
 
 /**
+ * This is a class to make PostalsoftService.properties more accessible and injectable
+ *
  * Created by William.Randall on 6/6/14.
  */
 @ApplicationScoped

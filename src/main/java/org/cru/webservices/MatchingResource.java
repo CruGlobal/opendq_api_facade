@@ -15,7 +15,7 @@ import javax.ws.rs.core.Response;
 import java.net.ConnectException;
 
 /**
- * Endpoint for clients to do matching
+ * Endpoint for clients to find a matching {@link Person} in the index
  *
  * Created by William.Randall on 6/6/14.
  */

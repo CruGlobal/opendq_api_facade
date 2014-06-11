@@ -10,6 +10,8 @@ import org.testng.annotations.Test;
 import static org.testng.Assert.assertNotNull;
 
 /**
+ * Test the {@link PostalsoftServiceWrapperProducer} class
+ *
  * Created by William.Randall on 6/6/14.
  */
 @Test

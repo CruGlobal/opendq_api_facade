@@ -10,6 +10,8 @@ import org.testng.annotations.Test;
 import static org.testng.Assert.assertEquals;
 
 /**
+ * Test the {@link MatchingService} class with exact and near matches
+ *
  * Created by William.Randall on 6/9/14.
  */
 @Test

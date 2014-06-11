@@ -33,36 +33,29 @@ public class MatchingResource
     @Produces(MediaType.APPLICATION_JSON)
     public Response findMatchingPerson(Person person)
     {
-        if(addressNormalizationService.normalizeAddress(person.getAddress()))
+        addressNormalizationService.normalizeAddress(person.getAddress());
+        try
         {
-            try
-            {
-                //We have a clean address, person's address is already updated
-                String matchId = matchingService.findMatch(person, "Match");
+            //We have a clean address, person's address is already updated
+            String matchId = matchingService.findMatch(person, "Match");
 
-                if(matchId != null)
-                {
-                    //Send the matching ID back to the client
-                    return Response.ok().entity(matchId).build();
-                }
-                else
-                {
-                    return Response.status(Response.Status.NO_CONTENT).build();
-                }
-            }
-            catch(ConnectException ce)
+            if(matchId != null)
             {
-                //TODO: log error
-                throw new WebApplicationException(
-                    Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(ce.getMessage())
-                    .build());
+                //Send the matching ID back to the client
+                return Response.ok().entity(matchId).build();
+            }
+            else
+            {
+                return Response.status(Response.Status.NO_CONTENT).build();
             }
         }
-        else
+        catch(ConnectException ce)
         {
-            //TODO: Do we want to fail here or just use the address given to us?
+            //TODO: log error
+            throw new WebApplicationException(
+                Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                .entity(ce.getMessage())
+                .build());
         }
-        return Response.ok().build();
     }
 }

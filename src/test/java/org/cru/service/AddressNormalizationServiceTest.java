@@ -18,20 +18,17 @@ import static org.testng.Assert.assertTrue;
 public class AddressNormalizationServiceTest
 {
     private AddressNormalizationService addressNormalizationService;
-    private PostalsoftServiceProperties postalsoftServiceProperties;
-    private PostalsoftServiceWrapper postalsoftServiceWrapper;
-    private PostalsoftServiceWrapperProducer postalsoftServiceWrapperProducer;
 
     @BeforeClass
     public void setup()
     {
-        postalsoftServiceProperties = new PostalsoftServiceProperties();
+        PostalsoftServiceProperties postalsoftServiceProperties = new PostalsoftServiceProperties();
         postalsoftServiceProperties.init();
 
-        postalsoftServiceWrapperProducer = new PostalsoftServiceWrapperProducer();
+        PostalsoftServiceWrapperProducer postalsoftServiceWrapperProducer = new PostalsoftServiceWrapperProducer();
         postalsoftServiceWrapperProducer.setPostalsoftServiceProperties(postalsoftServiceProperties);
         postalsoftServiceWrapperProducer.init();
-        postalsoftServiceWrapper = postalsoftServiceWrapperProducer.getPostalsoftServiceWrapper();
+        PostalsoftServiceWrapper postalsoftServiceWrapper = postalsoftServiceWrapperProducer.getPostalsoftServiceWrapper();
 
         postalsoftServiceWrapper.setPostalsoftServiceProperties(postalsoftServiceProperties);
         addressNormalizationService = new AddressNormalizationService();

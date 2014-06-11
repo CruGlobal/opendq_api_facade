@@ -17,12 +17,11 @@ import static org.testng.Assert.fail;
 public class AddServiceTest
 {
     private AddService addService;
-    private OpenDQProperties openDQProperties;
 
     @BeforeClass
     public void setup()
     {
-        openDQProperties = new OpenDQProperties();
+        OpenDQProperties openDQProperties = new OpenDQProperties();
         openDQProperties.init();
 
         addService = new AddService();

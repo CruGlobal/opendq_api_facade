@@ -6,6 +6,8 @@ import javax.inject.Inject;
 import java.net.ConnectException;
 
 /**
+ * Handle the logic of either matching or adding the {@link Person} given
+ *
  * Created by William.Randall on 6/9/14.
  */
 public class MatchOrAddService

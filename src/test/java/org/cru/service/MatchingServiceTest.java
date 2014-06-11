@@ -16,7 +16,6 @@ import static org.testng.Assert.assertEquals;
 public class MatchingServiceTest
 {
     private MatchingService matchingService;
-    private OpenDQProperties openDQProperties;
 
     @DataProvider(name = "successfulMatches")
     private Object[][] successfulMatches()
@@ -35,7 +34,7 @@ public class MatchingServiceTest
     @BeforeClass
     public void setup()
     {
-        openDQProperties = new OpenDQProperties();
+        OpenDQProperties openDQProperties = new OpenDQProperties();
         openDQProperties.init();
 
         matchingService = new MatchingService();

@@ -6,6 +6,8 @@ import com.infosolvetech.rtmatch.pdi4.ServiceResult;
 import org.cru.model.MatchResponse;
 import org.cru.model.Person;
 import org.cru.model.SearchResponse;
+import org.cru.util.DeletedIndexesFileIO;
+import org.cru.util.OafProperties;
 import org.cru.util.OpenDQProperties;
 import org.cru.util.ResponseMessage;
 
@@ -25,6 +27,8 @@ public class MatchingService
 {
     @Inject
     private OpenDQProperties openDQProperties;
+    @Inject
+    private OafProperties oafProperties;
 
     private String matchId;     // Global Registry ID that matches data given
     private String slotName;
@@ -43,6 +47,8 @@ public class MatchingService
         if(searchResponse.getScore() >= 0.95D)
         {
             matchId = searchResponse.getRowId();
+
+            if(matchHasBeenDeleted(matchId)) return null;
         }
 
         MatchResponse matchResponse = new MatchResponse();
@@ -104,6 +110,12 @@ public class MatchingService
         return runtimeMatchWSService.getRuntimeMatchWSPort();
     }
 
+    private boolean matchHasBeenDeleted(String matchId)
+    {
+        DeletedIndexesFileIO deletedIndexesFileIO = new DeletedIndexesFileIO(oafProperties);
+        return deletedIndexesFileIO.fileContainsId(matchId);
+    }
+
     public String getMatchId()
     {
         return matchId;
@@ -112,6 +124,11 @@ public class MatchingService
     void setOpenDQProperties(OpenDQProperties openDQProperties)
     {
         this.openDQProperties = openDQProperties;
+    }
+
+    void setOafProperties(OafProperties oafProperties)
+    {
+        this.oafProperties = oafProperties;
     }
 
     SearchResponse buildSearchResponse(ServiceResult searchResult)

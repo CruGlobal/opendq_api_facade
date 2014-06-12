@@ -5,7 +5,7 @@ import org.cru.model.MatchResponse;
 import org.cru.model.Person;
 import org.cru.util.OafProperties;
 import org.cru.util.OpenDQProperties;
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -37,7 +37,7 @@ public class MatchingServiceTest
         };
     }
 
-    @BeforeClass
+    @BeforeMethod
     public void setup()
     {
         OpenDQProperties openDQProperties = new OpenDQProperties();
@@ -54,7 +54,6 @@ public class MatchingServiceTest
     @Test(dataProvider = "successfulMatches")
     public void testFindMatch(Person person, String matchId) throws Exception
     {
-        setup();
         MatchResponse matchResponse = matchingService.findMatch(person, "Match");
         assertEquals(matchResponse.getMatchId(), matchId);
         assertTrue(matchResponse.getConfidenceLevel() >= 0.95D);

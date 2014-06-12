@@ -2,7 +2,6 @@ package org.cru.webservices;
 
 import org.cru.model.MatchResponse;
 import org.cru.model.Person;
-import org.cru.service.AddressNormalizationService;
 import org.cru.service.MatchOrAddService;
 
 import javax.inject.Inject;
@@ -26,8 +25,6 @@ public class MatchOrAddResource
 {
     @Inject
     private MatchOrAddService matchOrAddService;
-    @Inject
-    private AddressNormalizationService addressNormalizationService;
 
     @POST
     @Path("/match-or-add")
@@ -37,7 +34,6 @@ public class MatchOrAddResource
     {
         try
         {
-            addressNormalizationService.normalizeAddress(person.getAddress());
             MatchResponse matchResponse = matchOrAddService.matchOrAddPerson(person);
 
             if(matchResponse != null)

@@ -2,7 +2,6 @@ package org.cru.webservices;
 
 import org.cru.model.Person;
 import org.cru.service.AddService;
-import org.cru.service.AddressNormalizationService;
 
 import javax.inject.Inject;
 import javax.ws.rs.POST;
@@ -21,8 +20,6 @@ public class UpdateResource
 {
     @Inject
     private AddService addService;
-    @Inject
-    private AddressNormalizationService addressNormalizationService;
 
     @Path("/update")
     @POST
@@ -30,7 +27,6 @@ public class UpdateResource
     {
         try
         {
-            addressNormalizationService.normalizeAddress(person.getAddress());
             //Since there is currently no way to update an existing one, just add a new one
             addService.addPerson(person, "UpdateIndex");
         }

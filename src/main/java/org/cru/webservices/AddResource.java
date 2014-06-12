@@ -31,25 +31,19 @@ public class AddResource
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addPerson(Person person)
     {
-        if(addressNormalizationService.normalizeAddress(person.getAddress()))
+        addressNormalizationService.normalizeAddress(person.getAddress());
+        //TODO: Do we want to check for a match here before adding?
+        try
         {
-            //TODO: Do we want to check for a match here before adding?
-            try
-            {
-                addService.addPerson(person, "Add");
-            }
-            catch(ConnectException ce)
-            {
-                //TODO: log error
-                throw new WebApplicationException(
-                    Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+            addService.addPerson(person, "Add");
+        }
+        catch(ConnectException ce)
+        {
+            //TODO: log error
+            throw new WebApplicationException(
+                Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(ce.getMessage())
                     .build());
-            }
-        }
-        else
-        {
-            //TODO: Fail?
         }
         return Response.ok().build();
     }

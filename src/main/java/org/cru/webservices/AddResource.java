@@ -2,7 +2,6 @@ package org.cru.webservices;
 
 import org.cru.model.Person;
 import org.cru.service.AddService;
-import org.cru.service.AddressNormalizationService;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -22,8 +21,6 @@ import java.net.ConnectException;
 public class AddResource
 {
     @Inject
-    private AddressNormalizationService addressNormalizationService;
-    @Inject
     private AddService addService;
 
     @POST
@@ -31,7 +28,6 @@ public class AddResource
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addPerson(Person person)
     {
-        addressNormalizationService.normalizeAddress(person.getAddress());
         //TODO: Do we want to check for a match here before adding?
         try
         {

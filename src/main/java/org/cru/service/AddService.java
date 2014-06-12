@@ -20,6 +20,8 @@ public class AddService
 {
     @Inject
     private OpenDQProperties openDQProperties;
+    @Inject
+    private AddressNormalizationService addressNormalizationService;
 
     private String slotName;
     private String transformationFileLocation;
@@ -28,6 +30,7 @@ public class AddService
     public void addPerson(Person person, String slotName) throws ConnectException
     {
         this.slotName = slotName;
+        addressNormalizationService.normalizeAddress(person.getAddress());
         callRuntimeMatchService(person);
     }
 
@@ -100,5 +103,10 @@ public class AddService
     void setOpenDQProperties(OpenDQProperties openDQProperties)
     {
         this.openDQProperties = openDQProperties;
+    }
+
+    void setAddressNormalizationService(AddressNormalizationService addressNormalizationService)
+    {
+        this.addressNormalizationService = addressNormalizationService;
     }
 }

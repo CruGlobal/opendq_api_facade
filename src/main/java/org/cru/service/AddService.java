@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -82,7 +83,7 @@ public class AddService
 
     Map<String, String> generateFieldNamesAndValues(Person person)
     {
-        Map<String, String> fieldNamesAndValues = new HashMap<String, String>();
+        Map<String, String> fieldNamesAndValues = new LinkedHashMap<String, String>();
 
         fieldNamesAndValues.put("FIELD1", person.getFirstName());
         fieldNamesAndValues.put("FIELD2", person.getLastName());

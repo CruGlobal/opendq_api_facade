@@ -6,3 +6,6 @@ target/
 src/main/resources/log4j.properties
 src/main/resources/PostalsoftService.properties
 src/main/resources/opendq.properties
+src/main/resources/oaf.properties
+
+deletedIndexes.txt

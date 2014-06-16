@@ -1,15 +1,15 @@
 package org.cru.webservices;
 
+import org.cru.model.Person;
 import org.cru.service.DeleteService;
 
 import javax.inject.Inject;
-import javax.jws.WebParam;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.net.ConnectException;
-import org.cru.model.Person;
 import org.cru.util.ResponseMessage;
 
 /**
@@ -25,11 +25,11 @@ public class DeleteResource
 
     @Path("/delete/{id}")
     @DELETE
-    public Response deletePerson(@WebParam(name = "id") String globalRegistryId)
+    public Response deletePerson(@PathParam("id") String globalRegistryId)
     {
         try
         {
-            deleteService.deletePerson(globalRegistryId, "Delete");
+            deleteService.deletePerson(globalRegistryId);
         }
         catch(ConnectException ce)
         {

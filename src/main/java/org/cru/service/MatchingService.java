@@ -42,14 +42,9 @@ public class MatchingService
         //TODO: determine this logic
         if(searchResponse == null) return null;
 
-        String matchId = null;
+        String matchId = searchResponse.getRowId();
 
-        if(searchResponse.getScore() >= 0.95D)
-        {
-            matchId = searchResponse.getRowId();
-
-            if(matchHasBeenDeleted(matchId)) return null;
-        }
+        if(matchHasBeenDeleted(matchId)) return null;
 
         MatchResponse matchResponse = new MatchResponse();
         matchResponse.setConfidenceLevel(searchResponse.getScore());

@@ -2,6 +2,7 @@ package org.cru.service;
 
 import org.cru.model.MatchResponse;
 import org.cru.model.Person;
+import org.cru.util.ResponseMessage;
 
 import javax.inject.Inject;
 import java.net.ConnectException;
@@ -18,7 +19,7 @@ public class MatchOrUpdateService
     @Inject
     private AddService addService;
 
-    public void matchOrUpdatePerson(Person person) throws ConnectException
+    public MatchResponse matchOrUpdatePerson(Person person) throws ConnectException
     {
         MatchResponse matchResponse = matchingService.findMatch(person, "Match");
 
@@ -35,8 +36,12 @@ public class MatchOrUpdateService
             }
             else
             {
-                //TODO: implement some logic here (some sort of merge perhaps?  Or do we send this back to the client instead?)
+                MatchResponse conflictResponse = new MatchResponse();
+                conflictResponse.setMessage(ResponseMessage.CONFLICT.getMessage());
+                return conflictResponse;
             }
         }
+
+        return null;
     }
 }

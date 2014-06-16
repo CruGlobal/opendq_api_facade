@@ -8,6 +8,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
+ * Endpoint for doing either a match or update of an existing {@link Person}
+ * 
  * Created by William.Randall on 6/16/14.
  */
 @Path("/")

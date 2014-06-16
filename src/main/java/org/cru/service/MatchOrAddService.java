@@ -20,7 +20,7 @@ public class MatchOrAddService
 
     public MatchResponse matchOrAddPerson(Person person) throws ConnectException
     {
-        String slotName = "AddOrMatch";
+        String slotName = "MatchOrAdd";
         MatchResponse matchResponse = matchingService.findMatch(person, slotName);
 
         if(matchResponse != null) return matchResponse;

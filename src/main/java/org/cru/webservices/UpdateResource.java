@@ -28,7 +28,7 @@ public class UpdateResource
         try
         {
             //Since there is currently no way to update an existing one, just add a new one
-            addService.addPerson(person, "UpdateIndex");
+            addService.addPerson(person, "Update");
         }
         catch(ConnectException ce)
         {

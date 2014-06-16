@@ -26,10 +26,17 @@ public class MatchOrUpdateService
         {
             addService.addPerson(person, "MatchOrUpdate");
         }
-        else
+        else   // This means there is a match found for the updated information
         {
-            // This means there is a match for the updated information already in the index
-            //TODO: implement some logic here
+            // If it is the same global registry ID, then go ahead and do the add (do we even need to if we found it?)
+            if(matchResponse.getMatchId().equals(person.getRowId()))
+            {
+                addService.addPerson(person, "MatchOrUpdate");
+            }
+            else
+            {
+                //TODO: implement some logic here (some sort of merge perhaps?  Or do we send this back to the client instead?)
+            }
         }
     }
 }

@@ -39,7 +39,6 @@ public class MatchingService
         this.slotName = slotName;
         SearchResponse searchResponse = callRuntimeMatchService(person);
 
-        //TODO: determine this logic
         if(searchResponse == null) return null;
 
         String matchId = searchResponse.getRowId();

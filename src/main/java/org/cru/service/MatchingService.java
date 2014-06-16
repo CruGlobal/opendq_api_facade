@@ -33,7 +33,6 @@ public class MatchingService
     private String matchId;     // Global Registry ID that matches data given
     private String slotName;
     private String transformationFileLocation;
-    private String step;
 
 
     public MatchResponse findMatch(Person person, String slotName) throws ConnectException
@@ -68,7 +67,7 @@ public class MatchingService
 
     private void configureSlot(RuntimeMatchWS runtimeMatchWS)
     {
-        ServiceResult configurationResponse = runtimeMatchWS.configureSlot(slotName, transformationFileLocation, step);
+        ServiceResult configurationResponse = runtimeMatchWS.configureSlot(slotName, transformationFileLocation, "RtMatch");
 
         if(configurationResponse.isError())
         {
@@ -104,7 +103,6 @@ public class MatchingService
     private RuntimeMatchWS configureRuntimeService()
     {
         transformationFileLocation = openDQProperties.getProperty("transformationFileLocation");
-        step = "RtMatch";
 
         RuntimeMatchWSService runtimeMatchWSService = new RuntimeMatchWSService();
         return runtimeMatchWSService.getRuntimeMatchWSPort();

@@ -27,7 +27,6 @@ public class AddService
 
     private String slotName;
     private String transformationFileLocation;
-    private String step;
 
     public void addPerson(Person person, String slotName) throws ConnectException
     {
@@ -46,7 +45,7 @@ public class AddService
 
     private void configureSlot(RuntimeMatchWS runtimeMatchWS)
     {
-        ServiceResult configurationResponse = runtimeMatchWS.configureSlot(slotName, transformationFileLocation, step);
+        ServiceResult configurationResponse = runtimeMatchWS.configureSlot(slotName, transformationFileLocation, "RtIndex");
 
         if(configurationResponse.isError())
         {
@@ -76,7 +75,6 @@ public class AddService
     private RuntimeMatchWS configureRuntimeService()
     {
         transformationFileLocation = openDQProperties.getProperty("transformationFileLocation");
-        step = "RtIndex";
 
         RuntimeMatchWSService runtimeMatchWSService = new RuntimeMatchWSService();
         return runtimeMatchWSService.getRuntimeMatchWSPort();

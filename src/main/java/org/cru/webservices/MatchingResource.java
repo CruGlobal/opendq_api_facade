@@ -47,7 +47,7 @@ public class MatchingResource
             }
             else
             {
-                return Response.status(Response.Status.NO_CONTENT).build();
+                return Response.status(Response.Status.NOT_FOUND).build();
             }
         }
         catch(ConnectException ce)

@@ -36,9 +36,8 @@ public class MatchOrUpdateService
             }
             else
             {
-                MatchResponse conflictResponse = new MatchResponse();
-                conflictResponse.setMessage(ResponseMessage.CONFLICT.getMessage());
-                return conflictResponse;
+                matchResponse.setMessage(ResponseMessage.CONFLICT.getMessage());
+                return matchResponse;
             }
         }
 

@@ -11,6 +11,7 @@ public class MatchResponse
 {
     private String matchId;
     private double confidenceLevel;
+    private String message;
 
     public String getMatchId()
     {
@@ -30,5 +31,15 @@ public class MatchResponse
     public void setConfidenceLevel(double confidenceLevel)
     {
         this.confidenceLevel = confidenceLevel;
+    }
+
+    public String getMessage()
+    {
+        return message;
+    }
+
+    public void setMessage(String message)
+    {
+        this.message = message;
     }
 }

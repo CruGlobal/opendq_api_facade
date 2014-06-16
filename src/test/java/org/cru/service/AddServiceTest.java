@@ -1,8 +1,11 @@
 package org.cru.service;
 
+import org.cru.cdi.PostalsoftServiceWrapperProducer;
 import org.cru.model.Address;
 import org.cru.model.Person;
+import org.cru.postalsoft.PostalsoftServiceWrapper;
 import org.cru.util.OpenDQProperties;
+import org.cru.util.PostalsoftServiceProperties;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -26,8 +29,20 @@ public class AddServiceTest
         OpenDQProperties openDQProperties = new OpenDQProperties();
         openDQProperties.init();
 
+        PostalsoftServiceProperties postalsoftServiceProperties = new PostalsoftServiceProperties();
+
+        PostalsoftServiceWrapperProducer postalsoftServiceWrapperProducer = new PostalsoftServiceWrapperProducer();
+        postalsoftServiceWrapperProducer.setPostalsoftServiceProperties(postalsoftServiceProperties);
+        postalsoftServiceWrapperProducer.init();
+        PostalsoftServiceWrapper postalsoftServiceWrapper = postalsoftServiceWrapperProducer.getPostalsoftServiceWrapper();
+
+        postalsoftServiceWrapper.setPostalsoftServiceProperties(postalsoftServiceProperties);
+        AddressNormalizationService addressNormalizationService = new AddressNormalizationService();
+        addressNormalizationService.setPostalsoftServiceWrapper(postalsoftServiceWrapper);
+
         addService = new AddService();
         addService.setOpenDQProperties(openDQProperties);
+        addService.setAddressNormalizationService(addressNormalizationService);
     }
 
     @Test

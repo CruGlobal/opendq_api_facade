@@ -104,4 +104,9 @@ public class AddService
     {
         this.openDQProperties = openDQProperties;
     }
+
+    void setAddressNormalizationService(AddressNormalizationService addressNormalizationService)
+    {
+        this.addressNormalizationService = addressNormalizationService;
+    }
 }

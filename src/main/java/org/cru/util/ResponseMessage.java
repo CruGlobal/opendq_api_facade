@@ -6,7 +6,10 @@ package org.cru.util;
 public enum ResponseMessage
 {
     CONFLICT("The data you passed in matches another person.  Please merge these two records."),
-    ADDED("Successfully added person");
+    ADDED("Successfully added person"),
+    FOUND("Found a match"),
+    DELETED("Successfully deleted person"),
+    UPDATED("Successfully updated person");
 
     String message;
 

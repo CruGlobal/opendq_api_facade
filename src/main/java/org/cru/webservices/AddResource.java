@@ -2,6 +2,7 @@ package org.cru.webservices;
 
 import org.cru.model.Person;
 import org.cru.service.AddService;
+import org.cru.util.ResponseMessage;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -40,6 +41,7 @@ public class AddResource
                     .entity(ce.getMessage())
                     .build());
         }
-        return Response.ok().build();
+
+        return Response.ok().entity(ResponseMessage.ADDED.getMessage()).build();
     }
 }

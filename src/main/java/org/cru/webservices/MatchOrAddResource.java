@@ -3,6 +3,7 @@ package org.cru.webservices;
 import org.cru.model.MatchResponse;
 import org.cru.model.Person;
 import org.cru.service.MatchOrAddService;
+import org.cru.util.ResponseMessage;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -43,7 +44,7 @@ public class MatchOrAddResource
             }
             else
             {
-                return Response.status(Response.Status.NO_CONTENT).build();
+                return Response.ok().entity(ResponseMessage.ADDED.getMessage()).build();
             }
         }
         catch(ConnectException ce)

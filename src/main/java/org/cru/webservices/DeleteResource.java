@@ -10,6 +10,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.net.ConnectException;
 import org.cru.model.Person;
+import org.cru.util.ResponseMessage;
 
 /**
  * Endpoint to delete a {@link Person} from the index
@@ -38,6 +39,6 @@ public class DeleteResource
                 .build());
         }
 
-        return Response.ok().build();
+        return Response.ok().entity(ResponseMessage.DELETED.getMessage()).build();
     }
 }

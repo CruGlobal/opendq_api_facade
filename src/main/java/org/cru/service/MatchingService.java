@@ -7,6 +7,7 @@ import org.cru.model.MatchResponse;
 import org.cru.model.Person;
 import org.cru.model.SearchResponse;
 import org.cru.util.OpenDQProperties;
+import org.cru.util.ResponseMessage;
 
 import javax.inject.Inject;
 import java.net.ConnectException;
@@ -47,6 +48,7 @@ public class MatchingService
         MatchResponse matchResponse = new MatchResponse();
         matchResponse.setConfidenceLevel(searchResponse.getScore());
         matchResponse.setMatchId(matchId);
+        matchResponse.setMessage(ResponseMessage.FOUND.getMessage());
         return matchResponse;
     }
 

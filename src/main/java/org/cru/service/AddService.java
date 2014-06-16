@@ -9,7 +9,9 @@ import org.cru.util.OpenDQProperties;
 import javax.inject.Inject;
 import java.net.ConnectException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Service to handle complexity of adding a {@link Person} to the index
@@ -55,7 +57,15 @@ public class AddService
     private void addSlot(RuntimeMatchWS runtimeMatchWS, Person person)
     {
         //while updateSlot sounds like an update, it is actually inserting an entry into the index
-        ServiceResult addResponse = runtimeMatchWS.updateSlot(slotName, generateFieldNames(), generateFieldValues(person));
+        Map<String, String> fieldNamesAndValues = generateFieldNamesAndValues(person);
+
+        List<String> fieldNames = new ArrayList<String>();
+        fieldNames.addAll(fieldNamesAndValues.keySet());
+
+        List<String> fieldValues = new ArrayList<String>();
+        fieldValues.addAll(fieldNamesAndValues.values());
+
+        ServiceResult addResponse = runtimeMatchWS.updateSlot(slotName, fieldNames, fieldValues);
 
         if(addResponse.isError())
         {
@@ -72,32 +82,17 @@ public class AddService
         return runtimeMatchWSService.getRuntimeMatchWSPort();
     }
 
-    List<String> generateFieldNames()
+    Map<String, String> generateFieldNamesAndValues(Person person)
     {
-        List<String> fieldNames = new ArrayList<String>();
+        Map<String, String> fieldNamesAndValues = new HashMap<String, String>();
 
-        fieldNames.add("FIELD1");
-        fieldNames.add("FIELD2");
-        fieldNames.add("FIELD3");
-        fieldNames.add("FIELD4");
-        fieldNames.add("FIELD5");
+        fieldNamesAndValues.put("FIELD1", person.getFirstName());
+        fieldNamesAndValues.put("FIELD2", person.getLastName());
+        fieldNamesAndValues.put("FIELD3", person.getAddress().getAddressLine1());
+        fieldNamesAndValues.put("FIELD4", person.getAddress().getCity());
+        fieldNamesAndValues.put("FIELD5", person.getRowId());
 
-        return fieldNames;
-    }
-
-    //TODO: I don't like how tightly coupled these two methods (^ v) are...find a different way
-
-    List<String> generateFieldValues(Person person)
-    {
-        List<String> fieldValues = new ArrayList<String>();
-
-        fieldValues.add(person.getFirstName());
-        fieldValues.add(person.getLastName());
-        fieldValues.add(person.getAddress().getAddressLine1());
-        fieldValues.add(person.getAddress().getCity());
-        fieldValues.add(person.getRowId());
-
-        return fieldValues;
+        return fieldNamesAndValues;
     }
 
     void setOpenDQProperties(OpenDQProperties openDQProperties)

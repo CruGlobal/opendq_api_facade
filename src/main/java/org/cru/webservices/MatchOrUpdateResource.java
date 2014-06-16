@@ -1,7 +1,9 @@
 package org.cru.webservices;
 
+import org.cru.model.MatchResponse;
 import org.cru.model.Person;
 import org.cru.service.MatchOrUpdateService;
+import org.cru.util.ResponseMessage;
 
 import javax.inject.Inject;
 import javax.ws.rs.Path;
@@ -28,7 +30,16 @@ public class MatchOrUpdateResource
     {
         try
         {
-            matchOrUpdateService.matchOrUpdatePerson(person);
+            MatchResponse matchOrUpdateResponse = matchOrUpdateService.matchOrUpdatePerson(person);
+
+            if(matchOrUpdateResponse == null)
+            {
+                return Response.ok().entity(ResponseMessage.ADDED.getMessage()).build();
+            }
+            else if(matchOrUpdateResponse.getMessage().equals(ResponseMessage.CONFLICT.getMessage()))
+            {
+                return Response.status(Response.Status.CONFLICT).entity(matchOrUpdateResponse.getMessage()).build();
+            }
         }
         catch(ConnectException ce)
         {

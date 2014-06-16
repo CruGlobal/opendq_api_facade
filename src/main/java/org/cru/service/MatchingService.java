@@ -30,7 +30,6 @@ public class MatchingService
     @Inject
     private OafProperties oafProperties;
 
-    private String matchId;     // Global Registry ID that matches data given
     private String slotName;
     private String transformationFileLocation;
 
@@ -42,6 +41,8 @@ public class MatchingService
 
         //TODO: determine this logic
         if(searchResponse == null) return null;
+
+        String matchId = null;
 
         if(searchResponse.getScore() >= 0.95D)
         {
@@ -112,11 +113,6 @@ public class MatchingService
     {
         DeletedIndexesFileIO deletedIndexesFileIO = new DeletedIndexesFileIO(oafProperties);
         return deletedIndexesFileIO.fileContainsId(matchId);
-    }
-
-    public String getMatchId()
-    {
-        return matchId;
     }
 
     void setOpenDQProperties(OpenDQProperties openDQProperties)

@@ -24,23 +24,13 @@ public class DeleteService
         this.deletedIndexesFileIO = deletedIndexesFileIO;
     }
 
-    public void deletePerson(String globalRegistryId) throws ConnectException
+    public void deletePerson(String id) throws ConnectException
     {
-        deleteFromIndex(globalRegistryId);
+        if(!personIsDeleted(id)) deletedIndexesFileIO.writeToFile(id);
     }
 
     public boolean personIsDeleted(String id)
     {
         return deletedIndexesFileIO.fileContainsId(id);
-    }
-
-    private void deleteFromIndex(String globalRegistryId)
-    {
-        addIdToDeletedIndexesFile(globalRegistryId);
-    }
-
-    void addIdToDeletedIndexesFile(String id)
-    {
-        if(!deletedIndexesFileIO.fileContainsId(id)) deletedIndexesFileIO.writeToFile(id);
     }
 }

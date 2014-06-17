@@ -10,6 +10,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
@@ -46,17 +47,15 @@ public class MatchingServiceTest
         OafProperties oafProperties = new OafProperties();
         oafProperties.init();
 
-        matchingService = new MatchingService();
-        matchingService.setOpenDQProperties(openDQProperties);
-        matchingService.setOafProperties(oafProperties);
+        matchingService = new MatchingService(openDQProperties, oafProperties);
     }
 
     @Test(dataProvider = "successfulMatches")
     public void testFindMatch(Person person, String matchId) throws Exception
     {
         MatchResponse matchResponse = matchingService.findMatch(person, "Match");
+        assertNotNull(matchResponse);
         assertEquals(matchResponse.getMatchId(), matchId);
-        assertTrue(matchResponse.getConfidenceLevel() >= 0.95D);
     }
 
     public void testMatchHasBeenDeleted() throws Exception

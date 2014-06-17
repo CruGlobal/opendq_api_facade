@@ -3,6 +3,7 @@ package org.cru.service;
 import org.cru.model.Address;
 import org.cru.model.MatchResponse;
 import org.cru.model.Person;
+import org.cru.util.OafProperties;
 import org.cru.util.OpenDQProperties;
 import org.testng.annotations.Test;
 
@@ -27,8 +28,10 @@ public class MatchOrAddServiceTest
         OpenDQProperties openDQProperties = new OpenDQProperties();
         openDQProperties.init();
 
-        MatchingService matchingService = new MatchingService();
-        matchingService.setOpenDQProperties(openDQProperties);
+        OafProperties oafProperties = new OafProperties();
+        oafProperties.init();
+
+        MatchingService matchingService = new MatchingService(openDQProperties, oafProperties);
 
         AddService addService = new AddService();
         addService.setOpenDQProperties(openDQProperties);

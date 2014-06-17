@@ -25,13 +25,19 @@ import java.util.Map;
  */
 public class MatchingService
 {
-    @Inject
     private OpenDQProperties openDQProperties;
-    @Inject
     private OafProperties oafProperties;
-
     private String slotName;
     private String transformationFileLocation;
+
+    public MatchingService() {}
+
+    @Inject
+    public MatchingService(OpenDQProperties openDQProperties, OafProperties oafProperties)
+    {
+        this.openDQProperties = openDQProperties;
+        this.oafProperties = oafProperties;
+    }
 
 
     public MatchResponse findMatch(Person person, String slotName) throws ConnectException
@@ -107,16 +113,6 @@ public class MatchingService
     {
         DeletedIndexesFileIO deletedIndexesFileIO = new DeletedIndexesFileIO(oafProperties);
         return deletedIndexesFileIO.fileContainsId(matchId);
-    }
-
-    void setOpenDQProperties(OpenDQProperties openDQProperties)
-    {
-        this.openDQProperties = openDQProperties;
-    }
-
-    void setOafProperties(OafProperties oafProperties)
-    {
-        this.oafProperties = oafProperties;
     }
 
     SearchResponse buildSearchResponse(ServiceResult searchResult)

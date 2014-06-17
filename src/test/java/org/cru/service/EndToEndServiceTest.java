@@ -42,9 +42,7 @@ public class EndToEndServiceTest
         addService = new AddService();
         addService.setOpenDQProperties(openDQProperties);
 
-        matchingService = new MatchingService();
-        matchingService.setOafProperties(oafProperties);
-        matchingService.setOpenDQProperties(openDQProperties);
+        matchingService = new MatchingService(openDQProperties, oafProperties);
 
         deleteService = new DeleteService();
         deleteService.setOafProperties(oafProperties);

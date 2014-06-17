@@ -3,6 +3,7 @@ package org.cru.util;
 import org.apache.log4j.Logger;
 
 import javax.inject.Inject;
+import javax.ws.rs.WebApplicationException;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -65,7 +66,7 @@ public class DeletedIndexesFileIO
             catch(IOException ioe)
             {
                 log.error("Something failed when trying to read from " + filename, ioe);
-                throw new RuntimeException(ioe);
+                throw new WebApplicationException(ioe);
             }
         }
     }
@@ -114,7 +115,7 @@ public class DeletedIndexesFileIO
             catch(IOException ioe)
             {
                 log.error("Something failed when trying to write to " + filename, ioe);
-                throw new RuntimeException(ioe);
+                throw new WebApplicationException(ioe);
             }
         }
     }

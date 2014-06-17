@@ -10,6 +10,7 @@ import org.cru.util.OpenDQProperties;
 import org.cru.util.ResponseMessage;
 
 import javax.inject.Inject;
+import javax.ws.rs.WebApplicationException;
 import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -70,7 +71,7 @@ public class MatchingService
 
         if(configurationResponse.isError())
         {
-            throw new RuntimeException(configurationResponse.getMessage());
+            throw new WebApplicationException(configurationResponse.getMessage());
         }
     }
 
@@ -80,7 +81,7 @@ public class MatchingService
 
         if(searchResponse.isError())
         {
-            throw new RuntimeException(searchResponse.getMessage());
+            throw new WebApplicationException(searchResponse.getMessage());
         }
 
         return buildSearchResponse(searchResponse);

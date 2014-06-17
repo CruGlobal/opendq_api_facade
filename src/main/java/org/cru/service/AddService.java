@@ -7,6 +7,7 @@ import org.cru.model.Person;
 import org.cru.util.OpenDQProperties;
 
 import javax.inject.Inject;
+import javax.ws.rs.WebApplicationException;
 import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -56,7 +57,7 @@ public class AddService
 
         if(configurationResponse.isError())
         {
-            throw new RuntimeException(configurationResponse.getMessage());
+            throw new WebApplicationException(configurationResponse.getMessage());
         }
     }
 
@@ -75,7 +76,7 @@ public class AddService
 
         if(addResponse.isError())
         {
-            throw new RuntimeException(addResponse.getMessage());
+            throw new WebApplicationException(addResponse.getMessage());
         }
     }
 

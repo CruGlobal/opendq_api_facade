@@ -36,7 +36,7 @@ public class MatchOrUpdateResource
 
             if(matchOrUpdateResponse == null)
             {
-                return Response.ok().entity(ResponseMessage.ADDED.getMessage()).build();
+                return Response.ok().entity(ResponseMessage.UPDATED.getMessage()).build();
             }
             else if(matchOrUpdateResponse.getMessage().equals(ResponseMessage.CONFLICT.getMessage()))
             {

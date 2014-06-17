@@ -1,10 +1,13 @@
 package org.cru.service;
 
+import org.cru.cdi.PostalsoftServiceWrapperProducer;
 import org.cru.model.Address;
 import org.cru.model.MatchResponse;
 import org.cru.model.Person;
+import org.cru.postalsoft.PostalsoftServiceWrapper;
 import org.cru.util.OafProperties;
 import org.cru.util.OpenDQProperties;
+import org.cru.util.PostalsoftServiceProperties;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
@@ -33,8 +36,15 @@ public class MatchOrAddServiceTest
 
         MatchingService matchingService = new MatchingService(openDQProperties, oafProperties);
 
-        AddService addService = new AddService();
-        addService.setOpenDQProperties(openDQProperties);
+        PostalsoftServiceProperties postalsoftServiceProperties = new PostalsoftServiceProperties();
+        PostalsoftServiceWrapperProducer postalsoftServiceWrapperProducer = new PostalsoftServiceWrapperProducer();
+        postalsoftServiceWrapperProducer.setPostalsoftServiceProperties(postalsoftServiceProperties);
+        postalsoftServiceWrapperProducer.init();
+        PostalsoftServiceWrapper postalsoftServiceWrapper = postalsoftServiceWrapperProducer.getPostalsoftServiceWrapper();
+
+        AddressNormalizationService addressNormalizationService = new AddressNormalizationService(postalsoftServiceWrapper);
+
+        AddService addService = new AddService(openDQProperties, addressNormalizationService);
 
         matchOrAddService = new MatchOrAddService();
         matchOrAddService.setMatchingService(matchingService);

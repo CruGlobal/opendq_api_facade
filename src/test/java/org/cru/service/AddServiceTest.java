@@ -40,9 +40,7 @@ public class AddServiceTest
         AddressNormalizationService addressNormalizationService = new AddressNormalizationService();
         addressNormalizationService.setPostalsoftServiceWrapper(postalsoftServiceWrapper);
 
-        addService = new AddService();
-        addService.setOpenDQProperties(openDQProperties);
-        addService.setAddressNormalizationService(addressNormalizationService);
+        addService = new AddService(openDQProperties, addressNormalizationService);
     }
 
     @Test

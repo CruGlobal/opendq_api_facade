@@ -12,8 +12,15 @@ import javax.inject.Inject;
  */
 public class AddressNormalizationService
 {
-    @Inject
     private PostalsoftServiceWrapper postalsoftServiceWrapper;
+
+    public AddressNormalizationService() {}
+
+    @Inject
+    public AddressNormalizationService(PostalsoftServiceWrapper postalsoftServiceWrapper)
+    {
+        this.postalsoftServiceWrapper = postalsoftServiceWrapper;
+    }
 
     public boolean normalizeAddress(Address address)
     {

@@ -9,7 +9,6 @@ import org.cru.util.OpenDQProperties;
 import javax.inject.Inject;
 import java.net.ConnectException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,13 +20,20 @@ import java.util.Map;
  */
 public class AddService
 {
-    @Inject
     private OpenDQProperties openDQProperties;
-    @Inject
     private AddressNormalizationService addressNormalizationService;
 
     private String slotName;
     private String transformationFileLocation;
+
+    public AddService() {}
+
+    @Inject
+    public AddService(OpenDQProperties openDQProperties, AddressNormalizationService addressNormalizationService)
+    {
+        this.openDQProperties = openDQProperties;
+        this.addressNormalizationService = addressNormalizationService;
+    }
 
     public void addPerson(Person person, String slotName) throws ConnectException
     {
@@ -92,15 +98,5 @@ public class AddService
         fieldNamesAndValues.put("FIELD5", person.getRowId());
 
         return fieldNamesAndValues;
-    }
-
-    void setOpenDQProperties(OpenDQProperties openDQProperties)
-    {
-        this.openDQProperties = openDQProperties;
-    }
-
-    void setAddressNormalizationService(AddressNormalizationService addressNormalizationService)
-    {
-        this.addressNormalizationService = addressNormalizationService;
     }
 }

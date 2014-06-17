@@ -10,7 +10,10 @@ import org.cru.util.OpenDQProperties;
 import org.cru.util.PostalsoftServiceProperties;
 import org.testng.annotations.Test;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
@@ -25,6 +28,7 @@ import static org.testng.Assert.assertTrue;
 public class MatchOrAddServiceTest
 {
     private MatchOrAddService matchOrAddService;
+    private AddressNormalizationService addressNormalizationService;
 
     private void setup()
     {
@@ -35,17 +39,8 @@ public class MatchOrAddServiceTest
         oafProperties.init();
 
         MatchingService matchingService = new MatchingService(openDQProperties, oafProperties);
-
-        PostalsoftServiceProperties postalsoftServiceProperties = new PostalsoftServiceProperties();
-        PostalsoftServiceWrapperProducer postalsoftServiceWrapperProducer = new PostalsoftServiceWrapperProducer();
-        postalsoftServiceWrapperProducer.setPostalsoftServiceProperties(postalsoftServiceProperties);
-        postalsoftServiceWrapperProducer.init();
-        PostalsoftServiceWrapper postalsoftServiceWrapper = postalsoftServiceWrapperProducer.getPostalsoftServiceWrapper();
-
-        AddressNormalizationService addressNormalizationService = new AddressNormalizationService(postalsoftServiceWrapper);
-
+        addressNormalizationService = mock(AddressNormalizationService.class);
         AddService addService = new AddService(openDQProperties, addressNormalizationService);
-
         matchOrAddService = new MatchOrAddService(matchingService, addService);
     }
 
@@ -55,11 +50,15 @@ public class MatchOrAddServiceTest
     {
         setup();
         Person testPerson = createTestPerson();
+        when(addressNormalizationService.normalizeAddress(testPerson.getAddress())).thenReturn(false);
+
+
         MatchResponse matchResponse = matchOrAddService.matchOrAddPerson(testPerson);
         assertNull(matchResponse); //it should add it first
+
         matchResponse = matchOrAddService.matchOrAddPerson(testPerson);
+        assertNotNull(matchResponse);
         assertEquals(matchResponse.getMatchId(), testPerson.getRowId());  //now it should find it
-        assertTrue(matchResponse.getConfidenceLevel() >= 0.95D);
     }
 
     private Person createTestPerson()

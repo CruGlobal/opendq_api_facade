@@ -11,6 +11,8 @@ import org.testng.annotations.Test;
 
 import java.net.ConnectException;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.testng.Assert.fail;
 
 /**
@@ -22,6 +24,7 @@ import static org.testng.Assert.fail;
 public class AddServiceTest
 {
     private AddService addService;
+    private AddressNormalizationService addressNormalizationService;
 
     @BeforeClass
     public void setup()
@@ -29,17 +32,7 @@ public class AddServiceTest
         OpenDQProperties openDQProperties = new OpenDQProperties();
         openDQProperties.init();
 
-        PostalsoftServiceProperties postalsoftServiceProperties = new PostalsoftServiceProperties();
-
-        PostalsoftServiceWrapperProducer postalsoftServiceWrapperProducer = new PostalsoftServiceWrapperProducer();
-        postalsoftServiceWrapperProducer.setPostalsoftServiceProperties(postalsoftServiceProperties);
-        postalsoftServiceWrapperProducer.init();
-        PostalsoftServiceWrapper postalsoftServiceWrapper = postalsoftServiceWrapperProducer.getPostalsoftServiceWrapper();
-
-        postalsoftServiceWrapper.setPostalsoftServiceProperties(postalsoftServiceProperties);
-        AddressNormalizationService addressNormalizationService = new AddressNormalizationService();
-        addressNormalizationService.setPostalsoftServiceWrapper(postalsoftServiceWrapper);
-
+        addressNormalizationService = mock(AddressNormalizationService.class);
         addService = new AddService(openDQProperties, addressNormalizationService);
     }
 
@@ -48,7 +41,10 @@ public class AddServiceTest
     {
         try
         {
-            addService.addPerson(createTestPerson(), "Add");
+            Person testPerson = createTestPerson();
+            when(addressNormalizationService.normalizeAddress(testPerson.getAddress())).thenReturn(false);
+
+            addService.addPerson(testPerson, "Add");
         }
         catch(ConnectException ce)
         {

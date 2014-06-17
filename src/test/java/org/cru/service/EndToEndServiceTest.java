@@ -15,6 +15,7 @@ import org.testng.annotations.Test;
 import java.io.File;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
@@ -87,13 +88,13 @@ public class EndToEndServiceTest
 
         //Now that the person is added, we should find the person
         matchResponse = matchOrAddService.matchOrAddPerson(testPerson);
+        assertNotNull(matchResponse);
         assertEquals(matchResponse.getMatchId(), testPerson.getRowId());
-        assertTrue(matchResponse.getConfidenceLevel() >= 0.95D);
 
         //The matching service by itself should also find the person
         matchResponse = matchingService.findMatch(testPerson, "Match");
+        assertNotNull(matchResponse);
         assertEquals(matchResponse.getMatchId(), testPerson.getRowId());
-        assertTrue(matchResponse.getConfidenceLevel() >= 0.95D);
 
         //Now we delete the person from the index
         deleteService.deletePerson(testPerson.getRowId());

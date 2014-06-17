@@ -57,9 +57,7 @@ public class EndToEndServiceTest
         deleteService = new DeleteService();
         deleteService.setOafProperties(oafProperties);
 
-        matchOrAddService = new MatchOrAddService();
-        matchOrAddService.setAddService(addService);
-        matchOrAddService.setMatchingService(matchingService);
+        matchOrAddService = new MatchOrAddService(matchingService, addService);
 
         filename = oafProperties.getProperty("deletedIndexFile");
     }

@@ -1,13 +1,11 @@
 package org.cru.service;
 
-import org.cru.cdi.PostalsoftServiceWrapperProducer;
 import org.cru.model.Address;
 import org.cru.model.MatchResponse;
 import org.cru.model.Person;
-import org.cru.postalsoft.PostalsoftServiceWrapper;
+import org.cru.util.DeletedIndexesFileIO;
 import org.cru.util.OafProperties;
 import org.cru.util.OpenDQProperties;
-import org.cru.util.PostalsoftServiceProperties;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.mock;
@@ -15,7 +13,6 @@ import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
 
 /**
  * Test for {@link MatchOrAddService} which can currently only be run once successfully
@@ -38,7 +35,10 @@ public class MatchOrAddServiceTest
         OafProperties oafProperties = new OafProperties();
         oafProperties.init();
 
-        MatchingService matchingService = new MatchingService(openDQProperties, oafProperties);
+        DeletedIndexesFileIO deletedIndexesFileIO = new DeletedIndexesFileIO(oafProperties);
+        DeleteService deleteService = new DeleteService(deletedIndexesFileIO);
+
+        MatchingService matchingService = new MatchingService(openDQProperties, deleteService);
         addressNormalizationService = mock(AddressNormalizationService.class);
         AddService addService = new AddService(openDQProperties, addressNormalizationService);
         matchOrAddService = new MatchOrAddService(matchingService, addService);

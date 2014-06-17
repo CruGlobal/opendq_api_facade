@@ -2,6 +2,7 @@ package org.cru.util;
 
 import org.apache.log4j.Logger;
 
+import javax.inject.Inject;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -20,6 +21,9 @@ public class DeletedIndexesFileIO
     private final Object lock = new Object();
     private static Logger log = Logger.getLogger(DeletedIndexesFileIO.class);
 
+    public DeletedIndexesFileIO() {}
+
+    @Inject
     public DeletedIndexesFileIO(OafProperties oafProperties)
     {
         filename = oafProperties.getProperty("deletedIndexFile");

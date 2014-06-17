@@ -3,6 +3,7 @@ package org.cru.service;
 import org.cru.model.Address;
 import org.cru.model.MatchResponse;
 import org.cru.model.Person;
+import org.cru.util.DeletedIndexesFileIO;
 import org.cru.util.OafProperties;
 import org.cru.util.OpenDQProperties;
 import org.testng.annotations.BeforeMethod;
@@ -12,7 +13,6 @@ import org.testng.annotations.Test;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
 
 /**
  * Test the {@link MatchingService} class with exact and near matches
@@ -47,7 +47,9 @@ public class MatchingServiceTest
         OafProperties oafProperties = new OafProperties();
         oafProperties.init();
 
-        matchingService = new MatchingService(openDQProperties, oafProperties);
+        DeletedIndexesFileIO deletedIndexesFileIO = new DeletedIndexesFileIO(oafProperties);
+        DeleteService deleteService = new DeleteService(deletedIndexesFileIO);
+        matchingService = new MatchingService(openDQProperties, deleteService);
     }
 
     @Test(dataProvider = "successfulMatches")

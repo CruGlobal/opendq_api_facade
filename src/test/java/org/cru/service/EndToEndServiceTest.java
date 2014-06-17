@@ -5,6 +5,7 @@ import org.cru.model.Address;
 import org.cru.model.MatchResponse;
 import org.cru.model.Person;
 import org.cru.postalsoft.PostalsoftServiceWrapper;
+import org.cru.util.DeletedIndexesFileIO;
 import org.cru.util.OafProperties;
 import org.cru.util.OpenDQProperties;
 import org.cru.util.PostalsoftServiceProperties;
@@ -17,7 +18,6 @@ import java.io.File;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
 
 /**
  * Test Match, Add, and Delete services together.
@@ -51,9 +51,11 @@ public class EndToEndServiceTest
 
         AddressNormalizationService addressNormalizationService = new AddressNormalizationService(postalsoftServiceWrapper);
 
+        DeletedIndexesFileIO deletedIndexesFileIO = new DeletedIndexesFileIO(oafProperties);
+
+        deleteService = new DeleteService(deletedIndexesFileIO);
         addService = new AddService(openDQProperties, addressNormalizationService);
-        matchingService = new MatchingService(openDQProperties, oafProperties);
-        deleteService = new DeleteService(oafProperties);
+        matchingService = new MatchingService(openDQProperties, deleteService);
         matchOrAddService = new MatchOrAddService(matchingService, addService);
 
         filename = oafProperties.getProperty("deletedIndexFile");

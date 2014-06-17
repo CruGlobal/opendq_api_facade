@@ -1,11 +1,8 @@
 package org.cru.service;
 
-import org.cru.cdi.PostalsoftServiceWrapperProducer;
 import org.cru.model.Address;
 import org.cru.model.Person;
-import org.cru.postalsoft.PostalsoftServiceWrapper;
 import org.cru.util.OpenDQProperties;
-import org.cru.util.PostalsoftServiceProperties;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 

@@ -6,8 +6,6 @@ import com.infosolvetech.rtmatch.pdi4.ServiceResult;
 import org.cru.model.MatchResponse;
 import org.cru.model.Person;
 import org.cru.model.SearchResponse;
-import org.cru.util.DeletedIndexesFileIO;
-import org.cru.util.OafProperties;
 import org.cru.util.OpenDQProperties;
 import org.cru.util.ResponseMessage;
 
@@ -26,17 +24,17 @@ import java.util.Map;
 public class MatchingService
 {
     private OpenDQProperties openDQProperties;
-    private OafProperties oafProperties;
+    private DeleteService deleteService;
     private String slotName;
     private String transformationFileLocation;
 
     public MatchingService() {}
 
     @Inject
-    public MatchingService(OpenDQProperties openDQProperties, OafProperties oafProperties)
+    public MatchingService(OpenDQProperties openDQProperties, DeleteService deleteService)
     {
         this.openDQProperties = openDQProperties;
-        this.oafProperties = oafProperties;
+        this.deleteService = deleteService;
     }
 
 
@@ -111,8 +109,7 @@ public class MatchingService
 
     private boolean matchHasBeenDeleted(String matchId)
     {
-        DeletedIndexesFileIO deletedIndexesFileIO = new DeletedIndexesFileIO(oafProperties);
-        return deletedIndexesFileIO.fileContainsId(matchId);
+        return deleteService.personIsDeleted(matchId);
     }
 
     SearchResponse buildSearchResponse(ServiceResult searchResult)

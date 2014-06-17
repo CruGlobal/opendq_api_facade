@@ -14,19 +14,24 @@ import java.net.ConnectException;
  */
 public class DeleteService
 {
-    private OafProperties oafProperties;
+    private DeletedIndexesFileIO deletedIndexesFileIO;
 
     public DeleteService() {}
 
     @Inject
-    public DeleteService(OafProperties oafProperties)
+    public DeleteService(DeletedIndexesFileIO deletedIndexesFileIO)
     {
-        this.oafProperties = oafProperties;
+        this.deletedIndexesFileIO = deletedIndexesFileIO;
     }
 
     public void deletePerson(String globalRegistryId) throws ConnectException
     {
         deleteFromIndex(globalRegistryId);
+    }
+
+    public boolean personIsDeleted(String id)
+    {
+        return deletedIndexesFileIO.fileContainsId(id);
     }
 
     private void deleteFromIndex(String globalRegistryId)
@@ -36,7 +41,6 @@ public class DeleteService
 
     void addIdToDeletedIndexesFile(String id)
     {
-        DeletedIndexesFileIO deletedIndexesFileIO = new DeletedIndexesFileIO(oafProperties);
         if(!deletedIndexesFileIO.fileContainsId(id)) deletedIndexesFileIO.writeToFile(id);
     }
 }

@@ -1,5 +1,6 @@
 package org.cru.service;
 
+import org.cru.util.DeletedIndexesFileIO;
 import org.cru.util.OafProperties;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -20,7 +21,8 @@ public class DeleteServiceTest
         OafProperties oafProperties = new OafProperties();
         oafProperties.init();
 
-        deleteService = new DeleteService(oafProperties);
+        DeletedIndexesFileIO deletedIndexesFileIO = new DeletedIndexesFileIO(oafProperties);
+        deleteService = new DeleteService(deletedIndexesFileIO);
     }
 
     @Test

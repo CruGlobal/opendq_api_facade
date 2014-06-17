@@ -14,10 +14,17 @@ import java.net.ConnectException;
  */
 public class MatchOrUpdateService
 {
-    @Inject
     private MatchingService matchingService;
-    @Inject
     private AddService addService;
+
+    public MatchOrUpdateService() {}
+
+    @Inject
+    public MatchOrUpdateService(MatchingService matchingService, AddService addService)
+    {
+        this.matchingService = matchingService;
+        this.addService = addService;
+    }
 
     public MatchResponse matchOrUpdatePerson(Person person) throws ConnectException
     {

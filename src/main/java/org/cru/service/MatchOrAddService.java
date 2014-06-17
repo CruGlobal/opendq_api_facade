@@ -13,10 +13,17 @@ import java.net.ConnectException;
  */
 public class MatchOrAddService
 {
-    @Inject
     private AddService addService;
-    @Inject
     private MatchingService matchingService;
+
+    public MatchOrAddService() {}
+
+    @Inject
+    public MatchOrAddService(MatchingService matchingService, AddService addService)
+    {
+        this.matchingService = matchingService;
+        this.addService = addService;
+    }
 
     public MatchResponse matchOrAddPerson(Person person) throws ConnectException
     {
@@ -27,15 +34,5 @@ public class MatchOrAddService
 
         addService.addPerson(person, slotName);
         return null;
-    }
-
-    void setAddService(AddService addService)
-    {
-        this.addService = addService;
-    }
-
-    void setMatchingService(MatchingService matchingService)
-    {
-        this.matchingService = matchingService;
     }
 }

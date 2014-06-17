@@ -46,9 +46,7 @@ public class MatchOrAddServiceTest
 
         AddService addService = new AddService(openDQProperties, addressNormalizationService);
 
-        matchOrAddService = new MatchOrAddService();
-        matchOrAddService.setMatchingService(matchingService);
-        matchOrAddService.setAddService(addService);
+        matchOrAddService = new MatchOrAddService(matchingService, addService);
     }
 
     //NOTE: this will only work once, then the first part of the test will fail

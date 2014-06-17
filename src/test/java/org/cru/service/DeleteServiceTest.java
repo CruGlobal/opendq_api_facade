@@ -17,12 +17,10 @@ public class DeleteServiceTest
     @BeforeClass
     public void setup()
     {
-        deleteService = new DeleteService();
-
         OafProperties oafProperties = new OafProperties();
         oafProperties.init();
 
-        deleteService.setOafProperties(oafProperties);
+        deleteService = new DeleteService(oafProperties);
     }
 
     @Test

@@ -52,12 +52,8 @@ public class EndToEndServiceTest
         AddressNormalizationService addressNormalizationService = new AddressNormalizationService(postalsoftServiceWrapper);
 
         addService = new AddService(openDQProperties, addressNormalizationService);
-
         matchingService = new MatchingService(openDQProperties, oafProperties);
-
-        deleteService = new DeleteService();
-        deleteService.setOafProperties(oafProperties);
-
+        deleteService = new DeleteService(oafProperties);
         matchOrAddService = new MatchOrAddService(matchingService, addService);
 
         filename = oafProperties.getProperty("deletedIndexFile");

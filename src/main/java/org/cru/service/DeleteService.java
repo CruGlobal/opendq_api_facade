@@ -14,8 +14,15 @@ import java.net.ConnectException;
  */
 public class DeleteService
 {
-    @Inject
     private OafProperties oafProperties;
+
+    public DeleteService() {}
+
+    @Inject
+    public DeleteService(OafProperties oafProperties)
+    {
+        this.oafProperties = oafProperties;
+    }
 
     public void deletePerson(String globalRegistryId) throws ConnectException
     {
@@ -31,11 +38,5 @@ public class DeleteService
     {
         DeletedIndexesFileIO deletedIndexesFileIO = new DeletedIndexesFileIO(oafProperties);
         if(!deletedIndexesFileIO.fileContainsId(id)) deletedIndexesFileIO.writeToFile(id);
-    }
-
-    //For tests
-    void setOafProperties(OafProperties oafProperties)
-    {
-        this.oafProperties = oafProperties;
     }
 }

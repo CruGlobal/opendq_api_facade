@@ -2,7 +2,6 @@ package org.cru.service;
 
 import org.cru.model.Person;
 import org.cru.util.DeletedIndexesFileIO;
-import org.cru.util.OafProperties;
 
 import javax.inject.Inject;
 import java.net.ConnectException;

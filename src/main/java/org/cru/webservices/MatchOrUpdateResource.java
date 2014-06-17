@@ -6,6 +6,7 @@ import org.cru.service.MatchOrUpdateService;
 import org.cru.util.ResponseMessage;
 
 import javax.inject.Inject;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
@@ -24,6 +25,7 @@ public class MatchOrUpdateResource
     @Inject
     private MatchOrUpdateService matchOrUpdateService;
 
+    @POST
     @Path("/match-or-update")
     @Produces(MediaType.APPLICATION_JSON)
     public Response matchOrUpdatePerson(Person person)

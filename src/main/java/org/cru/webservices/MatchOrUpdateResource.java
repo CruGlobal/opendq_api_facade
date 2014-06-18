@@ -40,7 +40,7 @@ public class MatchOrUpdateResource
             }
             else if(matchOrUpdateResponse.getMessage().equals(ResponseMessage.CONFLICT.getMessage()))
             {
-                return Response.status(Response.Status.CONFLICT).entity(matchOrUpdateResponse.getMessage()).build();
+                return Response.status(Response.Status.CONFLICT).entity(matchOrUpdateResponse).build();
             }
         }
         catch(ConnectException ce)

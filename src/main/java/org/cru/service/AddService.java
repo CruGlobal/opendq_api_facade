@@ -92,8 +92,8 @@ public class AddService
     {
         Map<String, String> fieldNamesAndValues = new LinkedHashMap<String, String>();
 
-        fieldNamesAndValues.put("FIELD1", person.getFirstName());
-        fieldNamesAndValues.put("FIELD2", person.getLastName());
+        fieldNamesAndValues.put("FIELD1", person.getName().getFirstName());
+        fieldNamesAndValues.put("FIELD2", person.getName().getLastName());
         fieldNamesAndValues.put("FIELD3", person.getAddress().getAddressLine1());
         fieldNamesAndValues.put("FIELD4", person.getAddress().getCity());
         fieldNamesAndValues.put("FIELD5", person.getRowId());

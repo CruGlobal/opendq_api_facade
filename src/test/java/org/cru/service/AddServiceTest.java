@@ -2,6 +2,7 @@ package org.cru.service;
 
 import org.cru.model.Address;
 import org.cru.model.Person;
+import org.cru.model.PersonName;
 import org.cru.util.OpenDQProperties;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -56,14 +57,17 @@ public class AddServiceTest
     private Person createTestPerson()
     {
         Person testPerson = new Person();
-        Address testAddress = new Address();
 
+        Address testAddress = new Address();
         testAddress.setAddressLine1("100 Lake Hart Dr");
         testAddress.setCity("Orlando");
 
-        testPerson.setFirstName("Test");
-        testPerson.setLastName("LastNameTest");
+        PersonName personName = new PersonName();
+        personName.setFirstName("Test");
+        personName.setLastName("LastNameTest");
+
         testPerson.setAddress(testAddress);
+        testPerson.setName(personName);
         testPerson.setRowId("TEST_ROW_ID1");
 
         return testPerson;

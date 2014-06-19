@@ -7,29 +7,18 @@ package org.cru.model;
  */
 public class Person
 {
-    private String firstName;
-    private String lastName;
+    private PersonName name;
     private Address address;
     private String rowId;
 
-    public String getFirstName()
+    public PersonName getName()
     {
-        return firstName;
+        return name;
     }
 
-    public void setFirstName(String firstName)
+    public void setName(PersonName name)
     {
-        this.firstName = firstName;
-    }
-
-    public String getLastName()
-    {
-        return lastName;
-    }
-
-    public void setLastName(String lastName)
-    {
-        this.lastName = lastName;
+        this.name = name;
     }
 
     public Address getAddress()

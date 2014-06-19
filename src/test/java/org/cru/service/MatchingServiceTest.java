@@ -3,6 +3,7 @@ package org.cru.service;
 import org.cru.model.Address;
 import org.cru.model.MatchResponse;
 import org.cru.model.Person;
+import org.cru.model.PersonName;
 import org.cru.util.DeletedIndexesFileIO;
 import org.cru.util.OafProperties;
 import org.cru.util.OpenDQProperties;
@@ -63,12 +64,17 @@ public class MatchingServiceTest
     public void testMatchHasBeenDeleted() throws Exception
     {
         Person deletedPerson = new Person();
+
         Address address = new Address();
         address.setAddressLine1("4 Quarter Ln");
         address.setCity("Austin");
+
+        PersonName personName = new PersonName();
+        personName.setFirstName("Pandemic");
+        personName.setLastName("Handy");
+
         deletedPerson.setAddress(address);
-        deletedPerson.setFirstName("Pandemic");
-        deletedPerson.setLastName("Handy");
+        deletedPerson.setName(personName);
         deletedPerson.setRowId("6");
 
         MatchResponse matchResponse = matchingService.findMatch(deletedPerson, "Match");
@@ -78,14 +84,17 @@ public class MatchingServiceTest
     private Person generatePersonWithDataExactMatchFromSoapUI()
     {
         Person testPerson = new Person();
-        Address testAddress = new Address();
 
+        Address testAddress = new Address();
         testAddress.setAddressLine1("1211 Wee Dr");
         testAddress.setCity("Orlando");
 
-        testPerson.setFirstName("Test");
-        testPerson.setLastName("LastNameTest");
+        PersonName personName = new PersonName();
+        personName.setFirstName("Test");
+        personName.setLastName("LastNameTest");
+
         testPerson.setAddress(testAddress);
+        testPerson.setName(personName);
 
         return testPerson;
     }
@@ -93,14 +102,17 @@ public class MatchingServiceTest
     private Person generatePersonWithDataSimilarMatchFromSoapUI()
     {
         Person testPerson = new Person();
-        Address testAddress = new Address();
 
+        Address testAddress = new Address();
         testAddress.setAddressLine1("1211 Wee Dr");
         testAddress.setCity("Orlando");
 
-        testPerson.setFirstName("Testy");
-        testPerson.setLastName("LastNameTest");
+        PersonName personName = new PersonName();
+        personName.setFirstName("Testy");
+        personName.setLastName("LastNameTest");
+
         testPerson.setAddress(testAddress);
+        testPerson.setName(personName);
 
         return testPerson;
     }
@@ -108,14 +120,17 @@ public class MatchingServiceTest
     private Person generatePersonWithDataExactMatchFromJavaTest()
     {
         Person testPerson = new Person();
-        Address testAddress = new Address();
 
+        Address testAddress = new Address();
         testAddress.setAddressLine1("100 Lake Hart Dr");
         testAddress.setCity("Orlando");
 
-        testPerson.setFirstName("Bill");
-        testPerson.setLastName("Randall");
+        PersonName personName = new PersonName();
+        personName.setFirstName("Bill");
+        personName.setLastName("Randall");
+
         testPerson.setAddress(testAddress);
+        testPerson.setName(personName);
 
         return testPerson;
     }

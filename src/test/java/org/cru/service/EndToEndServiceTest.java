@@ -4,6 +4,7 @@ import org.cru.cdi.PostalsoftServiceWrapperProducer;
 import org.cru.model.Address;
 import org.cru.model.MatchResponse;
 import org.cru.model.Person;
+import org.cru.model.PersonName;
 import org.cru.postalsoft.PostalsoftServiceWrapper;
 import org.cru.util.DeletedIndexesFileIO;
 import org.cru.util.OafProperties;
@@ -115,15 +116,18 @@ public class EndToEndServiceTest
     private Person createTestPerson()
     {
         Person testPerson = new Person();
-        Address testAddress = new Address();
 
+        Address testAddress = new Address();
         testAddress.setAddressLine1("End To End Test Address");
         testAddress.setCity("Greenbay");
 
-        testPerson.setFirstName("E2E");
-        testPerson.setLastName("Test");
-        testPerson.setRowId("8");
+        PersonName personName = new PersonName();
+        personName.setFirstName("E2E");
+        personName.setLastName("Test");
+
         testPerson.setAddress(testAddress);
+        testPerson.setName(personName);
+        testPerson.setRowId("8");
 
         return testPerson;
     }

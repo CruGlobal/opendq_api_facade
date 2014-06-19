@@ -2,7 +2,7 @@ package org.cru.util;
 
 /**
  * Message to send back to the client depending on the action taken.
- * 
+ *
  * Created by William.Randall on 6/16/14.
  */
 public enum ResponseMessage

@@ -10,6 +10,7 @@ public class PersonName
     private String lastName;
     private String title;
     private String suffix;
+    private String preferredName;
 
     public String getFirstName()
     {
@@ -59,5 +60,15 @@ public class PersonName
     public void setSuffix(String suffix)
     {
         this.suffix = suffix;
+    }
+
+    public String getPreferredName()
+    {
+        return preferredName;
+    }
+
+    public void setPreferredName(String preferredName)
+    {
+        this.preferredName = preferredName;
     }
 }

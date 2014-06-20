@@ -1,5 +1,7 @@
 package org.cru.model;
 
+import java.util.List;
+
 /**
  * This object holds information that is contained within the index about a person
  *
@@ -7,6 +9,8 @@ package org.cru.model;
  */
 public class Person
 {
+    private String id;
+    private List<EmailAddress> emailAddresses;
     private PersonName name;
     private Address address;
     private String rowId;
@@ -15,8 +19,18 @@ public class Person
     private String accountNumber;
     private String employeeRelayId;
     private String relayId;
-    private String emailAddress;
-    private String phoneNumber;
+    private PhoneNumber phoneNumber;
+    private String clientIntegrationId;
+
+    public String getId()
+    {
+        return id;
+    }
+
+    public void setId(String id)
+    {
+        this.id = id;
+    }
 
     public PersonName getName()
     {
@@ -98,23 +112,33 @@ public class Person
         this.relayId = relayId;
     }
 
-    public String getEmailAddress()
+    public List<EmailAddress> getEmailAddresses()
     {
-        return emailAddress;
+        return emailAddresses;
     }
 
-    public void setEmailAddress(String emailAddress)
+    public void setEmailAddresses(List<EmailAddress> emailAddresses)
     {
-        this.emailAddress = emailAddress;
+        this.emailAddresses = emailAddresses;
     }
 
-    public String getPhoneNumber()
+    public PhoneNumber getPhoneNumber()
     {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(String phoneNumber)
+    public void setPhoneNumber(PhoneNumber phoneNumber)
     {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getClientIntegrationId()
+    {
+        return clientIntegrationId;
+    }
+
+    public void setClientIntegrationId(String clientIntegrationId)
+    {
+        this.clientIntegrationId = clientIntegrationId;
     }
 }

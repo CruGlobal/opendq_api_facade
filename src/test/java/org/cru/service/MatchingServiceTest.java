@@ -80,7 +80,7 @@ public class MatchingServiceTest
         addresses.add(address);
         deletedPerson.setAddresses(addresses);
         deletedPerson.setName(personName);
-        deletedPerson.setRowId("6");
+        deletedPerson.setId("6");
 
         MatchResponse matchResponse = matchingService.findMatch(deletedPerson, "Match");
         assertNull(matchResponse);

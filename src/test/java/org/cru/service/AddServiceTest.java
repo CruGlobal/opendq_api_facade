@@ -76,7 +76,7 @@ public class AddServiceTest
         addresses.add(testAddress);
         testPerson.setAddresses(addresses);
         testPerson.setName(personName);
-        testPerson.setRowId("TEST_ROW_ID1");
+        testPerson.setId("TEST_ROW_ID1");
 
         return testPerson;
     }

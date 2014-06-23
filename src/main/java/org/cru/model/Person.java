@@ -13,7 +13,6 @@ public class Person
     private List<EmailAddress> emailAddresses;
     private PersonName name;
     private List<Address> addresses;
-    private String rowId;
     private String gender;
     private String employeeNumber;
     private String accountNumber;
@@ -50,16 +49,6 @@ public class Person
     public void setAddresses(List<Address> addresses)
     {
         this.addresses = addresses;
-    }
-
-    public String getRowId()
-    {
-        return rowId;
-    }
-
-    public void setRowId(String rowId)
-    {
-        this.rowId = rowId;
     }
 
     public String getGender()

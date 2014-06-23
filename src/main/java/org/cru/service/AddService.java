@@ -103,7 +103,7 @@ public class AddService
         fieldNamesAndValues.put("FIELD2", person.getName().getLastName());
         fieldNamesAndValues.put("FIELD3", person.getAddresses().get(0).getAddressLine1());
         fieldNamesAndValues.put("FIELD4", person.getAddresses().get(0).getCity());
-        fieldNamesAndValues.put("FIELD5", person.getRowId());
+        fieldNamesAndValues.put("FIELD5", person.getId());
 
         return fieldNamesAndValues;
     }

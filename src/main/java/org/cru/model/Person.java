@@ -19,7 +19,8 @@ public class Person
     private String employeeRelayId;
     private String relayId;
     private List<PhoneNumber> phoneNumbers;
-    private String clientIntegrationId;  // This can be contactId, personId, etc depending on the system
+    private String clientIntegrationId;
+    private String siebelContactId;
 
     public String getId()
     {
@@ -129,5 +130,15 @@ public class Person
     public void setClientIntegrationId(String clientIntegrationId)
     {
         this.clientIntegrationId = clientIntegrationId;
+    }
+
+    public String getSiebelContactId()
+    {
+        return siebelContactId;
+    }
+
+    public void setSiebelContactId(String siebelContactId)
+    {
+        this.siebelContactId = siebelContactId;
     }
 }

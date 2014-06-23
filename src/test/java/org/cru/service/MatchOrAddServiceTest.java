@@ -9,6 +9,9 @@ import org.cru.util.OafProperties;
 import org.cru.util.OpenDQProperties;
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
@@ -51,8 +54,11 @@ public class MatchOrAddServiceTest
     {
         setup();
         Person testPerson = createTestPerson();
-        when(addressNormalizationService.normalizeAddress(testPerson.getAddress())).thenReturn(false);
 
+        for(Address address : testPerson.getAddresses())
+        {
+            when(addressNormalizationService.normalizeAddress(address)).thenReturn(false);
+        }
 
         MatchResponse matchResponse = matchOrAddService.matchOrAddPerson(testPerson);
         assertNull(matchResponse); //it should add it first
@@ -74,7 +80,9 @@ public class MatchOrAddServiceTest
         personName.setFirstName("AddOrMatch");
         personName.setLastName("AddOrMatchLastName");
 
-        testPerson.setAddress(address);
+        List<Address> addresses = new ArrayList<Address>();
+        addresses.add(address);
+        testPerson.setAddresses(addresses);
         testPerson.setName(personName);
         testPerson.setRowId("5");
 

@@ -1,5 +1,6 @@
 package org.cru.webservices;
 
+import org.cru.model.Address;
 import org.cru.model.MatchResponse;
 import org.cru.model.Person;
 import org.cru.service.AddressNormalizationService;
@@ -34,7 +35,11 @@ public class MatchingResource
     @Produces(MediaType.APPLICATION_JSON)
     public Response findMatchingPerson(Person person)
     {
-        addressNormalizationService.normalizeAddress(person.getAddress());
+        for(Address personAddress : person.getAddresses())
+        {
+            addressNormalizationService.normalizeAddress(personAddress);
+        }
+
         try
         {
             //We have a clean address, person's address is already updated

@@ -15,6 +15,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -125,7 +127,9 @@ public class EndToEndServiceTest
         personName.setFirstName("E2E");
         personName.setLastName("Test");
 
-        testPerson.setAddress(testAddress);
+        List<Address> addresses = new ArrayList<Address>();
+        addresses.add(testAddress);
+        testPerson.setAddresses(addresses);
         testPerson.setName(personName);
         testPerson.setRowId("8");
 

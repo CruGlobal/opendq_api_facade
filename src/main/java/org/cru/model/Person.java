@@ -12,7 +12,7 @@ public class Person
     private String id;
     private List<EmailAddress> emailAddresses;
     private PersonName name;
-    private Address address;
+    private List<Address> addresses;
     private String rowId;
     private String gender;
     private String employeeNumber;
@@ -42,14 +42,14 @@ public class Person
         this.name = name;
     }
 
-    public Address getAddress()
+    public List<Address> getAddresses()
     {
-        return address;
+        return addresses;
     }
 
-    public void setAddress(Address address)
+    public void setAddresses(List<Address> addresses)
     {
-        this.address = address;
+        this.addresses = addresses;
     }
 
     public String getRowId()

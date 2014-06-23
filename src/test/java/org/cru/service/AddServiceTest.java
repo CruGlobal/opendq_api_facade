@@ -8,6 +8,8 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.net.ConnectException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -40,7 +42,11 @@ public class AddServiceTest
         try
         {
             Person testPerson = createTestPerson();
-            when(addressNormalizationService.normalizeAddress(testPerson.getAddress())).thenReturn(false);
+
+            for(Address address : testPerson.getAddresses())
+            {
+                when(addressNormalizationService.normalizeAddress(address)).thenReturn(false);
+            }
 
             addService.addPerson(testPerson, "Add");
         }
@@ -66,7 +72,9 @@ public class AddServiceTest
         personName.setFirstName("Test");
         personName.setLastName("LastNameTest");
 
-        testPerson.setAddress(testAddress);
+        List<Address> addresses = new ArrayList<Address>();
+        addresses.add(testAddress);
+        testPerson.setAddresses(addresses);
         testPerson.setName(personName);
         testPerson.setRowId("TEST_ROW_ID1");
 

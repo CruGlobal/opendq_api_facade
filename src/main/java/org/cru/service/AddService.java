@@ -39,7 +39,12 @@ public class AddService
     public void addPerson(Person person, String slotName) throws ConnectException
     {
         this.slotName = slotName;
-        addressNormalizationService.normalizeAddress(person.getAddress());
+
+        for(Address address : person.getAddresses())
+        {
+            addressNormalizationService.normalizeAddress(address);
+        }
+
         callRuntimeMatchService(person);
     }
 
@@ -88,14 +93,15 @@ public class AddService
         return runtimeMatchWSService.getRuntimeMatchWSPort();
     }
 
+    //TODO: Handle multiple addresses, emails, phones
     Map<String, String> generateFieldNamesAndValues(Person person)
     {
         Map<String, String> fieldNamesAndValues = new LinkedHashMap<String, String>();
 
         fieldNamesAndValues.put("FIELD1", person.getName().getFirstName());
         fieldNamesAndValues.put("FIELD2", person.getName().getLastName());
-        fieldNamesAndValues.put("FIELD3", person.getAddress().getAddressLine1());
-        fieldNamesAndValues.put("FIELD4", person.getAddress().getCity());
+        fieldNamesAndValues.put("FIELD3", person.getAddresses().get(0).getAddressLine1());
+        fieldNamesAndValues.put("FIELD4", person.getAddresses().get(0).getCity());
         fieldNamesAndValues.put("FIELD5", person.getRowId());
 
         return fieldNamesAndValues;

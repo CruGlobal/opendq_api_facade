@@ -11,6 +11,9 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
@@ -73,7 +76,9 @@ public class MatchingServiceTest
         personName.setFirstName("Pandemic");
         personName.setLastName("Handy");
 
-        deletedPerson.setAddress(address);
+        List<Address> addresses = new ArrayList<Address>();
+        addresses.add(address);
+        deletedPerson.setAddresses(addresses);
         deletedPerson.setName(personName);
         deletedPerson.setRowId("6");
 
@@ -93,7 +98,9 @@ public class MatchingServiceTest
         personName.setFirstName("Test");
         personName.setLastName("LastNameTest");
 
-        testPerson.setAddress(testAddress);
+        List<Address> addresses = new ArrayList<Address>();
+        addresses.add(testAddress);
+        testPerson.setAddresses(addresses);
         testPerson.setName(personName);
 
         return testPerson;
@@ -111,7 +118,9 @@ public class MatchingServiceTest
         personName.setFirstName("Testy");
         personName.setLastName("LastNameTest");
 
-        testPerson.setAddress(testAddress);
+        List<Address> addresses = new ArrayList<Address>();
+        addresses.add(testAddress);
+        testPerson.setAddresses(addresses);
         testPerson.setName(personName);
 
         return testPerson;
@@ -129,7 +138,9 @@ public class MatchingServiceTest
         personName.setFirstName("Bill");
         personName.setLastName("Randall");
 
-        testPerson.setAddress(testAddress);
+        List<Address> addresses = new ArrayList<Address>();
+        addresses.add(testAddress);
+        testPerson.setAddresses(addresses);
         testPerson.setName(personName);
 
         return testPerson;

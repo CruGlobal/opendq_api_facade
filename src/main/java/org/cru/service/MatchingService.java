@@ -87,6 +87,7 @@ public class MatchingService
         return buildSearchResponse(searchResponse);
     }
 
+    //TODO: Handle multiple addresses, emails, phones
     private List<String> createSearchValuesFromPerson(Person person)
     {
         // Order must match the transformation file
@@ -94,8 +95,8 @@ public class MatchingService
 
         searchValues.add(person.getName().getFirstName());
         searchValues.add(person.getName().getLastName());
-        searchValues.add(person.getAddress().getAddressLine1());
-        searchValues.add(person.getAddress().getCity());
+        searchValues.add(person.getAddresses().get(0).getAddressLine1());
+        searchValues.add(person.getAddresses().get(0).getCity());
 
         return searchValues;
     }

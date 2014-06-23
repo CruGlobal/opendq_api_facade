@@ -19,8 +19,8 @@ public class Person
     private String accountNumber;
     private String employeeRelayId;
     private String relayId;
-    private PhoneNumber phoneNumber;
-    private String clientIntegrationId;
+    private List<PhoneNumber> phoneNumbers;
+    private String clientIntegrationId;  // This can be contactId, personId, etc depending on the system
 
     public String getId()
     {
@@ -122,14 +122,14 @@ public class Person
         this.emailAddresses = emailAddresses;
     }
 
-    public PhoneNumber getPhoneNumber()
+    public List<PhoneNumber> getPhoneNumbers()
     {
-        return phoneNumber;
+        return phoneNumbers;
     }
 
-    public void setPhoneNumber(PhoneNumber phoneNumber)
+    public void setPhoneNumbers(List<PhoneNumber> phoneNumbers)
     {
-        this.phoneNumber = phoneNumber;
+        this.phoneNumbers = phoneNumbers;
     }
 
     public String getClientIntegrationId()

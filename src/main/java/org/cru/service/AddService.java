@@ -3,6 +3,7 @@ package org.cru.service;
 import com.infosolvetech.rtmatch.pdi4.RuntimeMatchWS;
 import com.infosolvetech.rtmatch.pdi4.RuntimeMatchWSService;
 import com.infosolvetech.rtmatch.pdi4.ServiceResult;
+import org.cru.model.Address;
 import org.cru.model.Person;
 import org.cru.util.OpenDQProperties;
 

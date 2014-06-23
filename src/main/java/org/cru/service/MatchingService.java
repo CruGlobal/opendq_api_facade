@@ -46,7 +46,7 @@ public class MatchingService
 
         if(searchResponse == null) return null;
 
-        String matchId = searchResponse.getRowId();
+        String matchId = searchResponse.getId();
 
         if(matchHasBeenDeleted(matchId)) return null;
 
@@ -125,7 +125,7 @@ public class MatchingService
         }
 
         searchResponse.setScore(searchResult.getScore());
-        searchResponse.setRowId((String)searchResultValues.get(4));
+        searchResponse.setId((String) searchResultValues.get(4));
         searchResponse.setResultValues(buildResultValues(searchResultValues));
 
         return searchResponse;

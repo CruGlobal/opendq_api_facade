@@ -11,7 +11,7 @@ import java.util.Map;
 public class SearchResponse
 {
     private double score;
-    private String rowId;
+    private String id;
     private Map<String, Object> resultValues;
 
     public double getScore()
@@ -24,14 +24,14 @@ public class SearchResponse
         this.score = score;
     }
 
-    public String getRowId()
+    public String getId()
     {
-        return rowId;
+        return id;
     }
 
-    public void setRowId(String rowId)
+    public void setId(String id)
     {
-        this.rowId = rowId;
+        this.id = id;
     }
 
     public Map<String, Object> getResultValues()

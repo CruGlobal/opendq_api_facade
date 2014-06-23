@@ -7,6 +7,7 @@ package org.cru.model;
  */
 public class Address
 {
+    private String id;
     private String addressLine1;
     private String addressLine2;
     private String addressLine3;
@@ -17,6 +18,16 @@ public class Address
     private String country;
 
     private boolean normalized;
+
+    public String getId()
+    {
+        return id;
+    }
+
+    public void setId(String id)
+    {
+        this.id = id;
+    }
 
     public String getAddressLine1()
     {

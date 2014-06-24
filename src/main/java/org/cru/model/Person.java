@@ -1,5 +1,8 @@
 package org.cru.model;
 
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+import org.cru.deserialization.PersonDeserializer;
+
 import java.util.List;
 
 /**
@@ -7,6 +10,7 @@ import java.util.List;
  *
  * Created by William.Randall on 6/6/14.
  */
+@JsonDeserialize(using = PersonDeserializer.class)
 public class Person
 {
     private String id;

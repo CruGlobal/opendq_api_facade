@@ -25,27 +25,6 @@ import java.util.List;
  */
 public class PersonToMdmConverter
 {
-    private enum Codes {
-        MAILING_ADDRESS("15"),
-        BILLING_ADDRESS("16"),
-        PRIMARY_EMAIL("23"),
-        SECONDARY_EMAIL("25"),
-        PRIMARY_PHONE("29"),
-        SECONDARY_PHONE("30");
-
-        private String id;
-
-        Codes(String id)
-        {
-            this.id = id;
-        }
-
-        public String getId()
-        {
-            return id;
-        }
-    }
-
     private String opendqDatePattern = "MM/dd/YYYY";
     private String action;
     
@@ -53,7 +32,6 @@ public class PersonToMdmConverter
     {
         this.action = action;
     }
-
 
     public RealTimeObjectActionDTO createRealTimeObjectFromPerson(Person person)
     {
@@ -143,8 +121,8 @@ public class PersonToMdmConverter
             addressToAdd.setAction("A");
 
             //TODO: This should come in from the json
-            if(numAddress == 0) addressToAdd.setCodId(Codes.MAILING_ADDRESS.getId());
-            else addressToAdd.setCodId(Codes.BILLING_ADDRESS.getId());
+            if(numAddress == 0) addressToAdd.setCodId(MdmCodes.MAILING_ADDRESS.getId());
+            else addressToAdd.setCodId(MdmCodes.BILLING_ADDRESS.getId());
 
             addressToAdd.setClientId(MdmConstants.CLIENT_ID);
             addressToAdd.setTypId(MdmConstants.TYP_ID);
@@ -175,8 +153,8 @@ public class PersonToMdmConverter
                 emailCommunication.setPartyId(MdmConstants.JUNK_ID);
 
                 //TODO: This should come in from the json
-                if(numEmail == 0) emailCommunication.setCodId(Codes.PRIMARY_EMAIL.getId());
-                else emailCommunication.setCodId(Codes.SECONDARY_EMAIL.getId());
+                if(numEmail == 0) emailCommunication.setCodId(MdmCodes.PRIMARY_EMAIL.getId());
+                else emailCommunication.setCodId(MdmCodes.SECONDARY_EMAIL.getId());
 
                 emailCommunication.setCommdata(personEmail.getEmail());
                 emailCommunication.setComExclusionType("N");  //TODO: What to put here?
@@ -203,8 +181,8 @@ public class PersonToMdmConverter
                 phoneCommunication.setPartyId(MdmConstants.JUNK_ID);
 
                 //TODO: This should come in from the json (determined by location perhaps)
-                if(numPhone == 0) phoneCommunication.setCodId(Codes.PRIMARY_PHONE.getId());
-                else phoneCommunication.setCodId(Codes.SECONDARY_PHONE.getId());
+                if(numPhone == 0) phoneCommunication.setCodId(MdmCodes.PRIMARY_PHONE.getId());
+                else phoneCommunication.setCodId(MdmCodes.SECONDARY_PHONE.getId());
 
                 phoneCommunication.setCommdata(personPhone.getNumber());
                 phoneCommunication.setComExclusionType("N");  //TODO: What to put here?

@@ -1,8 +1,13 @@
 package org.cru.service;
 
+import com.infosolve.openmdm.webservices.provider.impl.DataManagementWSImpl;
+import com.infosolve.openmdm.webservices.provider.impl.DataManagementWSImplService;
+import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import com.infosolvetech.rtmatch.pdi4.RuntimeMatchWS;
 import com.infosolvetech.rtmatch.pdi4.RuntimeMatchWSService;
 import com.infosolvetech.rtmatch.pdi4.ServiceResult;
+import org.cru.mdm.MdmConstants;
+import org.cru.mdm.PersonToMdmConverter;
 import org.cru.model.Address;
 import org.cru.model.Person;
 import org.cru.util.OpenDQProperties;
@@ -28,6 +33,8 @@ public class AddService
     private String slotName;
     private String transformationFileLocation;
 
+    private static final String ACTION = "A";  // A = Add
+
     public AddService() {}
 
     @Inject
@@ -46,6 +53,7 @@ public class AddService
             addressNormalizationService.normalizeAddress(address);
         }
 
+        addPersonToMdm(person);
         callRuntimeMatchService(person);
     }
 
@@ -55,6 +63,19 @@ public class AddService
 
         configureSlot(runtimeMatchWS);
         addSlot(runtimeMatchWS, person);
+    }
+
+    private void addPersonToMdm(Person person)
+    {
+        DataManagementWSImpl mdmService = configureMdmService();
+        PersonToMdmConverter personToMdmConverter = new PersonToMdmConverter(ACTION);
+        RealTimeObjectActionDTO returnedObject =
+            mdmService.addObject(personToMdmConverter.createRealTimeObjectFromPerson(person));
+
+        if(MdmConstants.JUNK_ID.equals(returnedObject.getObjectEntity().getPartyId()))
+        {
+            throw new WebApplicationException("Failed to add person to mdm.");
+        }
     }
 
     private void configureSlot(RuntimeMatchWS runtimeMatchWS)
@@ -92,6 +113,12 @@ public class AddService
 
         RuntimeMatchWSService runtimeMatchWSService = new RuntimeMatchWSService();
         return runtimeMatchWSService.getRuntimeMatchWSPort();
+    }
+
+    private DataManagementWSImpl configureMdmService()
+    {
+        DataManagementWSImplService mdmService = new DataManagementWSImplService();
+        return mdmService.getDataManagementWSImplPort();
     }
 
     //TODO: Handle multiple addresses, emails, phones

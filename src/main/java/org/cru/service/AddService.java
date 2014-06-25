@@ -130,7 +130,7 @@ public class AddService
         fieldNamesAndValues.put("FIELD2", person.getName().getLastName());
         fieldNamesAndValues.put("FIELD3", person.getAddresses().get(0).getAddressLine1());
         fieldNamesAndValues.put("FIELD4", person.getAddresses().get(0).getCity());
-        fieldNamesAndValues.put("FIELD5", person.getId());
+        fieldNamesAndValues.put("FIELD5", person.getGlobalRegistryId());
 
         return fieldNamesAndValues;
     }

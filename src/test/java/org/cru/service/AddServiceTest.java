@@ -93,7 +93,7 @@ public class AddServiceTest
         List<PhoneNumber> phoneNumbers = new ArrayList<PhoneNumber>();
         phoneNumbers.add(phoneNumber);
 
-        testPerson.setId("TEST_ID1");
+        testPerson.setGlobalRegistryId("TEST_ID1");
         testPerson.setClientIntegrationId("1394218");
         testPerson.setSiebelContactId("1-43BK9");
 

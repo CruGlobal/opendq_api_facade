@@ -90,29 +90,28 @@ public class EndToEndServiceTest
         //Now that the person is added, we should find the person
         matchResponse = matchOrAddService.matchOrAddPerson(testPerson);
         assertNotNull(matchResponse);
-        assertEquals(matchResponse.getMatchId(), testPerson.getId());
+        assertEquals(matchResponse.getMatchId(), testPerson.getGlobalRegistryId());
 
         //The matching service by itself should also find the person
         matchResponse = matchingService.findMatch(testPerson, "Match");
         assertNotNull(matchResponse);
-        assertEquals(matchResponse.getMatchId(), testPerson.getId());
+        assertEquals(matchResponse.getMatchId(), testPerson.getGlobalRegistryId());
 
         //Now we delete the person from the index
-        deleteService.deletePerson(testPerson.getId());
+        deleteService.deletePerson(testPerson.getGlobalRegistryId());
 
         //The person should not be found anymore
         matchResponse = matchingService.findMatch(testPerson, "Match");
         assertNull(matchResponse);
 
         //Add the person back with a new row id
-        testPerson.setId("9");
+        testPerson.setGlobalRegistryId("9");
         addService.addPerson(testPerson, "Add");
 
         //TODO: Make this work (currently it will still find the original match, and will see it deleted
         //We should now find the person again
 //        matchResponse = matchingService.findMatch(testPerson, "Match");
-//        assertEquals(matchResponse.getMatchId(), testPerson.getId());
-//        assertTrue(matchResponse.getConfidenceLevel() >= 0.95D);
+//        assertEquals(matchResponse.getMatchId(), testPerson.getGlobalRegistryId());
     }
 
     private Person createTestPerson()
@@ -131,7 +130,7 @@ public class EndToEndServiceTest
         addresses.add(testAddress);
         testPerson.setAddresses(addresses);
         testPerson.setName(personName);
-        testPerson.setId("8");
+        testPerson.setGlobalRegistryId("8");
 
         return testPerson;
     }

@@ -13,7 +13,7 @@ import java.util.List;
 @JsonDeserialize(using = PersonDeserializer.class)
 public class Person
 {
-    private String id;
+    private String globalRegistryId;
     private List<EmailAddress> emailAddresses;
     private PersonName name;
     private List<Address> addresses;
@@ -26,14 +26,14 @@ public class Person
     private String clientIntegrationId;
     private String siebelContactId;
 
-    public String getId()
+    public String getGlobalRegistryId()
     {
-        return id;
+        return globalRegistryId;
     }
 
-    public void setId(String id)
+    public void setGlobalRegistryId(String globalRegistryId)
     {
-        this.id = id;
+        this.globalRegistryId = globalRegistryId;
     }
 
     public PersonName getName()

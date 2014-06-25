@@ -129,7 +129,7 @@ public class PersonDeserializerTest
 
     private void commonPersonAssertions(Person testPerson, PersonName personName, Address testAddress)
     {
-        assertEquals(testPerson.getId(), globalRegistryId);
+        assertEquals(testPerson.getGlobalRegistryId(), globalRegistryId);
         assertEquals(testPerson.getClientIntegrationId(), integrationId);
         assertThat(testPerson.getName(), deeplyEqualTo(personName));
         assertEquals(testPerson.getGender(), "Male");

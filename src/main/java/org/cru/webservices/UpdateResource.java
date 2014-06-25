@@ -1,7 +1,7 @@
 package org.cru.webservices;
 
 import org.cru.model.Person;
-import org.cru.service.AddService;
+import org.cru.service.UpdateService;
 import org.cru.util.ResponseMessage;
 
 import javax.inject.Inject;
@@ -20,7 +20,7 @@ import java.net.ConnectException;
 public class UpdateResource
 {
     @Inject
-    private AddService addService;
+    private UpdateService updateService;
 
     @SuppressWarnings("unused")  //used by Clients
     @Path("/update")
@@ -30,7 +30,7 @@ public class UpdateResource
         try
         {
             //Since there is currently no way to update an existing one, just add a new one
-            addService.addPerson(person, "Update");
+            updateService.updatePerson(person, "Update");
         }
         catch(ConnectException ce)
         {

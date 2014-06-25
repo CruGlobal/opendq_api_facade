@@ -15,16 +15,16 @@ import java.net.ConnectException;
 public class MatchOrUpdateService
 {
     private MatchingService matchingService;
-    private AddService addService;
+    private UpdateService updateService;
 
     @SuppressWarnings("unused")  //used by CDI
     public MatchOrUpdateService() {}
 
     @Inject
-    public MatchOrUpdateService(MatchingService matchingService, AddService addService)
+    public MatchOrUpdateService(MatchingService matchingService, UpdateService updateService)
     {
         this.matchingService = matchingService;
-        this.addService = addService;
+        this.updateService = updateService;
     }
 
     public MatchResponse matchOrUpdatePerson(Person person) throws ConnectException
@@ -33,14 +33,14 @@ public class MatchOrUpdateService
 
         if(matchResponse == null)
         {
-            addService.addPerson(person, "MatchOrUpdate");
+            updateService.updatePerson(person, "MatchOrUpdate");
         }
         else   // This means there is a match found for the updated information
         {
             // If it is the same global registry ID, then go ahead and do the add (do we even need to if we found it?)
             if(matchResponse.getMatchId().equals(person.getGlobalRegistryId()))
             {
-                addService.addPerson(person, "MatchOrUpdate");
+                updateService.updatePerson(person, "MatchOrUpdate");
             }
             else
             {

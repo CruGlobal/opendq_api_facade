@@ -25,7 +25,7 @@ import java.util.Map;
  */
 public class AddService extends IndexingService
 {
-    private AddressNormalizationService addressNormalizationService;
+    AddressNormalizationService addressNormalizationService;
     private static final String ACTION = "A";  // A = Add
 
     @SuppressWarnings("unused")  //used by CDI
@@ -65,7 +65,7 @@ public class AddService extends IndexingService
         }
     }
 
-    private void addSlot(RuntimeMatchWS runtimeMatchWS, Person person)
+    void addSlot(RuntimeMatchWS runtimeMatchWS, Person person)
     {
         //while updateSlot sounds like an update, it is actually inserting an entry into the index
         Map<String, String> fieldNamesAndValues = generateFieldNamesAndValues(person);

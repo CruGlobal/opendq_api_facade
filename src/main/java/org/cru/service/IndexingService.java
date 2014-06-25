@@ -22,6 +22,7 @@ public class IndexingService
     OpenDQProperties openDQProperties;
     String slotName;
     String transformationFileLocation;
+    String stepName;
 
     public IndexingService() {}
 
@@ -40,7 +41,7 @@ public class IndexingService
 
     private void configureSlot(RuntimeMatchWS runtimeMatchWS)
     {
-        ServiceResult configurationResponse = runtimeMatchWS.configureSlot(slotName, transformationFileLocation, "RtIndex");
+        ServiceResult configurationResponse = runtimeMatchWS.configureSlot(slotName, transformationFileLocation, stepName);
 
         if(configurationResponse.isError())
         {

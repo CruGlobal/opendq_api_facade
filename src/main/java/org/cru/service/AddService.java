@@ -41,6 +41,7 @@ public class AddService extends IndexingService
     public void addPerson(Person person, String slotName) throws ConnectException
     {
         this.slotName = slotName;
+        this.stepName = "RtIndex";
 
         for(Address address : person.getAddresses())
         {

@@ -38,6 +38,7 @@ public class MatchingService extends IndexingService
     public MatchResponse findMatch(Person person, String slotName) throws ConnectException
     {
         this.slotName = slotName;
+        this.stepName = "RtMatch";
         RuntimeMatchWS runtimeMatchWS = callRuntimeMatchService();
         SearchResponse searchResponse = searchSlot(runtimeMatchWS, person);
 

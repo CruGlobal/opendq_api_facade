@@ -1,10 +1,8 @@
 package org.cru.service;
 
 import com.infosolve.openmdm.webservices.provider.impl.DataManagementWSImpl;
-import com.infosolve.openmdm.webservices.provider.impl.DataManagementWSImplService;
 import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import com.infosolvetech.rtmatch.pdi4.RuntimeMatchWS;
-import com.infosolvetech.rtmatch.pdi4.RuntimeMatchWSService;
 import com.infosolvetech.rtmatch.pdi4.ServiceResult;
 import org.cru.mdm.MdmConstants;
 import org.cru.mdm.PersonToMdmConverter;
@@ -25,14 +23,9 @@ import java.util.Map;
  *
  * Created by William.Randall on 6/9/14.
  */
-public class AddService
+public class AddService extends IndexingService
 {
-    private OpenDQProperties openDQProperties;
     private AddressNormalizationService addressNormalizationService;
-
-    private String slotName;
-    private String transformationFileLocation;
-
     private static final String ACTION = "A";  // A = Add
 
     public AddService() {}
@@ -54,14 +47,7 @@ public class AddService
         }
 
         addPersonToMdm(person);
-        callRuntimeMatchService(person);
-    }
-
-    private void callRuntimeMatchService(Person person) throws ConnectException
-    {
-        RuntimeMatchWS runtimeMatchWS = configureRuntimeService();
-
-        configureSlot(runtimeMatchWS);
+        RuntimeMatchWS runtimeMatchWS = callRuntimeMatchService();
         addSlot(runtimeMatchWS, person);
     }
 
@@ -75,16 +61,6 @@ public class AddService
         if(MdmConstants.JUNK_ID.equals(returnedObject.getObjectEntity().getPartyId()))
         {
             throw new WebApplicationException("Failed to add person to mdm.");
-        }
-    }
-
-    private void configureSlot(RuntimeMatchWS runtimeMatchWS)
-    {
-        ServiceResult configurationResponse = runtimeMatchWS.configureSlot(slotName, transformationFileLocation, "RtIndex");
-
-        if(configurationResponse.isError())
-        {
-            throw new WebApplicationException(configurationResponse.getMessage());
         }
     }
 
@@ -105,20 +81,6 @@ public class AddService
         {
             throw new WebApplicationException(addResponse.getMessage());
         }
-    }
-
-    private RuntimeMatchWS configureRuntimeService()
-    {
-        transformationFileLocation = openDQProperties.getProperty("transformationFileLocation");
-
-        RuntimeMatchWSService runtimeMatchWSService = new RuntimeMatchWSService();
-        return runtimeMatchWSService.getRuntimeMatchWSPort();
-    }
-
-    private DataManagementWSImpl configureMdmService()
-    {
-        DataManagementWSImplService mdmService = new DataManagementWSImplService();
-        return mdmService.getDataManagementWSImplPort();
     }
 
     //TODO: Handle multiple addresses, emails, phones

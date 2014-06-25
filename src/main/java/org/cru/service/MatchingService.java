@@ -1,7 +1,6 @@
 package org.cru.service;
 
 import com.infosolvetech.rtmatch.pdi4.RuntimeMatchWS;
-import com.infosolvetech.rtmatch.pdi4.RuntimeMatchWSService;
 import com.infosolvetech.rtmatch.pdi4.ServiceResult;
 import org.cru.model.MatchResponse;
 import org.cru.model.Person;
@@ -18,16 +17,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Service to handle the complexity of matching person fields
+ * Service to handle the complexity of matching {@link Person} fields
  *
  * Created by William.Randall on 6/9/14.
  */
-public class MatchingService
+public class MatchingService extends IndexingService
 {
-    private OpenDQProperties openDQProperties;
     private DeleteService deleteService;
-    private String slotName;
-    private String transformationFileLocation;
 
     public MatchingService() {}
 
@@ -38,11 +34,11 @@ public class MatchingService
         this.deleteService = deleteService;
     }
 
-
     public MatchResponse findMatch(Person person, String slotName) throws ConnectException
     {
         this.slotName = slotName;
-        SearchResponse searchResponse = callRuntimeMatchService(person);
+        RuntimeMatchWS runtimeMatchWS = callRuntimeMatchService();
+        SearchResponse searchResponse = searchSlot(runtimeMatchWS, person);
 
         if(searchResponse == null) return null;
 
@@ -55,24 +51,6 @@ public class MatchingService
         matchResponse.setMatchId(matchId);
         matchResponse.setMessage(ResponseMessage.FOUND.getMessage());
         return matchResponse;
-    }
-
-    private SearchResponse callRuntimeMatchService(Person person) throws ConnectException
-    {
-        RuntimeMatchWS runtimeMatchWS = configureRuntimeService();
-
-        configureSlot(runtimeMatchWS);
-        return searchSlot(runtimeMatchWS, person);
-    }
-
-    private void configureSlot(RuntimeMatchWS runtimeMatchWS)
-    {
-        ServiceResult configurationResponse = runtimeMatchWS.configureSlot(slotName, transformationFileLocation, "RtMatch");
-
-        if(configurationResponse.isError())
-        {
-            throw new WebApplicationException(configurationResponse.getMessage());
-        }
     }
 
     private SearchResponse searchSlot(RuntimeMatchWS runtimeMatchWS, Person person)
@@ -99,14 +77,6 @@ public class MatchingService
         searchValues.add(person.getAddresses().get(0).getCity());
 
         return searchValues;
-    }
-
-    private RuntimeMatchWS configureRuntimeService()
-    {
-        transformationFileLocation = openDQProperties.getProperty("transformationFileLocation");
-
-        RuntimeMatchWSService runtimeMatchWSService = new RuntimeMatchWSService();
-        return runtimeMatchWSService.getRuntimeMatchWSPort();
     }
 
     private boolean matchHasBeenDeleted(String matchId)

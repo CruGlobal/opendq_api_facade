@@ -118,7 +118,7 @@ public class PersonToMdmConverter
             addressToAdd.setDateCreated(today.toString(opendqDatePattern));
             addressToAdd.setUserCreated(MdmConstants.USER);
             addressToAdd.setSource(MdmConstants.SOURCE);
-            addressToAdd.setAction("A");
+            addressToAdd.setAction(action);
 
             //TODO: This should come in from the json
             if(numAddress == 0) addressToAdd.setCodId(MdmCodes.MAILING_ADDRESS.getId());

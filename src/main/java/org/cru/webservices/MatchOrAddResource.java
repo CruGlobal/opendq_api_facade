@@ -27,6 +27,7 @@ public class MatchOrAddResource
     @Inject
     private MatchOrAddService matchOrAddService;
 
+    @SuppressWarnings("unused")  //used by Clients
     @POST
     @Path("/match-or-add")
     @Consumes(MediaType.APPLICATION_JSON)

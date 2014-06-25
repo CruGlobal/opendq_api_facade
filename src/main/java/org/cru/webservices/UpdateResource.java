@@ -22,6 +22,7 @@ public class UpdateResource
     @Inject
     private AddService addService;
 
+    @SuppressWarnings("unused")  //used by Clients
     @Path("/update")
     @POST
     public Response updateIndex(Person person)

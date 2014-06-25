@@ -23,6 +23,7 @@ public class DeleteResource
     @Inject
     private DeleteService deleteService;
 
+    @SuppressWarnings("unused")  //used by Clients
     @Path("/delete/{id}")
     @DELETE
     public Response deletePerson(@PathParam("id") String globalRegistryId)

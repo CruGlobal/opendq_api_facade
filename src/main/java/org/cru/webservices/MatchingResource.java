@@ -29,6 +29,7 @@ public class MatchingResource
     @Inject
     private MatchingService matchingService;
 
+    @SuppressWarnings("unused")  //used by Clients
     @POST
     @Path("/match")
     @Consumes(MediaType.APPLICATION_JSON)

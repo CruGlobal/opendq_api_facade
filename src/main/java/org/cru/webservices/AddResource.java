@@ -24,6 +24,7 @@ public class AddResource
     @Inject
     private AddService addService;
 
+    @SuppressWarnings("unused")  //used by Clients
     @POST
     @Path("/add")
     @Consumes(MediaType.APPLICATION_JSON)

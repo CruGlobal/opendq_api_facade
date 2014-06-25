@@ -25,6 +25,7 @@ public class MatchingService extends IndexingService
 {
     private DeleteService deleteService;
 
+    @SuppressWarnings("unused")  //used by CDI
     public MatchingService() {}
 
     @Inject

@@ -25,6 +25,7 @@ public class MatchOrUpdateResource
     @Inject
     private MatchOrUpdateService matchOrUpdateService;
 
+    @SuppressWarnings("unused")  //used by Clients
     @POST
     @Path("/match-or-update")
     @Produces(MediaType.APPLICATION_JSON)

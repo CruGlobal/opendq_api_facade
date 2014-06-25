@@ -16,6 +16,7 @@ public class MatchOrAddService
     private AddService addService;
     private MatchingService matchingService;
 
+    @SuppressWarnings("unused")  //used by CDI
     public MatchOrAddService() {}
 
     @Inject

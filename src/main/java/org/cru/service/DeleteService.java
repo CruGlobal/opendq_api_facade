@@ -15,6 +15,7 @@ public class DeleteService
 {
     private DeletedIndexesFileIO deletedIndexesFileIO;
 
+    @SuppressWarnings("unused")  //used by CDI
     public DeleteService() {}
 
     @Inject

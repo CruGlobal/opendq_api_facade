@@ -28,6 +28,7 @@ public class AddService extends IndexingService
     private AddressNormalizationService addressNormalizationService;
     private static final String ACTION = "A";  // A = Add
 
+    @SuppressWarnings("unused")  //used by CDI
     public AddService() {}
 
     @Inject

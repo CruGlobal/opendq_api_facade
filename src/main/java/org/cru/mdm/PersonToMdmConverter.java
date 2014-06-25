@@ -79,7 +79,7 @@ public class PersonToMdmConverter
         objEntityDTO.setPartyId(MdmConstants.JUNK_ID);
         objEntityDTO.setTypId(MdmConstants.TYP_ID);
         objEntityDTO.setCustomer("Y"); //TODO: Always?
-        objEntityDTO.setFromDate(today.toString(opendqDatePattern));
+        objEntityDTO.setFromDate(today.toString(opendqDatePattern));  // This is overwritten on insert
         objEntityDTO.setDateCreated(today.toString(opendqDatePattern));
         objEntityDTO.setUserCreated(MdmConstants.USER);
         objEntityDTO.setSource(MdmConstants.SOURCE);
@@ -114,7 +114,7 @@ public class PersonToMdmConverter
             addressToAdd.setCryName(address.getCountry());
             addressToAdd.setZip(address.getZipCode());
 
-            addressToAdd.setFromDate(today.toString(opendqDatePattern));
+            addressToAdd.setFromDate(today.toString(opendqDatePattern));  // This is overwritten on insert
             addressToAdd.setDateCreated(today.toString(opendqDatePattern));
             addressToAdd.setUserCreated(MdmConstants.USER);
             addressToAdd.setSource(MdmConstants.SOURCE);
@@ -225,7 +225,7 @@ public class PersonToMdmConverter
         personAttributes.setField2(person.getEmployeeNumber());
         personAttributes.setField3(person.getSiebelContactId());
         personAttributes.setField4(new DateTime().toString());  //TODO: What date/time should go here?
-        personAttributes.setFromDate(today.toString(opendqDatePattern));
+        personAttributes.setFromDate(today.toString(opendqDatePattern));  // This is overwritten on insert
         personAttributes.setTypId(MdmConstants.TYP_ID);
         personAttributes.setDateCreated(today.toString(opendqDatePattern));
         personAttributes.setUserCreated(MdmConstants.USER);
@@ -251,7 +251,7 @@ public class PersonToMdmConverter
         attributeData.setField5(personName.getSuffix());
         attributeData.setField6(person.getGender());
 
-        attributeData.setFromDate(today.toString(opendqDatePattern));
+        attributeData.setFromDate(today.toString(opendqDatePattern));  // This is overwritten on insert
         attributeData.setTypId(MdmConstants.TYP_ID);
         attributeData.setDateCreated(today.toString(opendqDatePattern));
         attributeData.setUserCreated(MdmConstants.USER);

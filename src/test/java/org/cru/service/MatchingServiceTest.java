@@ -1,9 +1,12 @@
 package org.cru.service;
 
 import org.cru.model.Address;
+import org.cru.model.EmailAddress;
 import org.cru.model.MatchResponse;
 import org.cru.model.Person;
 import org.cru.model.PersonName;
+import org.cru.model.PhoneNumber;
+import org.cru.model.SearchResponse;
 import org.cru.util.DeletedIndexesFileIO;
 import org.cru.util.OafProperties;
 import org.cru.util.OpenDQProperties;
@@ -38,7 +41,8 @@ public class MatchingServiceTest
         return new Object[][] {
             { exactMatchFromSoapUI, "3" },
             { exactMatchFromJavaTest, "2" },
-            { similarMatchFromSoapUI, "3" }
+            { similarMatchFromSoapUI, "3" },
+            { generatePersonWithLotsOfData(), "kses34223-dk43-9493-394nfa2348da"}
         };
     }
 
@@ -64,6 +68,7 @@ public class MatchingServiceTest
         assertEquals(matchResponse.getMatchId(), matchId);
     }
 
+    @Test
     public void testMatchHasBeenDeleted() throws Exception
     {
         Person deletedPerson = new Person();
@@ -84,6 +89,14 @@ public class MatchingServiceTest
 
         MatchResponse matchResponse = matchingService.findMatch(deletedPerson, "Match");
         assertNull(matchResponse);
+    }
+
+    @Test
+    public void testFindMatchById() throws Exception
+    {
+        SearchResponse searchResponse = matchingService.findMatchById("kses34223-dk43-9493-394nfa2348da", "MatchId");
+        assertNotNull(searchResponse);
+        assertEquals(searchResponse.getId(), "kses34223-dk43-9493-394nfa2348da");
     }
 
     private Person generatePersonWithDataExactMatchFromSoapUI()
@@ -142,6 +155,50 @@ public class MatchingServiceTest
         addresses.add(testAddress);
         testPerson.setAddresses(addresses);
         testPerson.setName(personName);
+
+        return testPerson;
+    }
+
+    private Person generatePersonWithLotsOfData()
+    {
+        Person testPerson = new Person();
+
+        Address testAddress = new Address();
+        testAddress.setAddressLine1("9878 Way Way");
+        testAddress.setCity("Las Vegas");
+        testAddress.setState("NV");
+        testAddress.setZipCode("84253");
+        testAddress.setCountry("USA");
+        List<Address> addresses = new ArrayList<Address>();
+        addresses.add(testAddress);
+
+        PersonName personName = new PersonName();
+        personName.setTitle("Ms.");
+        personName.setFirstName("Doe");
+        personName.setLastName("Low");
+
+        EmailAddress emailAddress = new EmailAddress();
+        emailAddress.setEmail("dow.low@crutest.org");
+        emailAddress.setId("654321");
+        List<EmailAddress> emailAddresses = new ArrayList<EmailAddress>();
+        emailAddresses.add(emailAddress);
+
+        PhoneNumber phoneNumber = new PhoneNumber();
+        phoneNumber.setNumber("5555555553");
+        phoneNumber.setLocation("work");
+        phoneNumber.setId("654321");
+        List<PhoneNumber> phoneNumbers = new ArrayList<PhoneNumber>();
+        phoneNumbers.add(phoneNumber);
+
+        testPerson.setGlobalRegistryId("kses34223-dk43-9493-394nfa2348da");
+        testPerson.setClientIntegrationId("654321");
+        testPerson.setSiebelContactId("1-6T4D4");
+
+        testPerson.setName(personName);
+        testPerson.setAddresses(addresses);
+        testPerson.setEmailAddresses(emailAddresses);
+        testPerson.setPhoneNumbers(phoneNumbers);
+        testPerson.setGender("F");
 
         return testPerson;
     }

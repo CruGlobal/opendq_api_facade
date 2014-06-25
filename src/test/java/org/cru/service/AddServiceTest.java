@@ -43,7 +43,7 @@ public class AddServiceTest
     {
         try
         {
-            Person testPerson = createTestPerson();
+            Person testPerson = generatePersonWithLotsOfData();
 
             for(Address address : testPerson.getAddresses())
             {
@@ -102,6 +102,50 @@ public class AddServiceTest
         testPerson.setEmailAddresses(emailAddresses);
         testPerson.setPhoneNumbers(phoneNumbers);
         testPerson.setGender("M");
+
+        return testPerson;
+    }
+
+    private Person generatePersonWithLotsOfData()
+    {
+        Person testPerson = new Person();
+
+        Address testAddress = new Address();
+        testAddress.setAddressLine1("9878 Way Way");
+        testAddress.setCity("Las Vegas");
+        testAddress.setState("NV");
+        testAddress.setZipCode("84253");
+        testAddress.setCountry("USA");
+        List<Address> addresses = new ArrayList<Address>();
+        addresses.add(testAddress);
+
+        PersonName personName = new PersonName();
+        personName.setTitle("Ms.");
+        personName.setFirstName("Doe");
+        personName.setLastName("Low");
+
+        EmailAddress emailAddress = new EmailAddress();
+        emailAddress.setEmail("dow.low@crutest.org");
+        emailAddress.setId("654321");
+        List<EmailAddress> emailAddresses = new ArrayList<EmailAddress>();
+        emailAddresses.add(emailAddress);
+
+        PhoneNumber phoneNumber = new PhoneNumber();
+        phoneNumber.setNumber("5555555553");
+        phoneNumber.setLocation("work");
+        phoneNumber.setId("654321");
+        List<PhoneNumber> phoneNumbers = new ArrayList<PhoneNumber>();
+        phoneNumbers.add(phoneNumber);
+
+        testPerson.setGlobalRegistryId("kses34223-dk43-9493-394nfa2348da");
+        testPerson.setClientIntegrationId("654321");
+        testPerson.setSiebelContactId("1-6T4D4");
+
+        testPerson.setName(personName);
+        testPerson.setAddresses(addresses);
+        testPerson.setEmailAddresses(emailAddresses);
+        testPerson.setPhoneNumbers(phoneNumbers);
+        testPerson.setGender("F");
 
         return testPerson;
     }

@@ -39,8 +39,7 @@ public class MatchingService extends IndexingService
     {
         this.slotName = slotName;
         this.stepName = "RtMatch";
-        RuntimeMatchWS runtimeMatchWS = callRuntimeMatchService();
-        SearchResponse searchResponse = searchSlot(runtimeMatchWS, person);
+        SearchResponse searchResponse = searchSlot(callRuntimeMatchService(), createSearchValuesFromPerson(person));
 
         if(searchResponse == null) return null;
 
@@ -55,9 +54,33 @@ public class MatchingService extends IndexingService
         return matchResponse;
     }
 
-    private SearchResponse searchSlot(RuntimeMatchWS runtimeMatchWS, Person person)
+    public SearchResponse findMatchById(String rowId, String slotName) throws ConnectException
     {
-        ServiceResult searchResponse = runtimeMatchWS.searchSlot(slotName, createSearchValuesFromPerson(person));
+        this.slotName = slotName;
+        this.stepName = "RtMatchId";
+
+        //The way the index search works requires the values above the row id to be set as well
+        List<String> searchValues = new ArrayList<String>();
+        searchValues.add("");
+        searchValues.add("");
+        searchValues.add("");
+        searchValues.add("");
+        searchValues.add(rowId);
+
+        SearchResponse searchResponse = searchSlot(callRuntimeMatchService(), searchValues);
+
+        if(searchResponse == null) return null;
+
+        String matchId = searchResponse.getId();
+
+        if(matchHasBeenDeleted(matchId)) return null;
+
+        return searchResponse;
+    }
+
+    private SearchResponse searchSlot(RuntimeMatchWS runtimeMatchWS, List<String> searchValues)
+    {
+        ServiceResult searchResponse = runtimeMatchWS.searchSlot(slotName, searchValues);
 
         if(searchResponse.isError())
         {

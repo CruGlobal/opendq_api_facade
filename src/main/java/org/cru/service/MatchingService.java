@@ -136,6 +136,8 @@ public class MatchingService extends IndexingService
         valueMap.put("lastName", searchResultValues.get(1));
         valueMap.put("address1", searchResultValues.get(2));
         valueMap.put("city", searchResultValues.get(3));
+        //4 is the globalRegistryId, which goes into the id field, not the values map
+        valueMap.put("partyId", searchResultValues.get(5));
 
         return valueMap;
     }

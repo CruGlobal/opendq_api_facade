@@ -50,12 +50,12 @@ public class AddService extends IndexingService
             addressNormalizationService.normalizeAddress(address);
         }
 
-        addPersonToMdm(person);
+        RealTimeObjectActionDTO addedPerson = addPersonToMdm(person);
         RuntimeMatchWS runtimeMatchWS = callRuntimeMatchService();
-        addSlot(runtimeMatchWS, person);
+        addSlot(runtimeMatchWS, person, addedPerson);
     }
 
-    private void addPersonToMdm(Person person)
+    private RealTimeObjectActionDTO addPersonToMdm(Person person)
     {
         DataManagementWSImpl mdmService = configureMdmService();
         PersonToMdmConverter personToMdmConverter = new PersonToMdmConverter(ACTION);
@@ -66,12 +66,14 @@ public class AddService extends IndexingService
         {
             throw new WebApplicationException("Failed to add person to mdm.");
         }
+
+        return returnedObject;
     }
 
-    void addSlot(RuntimeMatchWS runtimeMatchWS, Person person)
+    void addSlot(RuntimeMatchWS runtimeMatchWS, Person person, RealTimeObjectActionDTO mdmPerson)
     {
         //while updateSlot sounds like an update, it is actually inserting an entry into the index
-        Map<String, String> fieldNamesAndValues = generateFieldNamesAndValues(person);
+        Map<String, String> fieldNamesAndValues = generateFieldNamesAndValues(person, mdmPerson);
 
         List<String> fieldNames = new ArrayList<String>();
         fieldNames.addAll(fieldNamesAndValues.keySet());
@@ -88,7 +90,7 @@ public class AddService extends IndexingService
     }
 
     //TODO: Handle multiple addresses, emails, phones
-    Map<String, String> generateFieldNamesAndValues(Person person)
+    Map<String, String> generateFieldNamesAndValues(Person person, RealTimeObjectActionDTO mdmPerson)
     {
         Map<String, String> fieldNamesAndValues = new LinkedHashMap<String, String>();
 
@@ -97,6 +99,7 @@ public class AddService extends IndexingService
         fieldNamesAndValues.put("FIELD3", person.getAddresses().get(0).getAddressLine1());
         fieldNamesAndValues.put("FIELD4", person.getAddresses().get(0).getCity());
         fieldNamesAndValues.put("FIELD5", person.getGlobalRegistryId());
+        fieldNamesAndValues.put("FIELD6", mdmPerson.getObjectEntity().getPartyId());
 
         return fieldNamesAndValues;
     }

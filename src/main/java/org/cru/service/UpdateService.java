@@ -38,7 +38,7 @@ public class UpdateService extends AddService
 
         updateMdm(person);
         RuntimeMatchWS runtimeMatchWS = callRuntimeMatchService();
-        addSlot(runtimeMatchWS, person);
+        addSlot(runtimeMatchWS, person, null);
     }
 
     private void updateMdm(Person person)

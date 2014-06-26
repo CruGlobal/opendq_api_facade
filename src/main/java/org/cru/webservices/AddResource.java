@@ -1,6 +1,7 @@
 package org.cru.webservices;
 
 import org.cru.model.Person;
+import org.cru.qualifiers.Add;
 import org.cru.service.AddService;
 import org.cru.util.ResponseMessage;
 
@@ -21,7 +22,7 @@ import java.net.ConnectException;
 @Path("/")
 public class AddResource
 {
-    @Inject
+    @Inject @Add
     private AddService addService;
 
     @SuppressWarnings("unused")  //used by Clients

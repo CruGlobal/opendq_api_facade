@@ -2,6 +2,7 @@ package org.cru.service;
 
 import org.cru.model.MatchResponse;
 import org.cru.model.Person;
+import org.cru.qualifiers.Match;
 import org.cru.util.ResponseMessage;
 
 import javax.inject.Inject;
@@ -21,7 +22,7 @@ public class MatchOrUpdateService
     public MatchOrUpdateService() {}
 
     @Inject
-    public MatchOrUpdateService(MatchingService matchingService, UpdateService updateService)
+    public MatchOrUpdateService(@Match MatchingService matchingService, UpdateService updateService)
     {
         this.matchingService = matchingService;
         this.updateService = updateService;

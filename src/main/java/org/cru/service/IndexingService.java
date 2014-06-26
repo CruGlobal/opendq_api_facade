@@ -7,7 +7,6 @@ import com.infosolvetech.rtmatch.pdi4.RuntimeMatchWSService;
 import com.infosolvetech.rtmatch.pdi4.ServiceResult;
 import org.cru.util.OpenDQProperties;
 
-import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
 import java.net.ConnectException;
 
@@ -23,14 +22,6 @@ public class IndexingService
     String slotName;
     String transformationFileLocation;
     String stepName;
-
-    public IndexingService() {}
-
-    @Inject
-    public IndexingService(OpenDQProperties openDQProperties)
-    {
-        this.openDQProperties = openDQProperties;
-    }
 
     RuntimeMatchWS callRuntimeMatchService() throws ConnectException
     {

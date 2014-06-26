@@ -5,6 +5,7 @@ import com.infosolvetech.rtmatch.pdi4.ServiceResult;
 import org.cru.model.MatchResponse;
 import org.cru.model.Person;
 import org.cru.model.SearchResponse;
+import org.cru.qualifiers.Match;
 import org.cru.util.OpenDQProperties;
 import org.cru.util.ResponseMessage;
 
@@ -21,6 +22,7 @@ import java.util.Map;
  *
  * Created by William.Randall on 6/9/14.
  */
+@Match
 public class MatchingService extends IndexingService
 {
     private DeleteService deleteService;

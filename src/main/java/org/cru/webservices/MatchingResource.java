@@ -3,6 +3,7 @@ package org.cru.webservices;
 import org.cru.model.Address;
 import org.cru.model.MatchResponse;
 import org.cru.model.Person;
+import org.cru.qualifiers.Match;
 import org.cru.service.AddressNormalizationService;
 import org.cru.service.MatchingService;
 
@@ -26,7 +27,7 @@ public class MatchingResource
 {
     @Inject
     private AddressNormalizationService addressNormalizationService;
-    @Inject
+    @Inject @Match
     private MatchingService matchingService;
 
     @SuppressWarnings("unused")  //used by Clients

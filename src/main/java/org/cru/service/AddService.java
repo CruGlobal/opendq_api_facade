@@ -8,6 +8,7 @@ import org.cru.mdm.MdmConstants;
 import org.cru.mdm.PersonToMdmConverter;
 import org.cru.model.Address;
 import org.cru.model.Person;
+import org.cru.qualifiers.Add;
 import org.cru.util.OpenDQProperties;
 
 import javax.inject.Inject;
@@ -23,6 +24,7 @@ import java.util.Map;
  *
  * Created by William.Randall on 6/9/14.
  */
+@Add
 public class AddService extends IndexingService
 {
     AddressNormalizationService addressNormalizationService;

@@ -126,7 +126,7 @@ public class PersonDeserializer extends JsonDeserializer<Person>
     private Address deserializeAddress(JsonNode addressNode)
     {
         Address address = new Address();
-        address.setId(addressNode.path("client_integration_id").asText());
+        address.setId(addressNode.path("id").asText());
         address.setAddressLine1(addressNode.path("address_1").asText());
         address.setAddressLine2(addressNode.path("address_2").asText());
         address.setAddressLine3(addressNode.path("address_3").asText());
@@ -142,7 +142,7 @@ public class PersonDeserializer extends JsonDeserializer<Person>
     private EmailAddress deserializeEmailAddress(JsonNode emailAddressNode)
     {
         EmailAddress emailAddress = new EmailAddress();
-        emailAddress.setId(emailAddressNode.path("client_integration_id").asText());
+        emailAddress.setId(emailAddressNode.path("id").asText());
         emailAddress.setEmail(emailAddressNode.path("email").asText());
 
         return emailAddress;
@@ -151,7 +151,7 @@ public class PersonDeserializer extends JsonDeserializer<Person>
     private PhoneNumber deserializePhoneNumber(JsonNode phoneNumberNode)
     {
         PhoneNumber phoneNumber = new PhoneNumber();
-        phoneNumber.setId(phoneNumberNode.path("client_integration_id").asText());
+        phoneNumber.setId(phoneNumberNode.path("id").asText());
         phoneNumber.setLocation(phoneNumberNode.path("location").asText());
         phoneNumber.setNumber(phoneNumberNode.path("number").asText());
 

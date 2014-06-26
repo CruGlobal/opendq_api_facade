@@ -1,13 +1,27 @@
 package org.cru.model;
 
+import org.cru.mdm.MdmConstants;
+
 /**
  * Created by William.Randall on 6/20/14.
  */
 public class PhoneNumber
 {
+    private String mdmCommunicationId;
     private String id;
     private String number;
     private String location; // ex: mobile
+
+    public String getMdmCommunicationId()
+    {
+        if(mdmCommunicationId == null) return MdmConstants.JUNK_ID;
+        return mdmCommunicationId;
+    }
+
+    public void setMdmCommunicationId(String mdmCommunicationId)
+    {
+        this.mdmCommunicationId = mdmCommunicationId;
+    }
 
     public String getId()
     {

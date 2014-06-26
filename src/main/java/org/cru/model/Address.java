@@ -1,5 +1,7 @@
 package org.cru.model;
 
+import org.cru.mdm.MdmConstants;
+
 /**
  * This object holds different address information that we capture for normalization and matching purposes
  *
@@ -7,6 +9,8 @@ package org.cru.model;
  */
 public class Address
 {
+    private String mdmAddressId;
+
     private String id;
     private String addressLine1;
     private String addressLine2;
@@ -18,6 +22,17 @@ public class Address
     private String country;
 
     private boolean normalized;
+
+    public String getMdmAddressId()
+    {
+        if(mdmAddressId == null) return MdmConstants.JUNK_ID;
+        return mdmAddressId;
+    }
+
+    public void setMdmAddressId(String mdmAddressId)
+    {
+        this.mdmAddressId = mdmAddressId;
+    }
 
     public String getId()
     {

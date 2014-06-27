@@ -117,6 +117,13 @@ public class MatchingServiceTest
         assertEquals(foundPerson.getObjectAttributeDatas().getObjectAttributeData().size(), 2); //person and person attributes
     }
 
+    @Test
+    public void testFindDeletedInMdm() throws Exception
+    {
+        RealTimeObjectActionDTO deletedPerson = matchingService.findMatchInMdm("1079");
+        assertEquals(deletedPerson.getObjectEntity().getAction(), "D");
+    }
+
     private Person generatePersonWithDataExactMatchFromSoapUI()
     {
         Person testPerson = new Person();

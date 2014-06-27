@@ -98,7 +98,7 @@ public class EndToEndServiceTest
         assertEquals(matchResponse.getMatchId(), testPerson.getGlobalRegistryId());
 
         //Now we delete the person from the index
-        deleteService.deletePerson(testPerson.getGlobalRegistryId());
+        deleteService.deletePerson(testPerson.getGlobalRegistryId(), null); //TODO: Update this
 
         //The person should not be found anymore
         matchResponse = matchingService.findMatch(testPerson, "Match");

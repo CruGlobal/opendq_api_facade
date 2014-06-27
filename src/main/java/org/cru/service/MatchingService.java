@@ -1,5 +1,7 @@
 package org.cru.service;
 
+import com.infosolve.openmdm.webservices.provider.impl.DataManagementWSImpl;
+import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import com.infosolvetech.rtmatch.pdi4.RuntimeMatchWS;
 import com.infosolvetech.rtmatch.pdi4.ServiceResult;
 import org.cru.model.MatchResponse;
@@ -78,6 +80,12 @@ public class MatchingService extends IndexingService
         if(matchHasBeenDeleted(matchId)) return null;
 
         return searchResponse;
+    }
+
+    public RealTimeObjectActionDTO findMatchInMdm(String partyId)
+    {
+        DataManagementWSImpl mdmService = configureMdmService();
+        return mdmService.findObject(partyId);
     }
 
     private SearchResponse searchSlot(RuntimeMatchWS runtimeMatchWS, List<String> searchValues)

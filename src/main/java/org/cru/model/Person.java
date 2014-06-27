@@ -2,6 +2,7 @@ package org.cru.model;
 
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.cru.deserialization.PersonDeserializer;
+import org.cru.mdm.MdmConstants;
 
 import java.util.List;
 
@@ -13,6 +14,10 @@ import java.util.List;
 @JsonDeserialize(using = PersonDeserializer.class)
 public class Person
 {
+    private String mdmPartyId;
+    private String mdmPersonId;
+    private String mdmPersonAttributesId;
+
     private String globalRegistryId;
     private List<EmailAddress> emailAddresses;
     private PersonName name;
@@ -25,6 +30,39 @@ public class Person
     private List<PhoneNumber> phoneNumbers;
     private String clientIntegrationId;
     private String siebelContactId;
+
+    public String getMdmPartyId()
+    {
+        if(mdmPartyId == null) return MdmConstants.JUNK_ID;
+        return mdmPartyId;
+    }
+
+    public void setMdmPartyId(String mdmPartyId)
+    {
+        this.mdmPartyId = mdmPartyId;
+    }
+
+    public String getMdmPersonId()
+    {
+        if(mdmPersonId == null) return MdmConstants.JUNK_ID;
+        return mdmPersonId;
+    }
+
+    public void setMdmPersonId(String mdmPersonId)
+    {
+        this.mdmPersonId = mdmPersonId;
+    }
+
+    public String getMdmPersonAttributesId()
+    {
+        if(mdmPersonAttributesId == null) return MdmConstants.JUNK_ID;
+        return mdmPersonAttributesId;
+    }
+
+    public void setMdmPersonAttributesId(String mdmPersonAttributesId)
+    {
+        this.mdmPersonAttributesId = mdmPersonAttributesId;
+    }
 
     public String getGlobalRegistryId()
     {

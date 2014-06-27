@@ -27,7 +27,7 @@ public class PersonToMdmConverter
 {
     private String opendqDatePattern = "MM/dd/YYYY";
     private String action;
-    
+
     public PersonToMdmConverter(String action)
     {
         this.action = action;
@@ -76,7 +76,7 @@ public class PersonToMdmConverter
     {
         ObjEntityDTO objEntityDTO = new ObjEntityDTO();
 
-        objEntityDTO.setPartyId(MdmConstants.JUNK_ID);
+        objEntityDTO.setPartyId(person.getMdmPartyId());
         objEntityDTO.setTypId(MdmConstants.TYP_ID);
         objEntityDTO.setCustomer("Y"); //TODO: Always?
         objEntityDTO.setFromDate(today.toString(opendqDatePattern));  // This is overwritten on insert
@@ -102,7 +102,7 @@ public class PersonToMdmConverter
         {
             ObjAddressDTO addressToAdd = new ObjAddressDTO();
 
-            addressToAdd.setAddressId(MdmConstants.JUNK_ID);
+            addressToAdd.setAddressId(address.getMdmAddressId());
             addressToAdd.setComExclusionType("N");  //TODO: What goes here?
 
             addressToAdd.setAddressLine1(address.getAddressLine1());
@@ -149,8 +149,8 @@ public class PersonToMdmConverter
             {
                 ObjCommunicationDTO emailCommunication = new ObjCommunicationDTO();
 
-                emailCommunication.setComId(MdmConstants.JUNK_ID);
-                emailCommunication.setPartyId(MdmConstants.JUNK_ID);
+                emailCommunication.setComId(personEmail.getMdmCommunicationId());
+                emailCommunication.setPartyId(person.getMdmPartyId());
 
                 //TODO: This should come in from the json
                 if(numEmail == 0) emailCommunication.setCodId(MdmCodes.PRIMARY_EMAIL.getId());
@@ -177,8 +177,8 @@ public class PersonToMdmConverter
             {
                 ObjCommunicationDTO phoneCommunication = new ObjCommunicationDTO();
 
-                phoneCommunication.setComId(MdmConstants.JUNK_ID);
-                phoneCommunication.setPartyId(MdmConstants.JUNK_ID);
+                phoneCommunication.setComId(personPhone.getMdmCommunicationId());
+                phoneCommunication.setPartyId(person.getMdmPartyId());
 
                 //TODO: This should come in from the json (determined by location perhaps)
                 if(numPhone == 0) phoneCommunication.setCodId(MdmCodes.PRIMARY_PHONE.getId());
@@ -220,7 +220,7 @@ public class PersonToMdmConverter
     {
         ObjAttributeDataDTO personAttributes = new ObjAttributeDataDTO();
 
-        personAttributes.setObjAdId(MdmConstants.JUNK_ID);
+        personAttributes.setObjAdId(person.getMdmPersonAttributesId());
         personAttributes.setField1(MdmConstants.SOURCE);
         personAttributes.setField2(person.getEmployeeNumber());
         personAttributes.setField3(person.getSiebelContactId());
@@ -243,7 +243,7 @@ public class PersonToMdmConverter
         ObjAttributeDataDTO attributeData = new ObjAttributeDataDTO();
         PersonName personName = person.getName();
 
-        attributeData.setObjAdId(MdmConstants.JUNK_ID);
+        attributeData.setObjAdId(person.getMdmPersonId());
         attributeData.setField1(personName.getTitle());
         attributeData.setField2(personName.getFirstName());
         attributeData.setField3(personName.getMiddleName());

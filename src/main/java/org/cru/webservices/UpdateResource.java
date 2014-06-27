@@ -1,7 +1,8 @@
 package org.cru.webservices;
 
+import org.cru.model.MatchResponse;
 import org.cru.model.Person;
-import org.cru.service.UpdateService;
+import org.cru.service.MatchOrUpdateService;
 import org.cru.util.ResponseMessage;
 
 import javax.inject.Inject;
@@ -20,7 +21,7 @@ import java.net.ConnectException;
 public class UpdateResource
 {
     @Inject
-    private UpdateService updateService;
+    private MatchOrUpdateService matchOrUpdateService;
 
     @SuppressWarnings("unused")  //used by Clients
     @Path("/update")
@@ -29,8 +30,16 @@ public class UpdateResource
     {
         try
         {
-            //Since there is currently no way to update an existing one, just add a new one
-            updateService.updatePerson(person, "Update");
+            MatchResponse matchOrUpdateResponse = matchOrUpdateService.matchOrUpdatePerson(person);
+
+            if(matchOrUpdateResponse == null)
+            {
+                return Response.ok().entity(ResponseMessage.UPDATED.getMessage()).build();
+            }
+            else if(matchOrUpdateResponse.getMessage().equals(ResponseMessage.CONFLICT.getMessage()))
+            {
+                return Response.status(Response.Status.CONFLICT).entity(matchOrUpdateResponse).build();
+            }
         }
         catch(ConnectException ce)
         {

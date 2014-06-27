@@ -1,9 +1,21 @@
 package org.cru.service;
 
+import org.cru.model.SearchResponse;
 import org.cru.util.DeletedIndexesFileIO;
 import org.cru.util.OafProperties;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+import java.net.ConnectException;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
+import static org.testng.AssertJUnit.fail;
 
 /**
  * Tests the {@link DeleteService} class
@@ -15,6 +27,31 @@ public class DeleteServiceTest
 {
     private DeleteService deleteService;
 
+    @DataProvider(name = "notFoundPersons")
+    private Object[][] notFoundPersons()
+    {
+        String notFoundId1 = "6";
+        String notFoundId2 = "7";
+        String notFoundId3 = "8";
+
+        return new Object[][] {
+            { notFoundId1, createNotFoundSearchResponse(notFoundId1) },
+            { notFoundId2, createNotFoundSearchResponse(notFoundId2) },
+            { notFoundId3, createNotFoundSearchResponse(notFoundId3) }
+        };
+    }
+
+    @DataProvider(name = "foundPersons")
+    private Object[][] foundPersons()
+    {
+        String foundGRId1 = "be20d878-dd9e-11e3-9615-12768b82bfd3";
+        String foundPartyId1 = "1075";
+
+        return new Object[][] {
+            { foundGRId1, createFoundSearchResponse(foundGRId1, foundPartyId1) },
+        };
+    }
+
     @BeforeClass
     public void setup()
     {
@@ -25,11 +62,54 @@ public class DeleteServiceTest
         deleteService = new DeleteService(deletedIndexesFileIO);
     }
 
-    @Test
-    public void testDeletePerson() throws Exception
+    @Test(dataProvider = "notFoundPersons")
+    public void testDeletePersonNotFound(String id, SearchResponse foundIndex) throws Exception
     {
-        deleteService.deletePerson("6");
-        deleteService.deletePerson("7");
-        deleteService.deletePerson("8");
+        try
+        {
+            deleteService.deletePerson(id, foundIndex);
+        }
+        catch(WebApplicationException we)
+        {
+            assertEquals(we.getResponse().getStatus(), Response.Status.NOT_FOUND.getStatusCode());
+            assertTrue(((String)we.getResponse().getEntity()).contains("not found"));
+        }
+    }
+
+    @Test(dataProvider = "foundPersons")
+    public void testDeletePersonFound(String id, SearchResponse foundIndex) throws Exception
+    {
+        try
+        {
+            deleteService.deletePerson(id, foundIndex);
+        }
+        catch(ConnectException ce)
+        {
+            fail();
+        }
+        catch(WebApplicationException we)
+        {
+            fail();
+        }
+    }
+
+    private SearchResponse createNotFoundSearchResponse(String globalRegistryId)
+    {
+        SearchResponse foundIndex = new SearchResponse();
+        foundIndex.setId(globalRegistryId);
+        Map<String, Object> values = new HashMap<String, Object>();
+        values.put("partyId", "-50");
+        foundIndex.setResultValues(values);
+        return foundIndex;
+    }
+
+    private SearchResponse createFoundSearchResponse(String globalRegistryId, String partyId)
+    {
+        SearchResponse foundIndex = new SearchResponse();
+        foundIndex.setId(globalRegistryId);
+        Map<String, Object> values = new HashMap<String, Object>();
+        values.put("partyId", partyId);
+        foundIndex.setResultValues(values);
+        return foundIndex;
     }
 }

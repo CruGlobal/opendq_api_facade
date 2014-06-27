@@ -1,11 +1,13 @@
 package org.cru.service;
 
+import com.infosolve.openmdm.webservices.provider.impl.DataManagementWSImpl;
+import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import com.infosolvetech.rtmatch.pdi4.RuntimeMatchWS;
-import com.infosolvetech.rtmatch.pdi4.RuntimeMatchWSService;
 import com.infosolvetech.rtmatch.pdi4.ServiceResult;
 import org.cru.model.MatchResponse;
 import org.cru.model.Person;
 import org.cru.model.SearchResponse;
+import org.cru.qualifiers.Match;
 import org.cru.util.OpenDQProperties;
 import org.cru.util.ResponseMessage;
 
@@ -18,17 +20,16 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Service to handle the complexity of matching person fields
+ * Service to handle the complexity of matching {@link Person} fields
  *
  * Created by William.Randall on 6/9/14.
  */
-public class MatchingService
+@Match
+public class MatchingService extends IndexingService
 {
-    private OpenDQProperties openDQProperties;
     private DeleteService deleteService;
-    private String slotName;
-    private String transformationFileLocation;
 
+    @SuppressWarnings("unused")  //used by CDI
     public MatchingService() {}
 
     @Inject
@@ -38,11 +39,11 @@ public class MatchingService
         this.deleteService = deleteService;
     }
 
-
     public MatchResponse findMatch(Person person, String slotName) throws ConnectException
     {
         this.slotName = slotName;
-        SearchResponse searchResponse = callRuntimeMatchService(person);
+        this.stepName = "RtMatch";
+        SearchResponse searchResponse = searchSlot(callRuntimeMatchService(), createSearchValuesFromPerson(person));
 
         if(searchResponse == null) return null;
 
@@ -57,27 +58,39 @@ public class MatchingService
         return matchResponse;
     }
 
-    private SearchResponse callRuntimeMatchService(Person person) throws ConnectException
+    public SearchResponse findMatchById(String rowId, String slotName) throws ConnectException
     {
-        RuntimeMatchWS runtimeMatchWS = configureRuntimeService();
+        this.slotName = slotName;
+        this.stepName = "RtMatchId";
 
-        configureSlot(runtimeMatchWS);
-        return searchSlot(runtimeMatchWS, person);
+        //The way the index search works requires the values above the row id to be set as well
+        List<String> searchValues = new ArrayList<String>();
+        searchValues.add("");
+        searchValues.add("");
+        searchValues.add("");
+        searchValues.add("");
+        searchValues.add(rowId);
+
+        SearchResponse searchResponse = searchSlot(callRuntimeMatchService(), searchValues);
+
+        if(searchResponse == null) return null;
+
+        String matchId = searchResponse.getId();
+
+        if(matchHasBeenDeleted(matchId)) return null;
+
+        return searchResponse;
     }
 
-    private void configureSlot(RuntimeMatchWS runtimeMatchWS)
+    public RealTimeObjectActionDTO findMatchInMdm(String partyId)
     {
-        ServiceResult configurationResponse = runtimeMatchWS.configureSlot(slotName, transformationFileLocation, "RtMatch");
-
-        if(configurationResponse.isError())
-        {
-            throw new WebApplicationException(configurationResponse.getMessage());
-        }
+        DataManagementWSImpl mdmService = configureMdmService();
+        return mdmService.findObject(partyId);
     }
 
-    private SearchResponse searchSlot(RuntimeMatchWS runtimeMatchWS, Person person)
+    private SearchResponse searchSlot(RuntimeMatchWS runtimeMatchWS, List<String> searchValues)
     {
-        ServiceResult searchResponse = runtimeMatchWS.searchSlot(slotName, createSearchValuesFromPerson(person));
+        ServiceResult searchResponse = runtimeMatchWS.searchSlot(slotName, searchValues);
 
         if(searchResponse.isError())
         {
@@ -99,14 +112,6 @@ public class MatchingService
         searchValues.add(person.getAddresses().get(0).getCity());
 
         return searchValues;
-    }
-
-    private RuntimeMatchWS configureRuntimeService()
-    {
-        transformationFileLocation = openDQProperties.getProperty("transformationFileLocation");
-
-        RuntimeMatchWSService runtimeMatchWSService = new RuntimeMatchWSService();
-        return runtimeMatchWSService.getRuntimeMatchWSPort();
     }
 
     private boolean matchHasBeenDeleted(String matchId)
@@ -139,6 +144,8 @@ public class MatchingService
         valueMap.put("lastName", searchResultValues.get(1));
         valueMap.put("address1", searchResultValues.get(2));
         valueMap.put("city", searchResultValues.get(3));
+        //4 is the globalRegistryId, which goes into the id field, not the values map
+        valueMap.put("partyId", searchResultValues.get(5));
 
         return valueMap;
     }

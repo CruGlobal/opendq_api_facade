@@ -1,6 +1,9 @@
 package org.cru.webservices;
 
 import org.cru.model.Person;
+import org.cru.model.SearchResponse;
+import org.cru.qualifiers.Delete;
+import org.cru.qualifiers.Match;
 import org.cru.service.DeleteService;
 
 import javax.inject.Inject;
@@ -10,6 +13,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.net.ConnectException;
+
+import org.cru.service.MatchingService;
 import org.cru.util.ResponseMessage;
 
 /**
@@ -20,16 +25,20 @@ import org.cru.util.ResponseMessage;
 @Path("/")
 public class DeleteResource
 {
-    @Inject
+    @Inject @Delete
     private DeleteService deleteService;
+    @Inject @Match
+    private MatchingService matchingService;
 
+    @SuppressWarnings("unused")  //used by Clients
     @Path("/delete/{id}")
     @DELETE
     public Response deletePerson(@PathParam("id") String globalRegistryId)
     {
         try
         {
-            deleteService.deletePerson(globalRegistryId);
+            SearchResponse foundIndex = matchingService.findMatchById(globalRegistryId, "MatchId");
+            deleteService.deletePerson(globalRegistryId, foundIndex);
         }
         catch(ConnectException ce)
         {

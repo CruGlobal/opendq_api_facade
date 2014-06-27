@@ -22,6 +22,7 @@ public class DeletedIndexesFileIO
     private final Object lock = new Object();
     private static Logger log = Logger.getLogger(DeletedIndexesFileIO.class);
 
+    @SuppressWarnings("unused")  //used by CDI
     public DeletedIndexesFileIO() {}
 
     @Inject

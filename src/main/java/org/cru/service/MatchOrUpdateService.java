@@ -1,10 +1,15 @@
 package org.cru.service;
 
+import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import org.cru.model.MatchResponse;
 import org.cru.model.Person;
+import org.cru.model.SearchResponse;
+import org.cru.qualifiers.Match;
 import org.cru.util.ResponseMessage;
 
 import javax.inject.Inject;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 import java.net.ConnectException;
 
 /**
@@ -15,15 +20,17 @@ import java.net.ConnectException;
 public class MatchOrUpdateService
 {
     private MatchingService matchingService;
-    private AddService addService;
+    private UpdateService updateService;
 
+    @SuppressWarnings("unused")  //used by CDI
     public MatchOrUpdateService() {}
 
+    @SuppressWarnings("unused")  //used by CDI
     @Inject
-    public MatchOrUpdateService(MatchingService matchingService, AddService addService)
+    public MatchOrUpdateService(@Match MatchingService matchingService, UpdateService updateService)
     {
         this.matchingService = matchingService;
-        this.addService = addService;
+        this.updateService = updateService;
     }
 
     public MatchResponse matchOrUpdatePerson(Person person) throws ConnectException
@@ -32,20 +39,33 @@ public class MatchOrUpdateService
 
         if(matchResponse == null)
         {
-            addService.addPerson(person, "MatchOrUpdate");
+            SearchResponse searchResponse = matchingService.findMatchById(person.getGlobalRegistryId(), "MatchId");
+
+            if(searchResponse == null)
+            {
+                throw new WebApplicationException(
+                    Response.status(Response.Status.NOT_FOUND)
+                        .entity("Could not find Person in the index using global registry id: " + person.getGlobalRegistryId())
+                        .build());
+            }
+
+            String partyId = (String) searchResponse.getResultValues().get("partyId");
+            RealTimeObjectActionDTO foundMdmPerson = matchingService.findMatchInMdm(partyId);
+
+            if(foundMdmPerson == null)
+            {
+                throw new WebApplicationException(
+                    Response.status(Response.Status.NOT_FOUND)
+                        .entity("Could not find Person in MDM using party id: " + partyId)
+                        .build());
+            }
+
+            updateService.updatePerson(person, foundMdmPerson, "MatchOrUpdate");
         }
         else   // This means there is a match found for the updated information
         {
-            // If it is the same global registry ID, then go ahead and do the add (do we even need to if we found it?)
-            if(matchResponse.getMatchId().equals(person.getId()))
-            {
-                addService.addPerson(person, "MatchOrUpdate");
-            }
-            else
-            {
-                matchResponse.setMessage(ResponseMessage.CONFLICT.getMessage());
-                return matchResponse;
-            }
+            matchResponse.setMessage(ResponseMessage.CONFLICT.getMessage());
+            return matchResponse;
         }
 
         return null;

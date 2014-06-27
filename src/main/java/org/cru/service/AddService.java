@@ -1,10 +1,14 @@
 package org.cru.service;
 
+import com.infosolve.openmdm.webservices.provider.impl.DataManagementWSImpl;
+import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import com.infosolvetech.rtmatch.pdi4.RuntimeMatchWS;
-import com.infosolvetech.rtmatch.pdi4.RuntimeMatchWSService;
 import com.infosolvetech.rtmatch.pdi4.ServiceResult;
+import org.cru.mdm.MdmConstants;
+import org.cru.mdm.PersonToMdmConverter;
 import org.cru.model.Address;
 import org.cru.model.Person;
+import org.cru.qualifiers.Add;
 import org.cru.util.OpenDQProperties;
 
 import javax.inject.Inject;
@@ -20,14 +24,13 @@ import java.util.Map;
  *
  * Created by William.Randall on 6/9/14.
  */
-public class AddService
+@Add
+public class AddService extends IndexingService
 {
-    private OpenDQProperties openDQProperties;
-    private AddressNormalizationService addressNormalizationService;
+    AddressNormalizationService addressNormalizationService;
+    private static final String ACTION = "A";  // A = Add
 
-    private String slotName;
-    private String transformationFileLocation;
-
+    @SuppressWarnings("unused")  //used by CDI
     public AddService() {}
 
     @Inject
@@ -40,37 +43,37 @@ public class AddService
     public void addPerson(Person person, String slotName) throws ConnectException
     {
         this.slotName = slotName;
+        this.stepName = "RtIndex";
 
         for(Address address : person.getAddresses())
         {
             addressNormalizationService.normalizeAddress(address);
         }
 
-        callRuntimeMatchService(person);
+        RealTimeObjectActionDTO addedPerson = addPersonToMdm(person);
+        RuntimeMatchWS runtimeMatchWS = callRuntimeMatchService();
+        addSlot(runtimeMatchWS, person, addedPerson);
     }
 
-    private void callRuntimeMatchService(Person person) throws ConnectException
+    private RealTimeObjectActionDTO addPersonToMdm(Person person)
     {
-        RuntimeMatchWS runtimeMatchWS = configureRuntimeService();
+        DataManagementWSImpl mdmService = configureMdmService();
+        PersonToMdmConverter personToMdmConverter = new PersonToMdmConverter(ACTION);
+        RealTimeObjectActionDTO returnedObject =
+            mdmService.addObject(personToMdmConverter.createRealTimeObjectFromPerson(person));
 
-        configureSlot(runtimeMatchWS);
-        addSlot(runtimeMatchWS, person);
-    }
-
-    private void configureSlot(RuntimeMatchWS runtimeMatchWS)
-    {
-        ServiceResult configurationResponse = runtimeMatchWS.configureSlot(slotName, transformationFileLocation, "RtIndex");
-
-        if(configurationResponse.isError())
+        if(MdmConstants.JUNK_ID.equals(returnedObject.getObjectEntity().getPartyId()))
         {
-            throw new WebApplicationException(configurationResponse.getMessage());
+            throw new WebApplicationException("Failed to add person to mdm.");
         }
+
+        return returnedObject;
     }
 
-    private void addSlot(RuntimeMatchWS runtimeMatchWS, Person person)
+    void addSlot(RuntimeMatchWS runtimeMatchWS, Person person, RealTimeObjectActionDTO mdmPerson)
     {
         //while updateSlot sounds like an update, it is actually inserting an entry into the index
-        Map<String, String> fieldNamesAndValues = generateFieldNamesAndValues(person);
+        Map<String, String> fieldNamesAndValues = generateFieldNamesAndValues(person, mdmPerson);
 
         List<String> fieldNames = new ArrayList<String>();
         fieldNames.addAll(fieldNamesAndValues.keySet());
@@ -86,24 +89,18 @@ public class AddService
         }
     }
 
-    private RuntimeMatchWS configureRuntimeService()
-    {
-        transformationFileLocation = openDQProperties.getProperty("transformationFileLocation");
-
-        RuntimeMatchWSService runtimeMatchWSService = new RuntimeMatchWSService();
-        return runtimeMatchWSService.getRuntimeMatchWSPort();
-    }
-
     //TODO: Handle multiple addresses, emails, phones
-    Map<String, String> generateFieldNamesAndValues(Person person)
+    Map<String, String> generateFieldNamesAndValues(Person person, RealTimeObjectActionDTO mdmPerson)
     {
         Map<String, String> fieldNamesAndValues = new LinkedHashMap<String, String>();
 
+        //NOTE: Only 10 fields can be set
         fieldNamesAndValues.put("FIELD1", person.getName().getFirstName());
         fieldNamesAndValues.put("FIELD2", person.getName().getLastName());
         fieldNamesAndValues.put("FIELD3", person.getAddresses().get(0).getAddressLine1());
         fieldNamesAndValues.put("FIELD4", person.getAddresses().get(0).getCity());
-        fieldNamesAndValues.put("FIELD5", person.getId());
+        fieldNamesAndValues.put("FIELD5", person.getGlobalRegistryId());
+        fieldNamesAndValues.put("FIELD6", mdmPerson.getObjectEntity().getPartyId());
 
         return fieldNamesAndValues;
     }

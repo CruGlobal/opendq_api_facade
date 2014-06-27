@@ -2,6 +2,8 @@ package org.cru.service;
 
 import org.cru.model.MatchResponse;
 import org.cru.model.Person;
+import org.cru.qualifiers.Add;
+import org.cru.qualifiers.Match;
 
 import javax.inject.Inject;
 import java.net.ConnectException;
@@ -16,10 +18,11 @@ public class MatchOrAddService
     private AddService addService;
     private MatchingService matchingService;
 
+    @SuppressWarnings("unused")  //used by CDI
     public MatchOrAddService() {}
 
     @Inject
-    public MatchOrAddService(MatchingService matchingService, AddService addService)
+    public MatchOrAddService(@Match MatchingService matchingService, @Add AddService addService)
     {
         this.matchingService = matchingService;
         this.addService = addService;

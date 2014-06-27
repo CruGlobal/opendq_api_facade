@@ -37,7 +37,7 @@ public class DeleteResource
     {
         try
         {
-            SearchResponse foundIndex = matchingService.findMatchById(globalRegistryId, "Match");
+            SearchResponse foundIndex = matchingService.findMatchById(globalRegistryId, "MatchId");
             deleteService.deletePerson(globalRegistryId, foundIndex);
         }
         catch(ConnectException ce)

@@ -1,5 +1,6 @@
 package org.cru.service;
 
+import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import org.cru.model.Address;
 import org.cru.model.EmailAddress;
 import org.cru.model.MatchResponse;
@@ -42,7 +43,7 @@ public class MatchingServiceTest
             { exactMatchFromSoapUI, "3" },
             { exactMatchFromJavaTest, "2" },
             { similarMatchFromSoapUI, "3" },
-            { generatePersonWithLotsOfData(), "kses34223-dk43-9493-394nfa2348da"}
+            { generatePersonWithLotsOfData(), "3ikfj32-8rt4-9493-394nfa2348da"}
         };
     }
 
@@ -94,9 +95,26 @@ public class MatchingServiceTest
     @Test
     public void testFindMatchById() throws Exception
     {
-        SearchResponse searchResponse = matchingService.findMatchById("kses34223-dk43-9493-394nfa2348da", "MatchId");
+        SearchResponse searchResponse = matchingService.findMatchById("3ikfj32-8rt4-9493-394nfa2348da", "MatchId");
         assertNotNull(searchResponse);
-        assertEquals(searchResponse.getId(), "kses34223-dk43-9493-394nfa2348da");
+        assertEquals(searchResponse.getId(), "3ikfj32-8rt4-9493-394nfa2348da");
+    }
+
+    @Test
+    public void testFindMatchInMdm() throws Exception
+    {
+        RealTimeObjectActionDTO foundPerson = matchingService.findMatchInMdm("1073");
+
+        assertNotNull(foundPerson);
+        assertNotNull(foundPerson.getObjectEntity());
+        assertNotNull(foundPerson.getObjectAddresses());
+        assertNotNull(foundPerson.getObjectCommunications());
+        assertNotNull(foundPerson.getObjectAttributeDatas());
+
+        assertEquals(foundPerson.getObjectEntity().getPartyId(), "1073");
+        assertEquals(foundPerson.getObjectCommunications().getObjectCommunication().size(), 2);  //email and phone number
+        assertEquals(foundPerson.getObjectAddresses().getObjectAddress().size(), 1);  //only 1 address for this party id
+        assertEquals(foundPerson.getObjectAttributeDatas().getObjectAttributeData().size(), 2); //person and person attributes
     }
 
     private Person generatePersonWithDataExactMatchFromSoapUI()
@@ -164,7 +182,8 @@ public class MatchingServiceTest
         Person testPerson = new Person();
 
         Address testAddress = new Address();
-        testAddress.setAddressLine1("9878 Way Way");
+        testAddress.setId("kses34223-dk43-9493-394nfa2348d1");
+        testAddress.setAddressLine1("1125 Blvd Way");
         testAddress.setCity("Las Vegas");
         testAddress.setState("NV");
         testAddress.setZipCode("84253");
@@ -174,24 +193,24 @@ public class MatchingServiceTest
 
         PersonName personName = new PersonName();
         personName.setTitle("Ms.");
-        personName.setFirstName("Doe");
-        personName.setLastName("Low");
+        personName.setFirstName("Nom");
+        personName.setLastName("Nom");
 
         EmailAddress emailAddress = new EmailAddress();
-        emailAddress.setEmail("dow.low@crutest.org");
-        emailAddress.setId("654321");
+        emailAddress.setEmail("nom.nom@crutest.org");
+        emailAddress.setId("kses34223-dk43-9493-394nfa2348d2");
         List<EmailAddress> emailAddresses = new ArrayList<EmailAddress>();
         emailAddresses.add(emailAddress);
 
         PhoneNumber phoneNumber = new PhoneNumber();
         phoneNumber.setNumber("5555555553");
         phoneNumber.setLocation("work");
-        phoneNumber.setId("654321");
+        phoneNumber.setId("kses34223-dk43-9493-394nfa2348d3");
         List<PhoneNumber> phoneNumbers = new ArrayList<PhoneNumber>();
         phoneNumbers.add(phoneNumber);
 
-        testPerson.setGlobalRegistryId("kses34223-dk43-9493-394nfa2348da");
-        testPerson.setClientIntegrationId("654321");
+        testPerson.setGlobalRegistryId("3ikfj32-8rt4-9493-394nfa2348da");
+        testPerson.setClientIntegrationId("221568");
         testPerson.setSiebelContactId("1-6T4D4");
 
         testPerson.setName(personName);

@@ -1,11 +1,15 @@
 package org.cru.service;
 
+import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import org.cru.model.MatchResponse;
 import org.cru.model.Person;
+import org.cru.model.SearchResponse;
 import org.cru.qualifiers.Match;
 import org.cru.util.ResponseMessage;
 
 import javax.inject.Inject;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 import java.net.ConnectException;
 
 /**
@@ -21,6 +25,7 @@ public class MatchOrUpdateService
     @SuppressWarnings("unused")  //used by CDI
     public MatchOrUpdateService() {}
 
+    @SuppressWarnings("unused")  //used by CDI
     @Inject
     public MatchOrUpdateService(@Match MatchingService matchingService, UpdateService updateService)
     {
@@ -34,7 +39,28 @@ public class MatchOrUpdateService
 
         if(matchResponse == null)
         {
-            updateService.updatePerson(person, "MatchOrUpdate");
+            SearchResponse searchResponse = matchingService.findMatchById(person.getGlobalRegistryId(), "MatchId");
+
+            if(searchResponse == null)
+            {
+                throw new WebApplicationException(
+                    Response.status(Response.Status.NOT_FOUND)
+                        .entity("Could not find Person in the index using global registry id: " + person.getGlobalRegistryId())
+                        .build());
+            }
+
+            String partyId = (String) searchResponse.getResultValues().get("partyId");
+            RealTimeObjectActionDTO foundMdmPerson = matchingService.findMatchInMdm(partyId);
+
+            if(foundMdmPerson == null)
+            {
+                throw new WebApplicationException(
+                    Response.status(Response.Status.NOT_FOUND)
+                        .entity("Could not find Person in MDM using party id: " + partyId)
+                        .build());
+            }
+
+            updateService.updatePerson(person, foundMdmPerson, "MatchOrUpdate");
         }
         else   // This means there is a match found for the updated information
         {

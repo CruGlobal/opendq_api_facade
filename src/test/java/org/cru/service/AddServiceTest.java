@@ -111,7 +111,8 @@ public class AddServiceTest
         Person testPerson = new Person();
 
         Address testAddress = new Address();
-        testAddress.setAddressLine1("9878 Way Way");
+        testAddress.setId("kses34223-dk43-9493-394nfa2348d1");
+        testAddress.setAddressLine1("1125 Blvd Way");
         testAddress.setCity("Las Vegas");
         testAddress.setState("NV");
         testAddress.setZipCode("84253");
@@ -121,24 +122,24 @@ public class AddServiceTest
 
         PersonName personName = new PersonName();
         personName.setTitle("Ms.");
-        personName.setFirstName("Doe");
-        personName.setLastName("Low");
+        personName.setFirstName("Nom");
+        personName.setLastName("Nom");
 
         EmailAddress emailAddress = new EmailAddress();
-        emailAddress.setEmail("dow.low@crutest.org");
-        emailAddress.setId("654321");
+        emailAddress.setEmail("nom.nom@crutest.org");
+        emailAddress.setId("kses34223-dk43-9493-394nfa2348d2");
         List<EmailAddress> emailAddresses = new ArrayList<EmailAddress>();
         emailAddresses.add(emailAddress);
 
         PhoneNumber phoneNumber = new PhoneNumber();
         phoneNumber.setNumber("5555555553");
         phoneNumber.setLocation("work");
-        phoneNumber.setId("654321");
+        phoneNumber.setId("kses34223-dk43-9493-394nfa2348d3");
         List<PhoneNumber> phoneNumbers = new ArrayList<PhoneNumber>();
         phoneNumbers.add(phoneNumber);
 
-        testPerson.setGlobalRegistryId("kses34223-dk43-9493-394nfa2348da");
-        testPerson.setClientIntegrationId("654321");
+        testPerson.setGlobalRegistryId("3ikfj32-8rt4-9493-394nfa2348da");
+        testPerson.setClientIntegrationId("221568");
         testPerson.setSiebelContactId("1-6T4D4");
 
         testPerson.setName(personName);

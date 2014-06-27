@@ -38,16 +38,8 @@ public class MatchOrUpdateService
         }
         else   // This means there is a match found for the updated information
         {
-            // If it is the same global registry ID, then go ahead and do the add (do we even need to if we found it?)
-            if(matchResponse.getMatchId().equals(person.getGlobalRegistryId()))
-            {
-                updateService.updatePerson(person, "MatchOrUpdate");
-            }
-            else
-            {
-                matchResponse.setMessage(ResponseMessage.CONFLICT.getMessage());
-                return matchResponse;
-            }
+            matchResponse.setMessage(ResponseMessage.CONFLICT.getMessage());
+            return matchResponse;
         }
 
         return null;

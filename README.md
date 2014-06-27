@@ -1,11 +1,13 @@
 opendq_api_facade
 =================
 
-Endpoints
+<h3>Endpoints</h3>
 
-/oaf/rest/match
-/oaf/rest/update
-/oaf/rest/add
-/oaf/rest/match-or-add
-/oaf/rest/delete
+<ul>
+  <li>/oaf/rest/match</li>
+  <li>/oaf/rest/update</li>
+  <li>/oaf/rest/add</li>
+  <li>/oaf/rest/match-or-add</li>
+  <li>/oaf/rest/delete</li>
+</ul>
 

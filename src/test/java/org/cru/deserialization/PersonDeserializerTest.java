@@ -133,8 +133,7 @@ public class PersonDeserializerTest
         assertEquals(testPerson.getClientIntegrationId(), integrationId);
         assertThat(testPerson.getName(), deeplyEqualTo(personName));
         assertEquals(testPerson.getGender(), "Male");
-        assertEquals(testPerson.getRelayId(), relayGuid);
-        assertEquals(testPerson.getEmployeeRelayId(), relayGuid);
+        assertEquals(testPerson.getAuthentication().getRelayGuid(), relayGuid);
         assertEquals(testPerson.getSiebelContactId(), contactId);
         assertEquals(testPerson.getEmployeeNumber(), employeeNumber);
 

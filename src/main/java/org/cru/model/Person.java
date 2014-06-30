@@ -25,11 +25,10 @@ public class Person
     private String gender;
     private String employeeNumber;
     private String accountNumber;
-    private String employeeRelayId;
-    private String relayId;
     private List<PhoneNumber> phoneNumbers;
     private String clientIntegrationId;
     private String siebelContactId;
+    private Authentication authentication;
 
     public String getMdmPartyId()
     {
@@ -124,26 +123,6 @@ public class Person
         this.accountNumber = accountNumber;
     }
 
-    public String getEmployeeRelayId()
-    {
-        return employeeRelayId;
-    }
-
-    public void setEmployeeRelayId(String employeeRelayId)
-    {
-        this.employeeRelayId = employeeRelayId;
-    }
-
-    public String getRelayId()
-    {
-        return relayId;
-    }
-
-    public void setRelayId(String relayId)
-    {
-        this.relayId = relayId;
-    }
-
     public List<EmailAddress> getEmailAddresses()
     {
         return emailAddresses;
@@ -182,5 +161,15 @@ public class Person
     public void setSiebelContactId(String siebelContactId)
     {
         this.siebelContactId = siebelContactId;
+    }
+
+    public Authentication getAuthentication()
+    {
+        return authentication;
+    }
+
+    public void setAuthentication(Authentication authentication)
+    {
+        this.authentication = authentication;
     }
 }

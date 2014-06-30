@@ -134,8 +134,8 @@ public class PersonDeserializerTest
         assertThat(testPerson.getName(), deeplyEqualTo(personName));
         assertEquals(testPerson.getGender(), "Male");
         assertEquals(testPerson.getAuthentication().getRelayGuid(), relayGuid);
-        assertEquals(testPerson.getSiebelContactId(), contactId);
-        assertEquals(testPerson.getEmployeeNumber(), employeeNumber);
+        assertEquals(testPerson.getLinkedIdentities().getSiebelContactId(), contactId);
+        assertEquals(testPerson.getLinkedIdentities().getEmployeeNumber(), employeeNumber);
 
         //Address
         assertFalse(testPerson.getAddresses().isEmpty());

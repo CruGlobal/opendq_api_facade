@@ -78,15 +78,15 @@ public class PersonToMdmConverter
 
         objEntityDTO.setPartyId(person.getMdmPartyId());
         objEntityDTO.setTypId(MdmConstants.TYP_ID);
-        objEntityDTO.setCustomer("Y"); //TODO: Always?
+        objEntityDTO.setCustomer("Y"); //TODO: Not Always...Come from Client?
         objEntityDTO.setFromDate(today.toString(opendqDatePattern));  // This is overwritten on insert
         objEntityDTO.setDateCreated(today.toString(opendqDatePattern));
         objEntityDTO.setUserCreated(MdmConstants.USER);
         objEntityDTO.setSource(MdmConstants.SOURCE);
         objEntityDTO.setAction(action);
         objEntityDTO.setSrcId(person.getClientIntegrationId());
-        objEntityDTO.setStatus("A"); // A = Approved? P = Pending? TODO: What should go here?
-        objEntityDTO.setActive("Y"); //TODO: Always?
+        objEntityDTO.setStatus("A"); // A = Approved, P = Pending, R = Rejected TODO: What should go here?
+        objEntityDTO.setActive("Y"); //TODO: May be A = Active, D = Inactive
         objEntityDTO.setClientId(MdmConstants.CLIENT_ID);
 
         return objEntityDTO;
@@ -103,7 +103,7 @@ public class PersonToMdmConverter
             ObjAddressDTO addressToAdd = new ObjAddressDTO();
 
             addressToAdd.setAddressId(address.getMdmAddressId());
-            addressToAdd.setComExclusionType("N");  //TODO: What goes here?
+            addressToAdd.setComExclusionType("N");  //TODO: May need to get from client
 
             addressToAdd.setAddressLine1(address.getAddressLine1());
             addressToAdd.setAddressLine2(address.getAddressLine2());
@@ -157,7 +157,7 @@ public class PersonToMdmConverter
                 else emailCommunication.setCodId(MdmCodes.SECONDARY_EMAIL.getId());
 
                 emailCommunication.setCommdata(personEmail.getEmail());
-                emailCommunication.setComExclusionType("N");  //TODO: What to put here?
+                emailCommunication.setComExclusionType("N");  //TODO: May need to get from client
                 emailCommunication.setDateCreated(today.toString(opendqDatePattern));
                 emailCommunication.setUserCreated(MdmConstants.USER);
                 emailCommunication.setSource(MdmConstants.SOURCE);
@@ -185,7 +185,7 @@ public class PersonToMdmConverter
                 else phoneCommunication.setCodId(MdmCodes.SECONDARY_PHONE.getId());
 
                 phoneCommunication.setCommdata(personPhone.getNumber());
-                phoneCommunication.setComExclusionType("N");  //TODO: What to put here?
+                phoneCommunication.setComExclusionType("N");  //TODO: May need to get from client
                 phoneCommunication.setDateCreated(today.toString(opendqDatePattern));
                 phoneCommunication.setUserCreated(MdmConstants.USER);
                 phoneCommunication.setSource(MdmConstants.SOURCE);
@@ -224,7 +224,7 @@ public class PersonToMdmConverter
         personAttributes.setField1(MdmConstants.SOURCE);
         personAttributes.setField2(person.getLinkedIdentities().getEmployeeNumber());
         personAttributes.setField3(person.getLinkedIdentities().getSiebelContactId());
-        personAttributes.setField4(new DateTime().toString());  //TODO: What date/time should go here?
+        personAttributes.setField4(new DateTime().toString());  //TODO: Source Modified Date
         personAttributes.setFromDate(today.toString(opendqDatePattern));  // This is overwritten on insert
         personAttributes.setTypId(MdmConstants.TYP_ID);
         personAttributes.setDateCreated(today.toString(opendqDatePattern));

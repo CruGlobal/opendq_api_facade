@@ -166,7 +166,7 @@ public class PersonDeserializerTest
                 "\"person\": {" +
                     "\"id\": \"" + globalRegistryId + "\"," +
                     "\"email_address\": {" +
-                        "\"client_integration_id\": \"" + integrationId + "\"," +
+                        "\"id\": \"" + integrationId + "\"," +
                         "\"email\": \"blah@blah.com\"" +
                     "}," +
                     "\"last_name\": \"" + testPersonName.getLastName() + "\"," +
@@ -177,13 +177,13 @@ public class PersonDeserializerTest
                     "\"suffix\": \"" + testPersonName.getSuffix() + "\"," +
                     "\"gender\": \"Male\"," +
                     "\"phone_number\": {" +
-                        "\"client_integration_id\": \"" + integrationId + "\"," +
+                        "\"id\": \"" + integrationId + "\"," +
                         "\"number\": \"5555555555\"," +
                         "\"location\": \"mobile\"" +
                     "}," +
                     "\"client_integration_id\": \"" + integrationId + "\"," +
                     "\"address\": {" +
-                        "\"client_integration_id\": \"" + testAddress1.getId() + "\"," +
+                        "\"id\": \"" + testAddress1.getId() + "\"," +
                         "\"address_1\": \"" + testAddress1.getAddressLine1() + "\"," +
                         "\"address_2\": \"" + testAddress1.getAddressLine2() + "\"," +
                         "\"address_3\": \"" + testAddress1.getAddressLine3() + "\"," +
@@ -211,7 +211,7 @@ public class PersonDeserializerTest
                 "\"person\": {" +
                     "\"id\": \"" + globalRegistryId + "\"," +
                     "\"email_address\": {" +
-                        "\"client_integration_id\": \"" + integrationId + "\"," +
+                        "\"id\": \"" + integrationId + "\"," +
                         "\"email\": \"blah@blah.com\"" +
                     "}," +
                     "\"last_name\": \"" + testPersonName.getLastName() + "\"," +
@@ -222,14 +222,14 @@ public class PersonDeserializerTest
                     "\"suffix\": \"" + testPersonName.getSuffix() + "\"," +
                     "\"gender\": \"Male\"," +
                     "\"phone_number\": {" +
-                        "\"client_integration_id\": \"" + integrationId + "\"," +
+                        "\"id\": \"" + integrationId + "\"," +
                         "\"number\": \"5555555555\"," +
                         "\"location\": \"mobile\"" +
                     "}," +
                     "\"client_integration_id\": \"" + integrationId + "\"," +
                     "\"address\": [" +
                         "{" +
-                            "\"client_integration_id\": \"" + testAddress1.getId() + "\"," +
+                            "\"id\": \"" + testAddress1.getId() + "\"," +
                             "\"address_1\": \"" + testAddress1.getAddressLine1() + "\"," +
                             "\"address_2\": \"" + testAddress1.getAddressLine2() + "\"," +
                             "\"address_3\": \"" + testAddress1.getAddressLine3() + "\"," +
@@ -240,7 +240,7 @@ public class PersonDeserializerTest
                             "\"country\": \"" + testAddress1.getCountry() + "\"" +
                         "}," +
                         "{" +
-                            "\"client_integration_id\": \"" + testAddress2.getId() + "\"," +
+                            "\"id\": \"" + testAddress2.getId() + "\"," +
                             "\"address_1\": \"" + testAddress2.getAddressLine1() + "\"," +
                             "\"address_2\": \"" + testAddress2.getAddressLine2() + "\"," +
                             "\"address_3\": \"" + testAddress2.getAddressLine3() + "\"," +
@@ -270,11 +270,11 @@ public class PersonDeserializerTest
                     "\"id\": \"" + globalRegistryId + "\"," +
                     "\"email_address\": [" +
                         "{" +
-                            "\"client_integration_id\": \"" + integrationId + "\"," +
+                            "\"id\": \"" + integrationId + "\"," +
                             "\"email\": \"blah@blah.com\"" +
                         "}," +
                         "{" +
-                            "\"client_integration_id\": \"" + integrationId + "\"," +
+                            "\"id\": \"" + integrationId + "\"," +
                             "\"email\": \"wee@wee.org\"" +
                         "}" +
                     "]," +
@@ -286,13 +286,13 @@ public class PersonDeserializerTest
                     "\"suffix\": \"" + testPersonName.getSuffix() + "\"," +
                     "\"gender\": \"Male\"," +
                     "\"phone_number\": {" +
-                        "\"client_integration_id\": \"" + integrationId + "\"," +
+                        "\"id\": \"" + integrationId + "\"," +
                         "\"number\": \"5555555555\"," +
                         "\"location\": \"mobile\"" +
                     "}," +
                     "\"client_integration_id\": \"" + integrationId + "\"," +
                     "\"address\": {" +
-                        "\"client_integration_id\": \"" + testAddress1.getId() + "\"," +
+                        "\"id\": \"" + testAddress1.getId() + "\"," +
                         "\"address_1\": \"" + testAddress1.getAddressLine1() + "\"," +
                         "\"address_2\": \"" + testAddress1.getAddressLine2() + "\"," +
                         "\"address_3\": \"" + testAddress1.getAddressLine3() + "\"," +
@@ -320,7 +320,7 @@ public class PersonDeserializerTest
                 "\"person\": {" +
                     "\"id\": \"" + globalRegistryId + "\"," +
                     "\"email_address\": {" +
-                        "\"client_integration_id\": \"" + integrationId + "\"," +
+                        "\"id\": \"" + integrationId + "\"," +
                         "\"email\": \"blah@blah.com\"" +
                     "}," +
                     "\"last_name\": \"" + testPersonName.getLastName() + "\"," +
@@ -332,19 +332,19 @@ public class PersonDeserializerTest
                     "\"gender\": \"Male\"," +
                     "\"phone_number\": [" +
                         "{" +
-                            "\"client_integration_id\": \"" + integrationId + "\"," +
+                            "\"id\": \"" + integrationId + "\"," +
                             "\"number\": \"5555555555\"," +
                             "\"location\": \"mobile\"" +
                         "}," +
                         "{" +
-                            "\"client_integration_id\": \"" + integrationId + "\"," +
+                            "\"id\": \"" + integrationId + "\"," +
                             "\"number\": \"5555555554\"," +
                             "\"location\": \"home\"" +
                         "}" +
                     "]," +
                     "\"client_integration_id\": \"" + integrationId + "\"," +
                     "\"address\": {" +
-                        "\"client_integration_id\": \"" + testAddress1.getId() + "\"," +
+                        "\"id\": \"" + testAddress1.getId() + "\"," +
                         "\"address_1\": \"" + testAddress1.getAddressLine1() + "\"," +
                         "\"address_2\": \"" + testAddress1.getAddressLine2() + "\"," +
                         "\"address_3\": \"" + testAddress1.getAddressLine3() + "\"," +
@@ -377,7 +377,7 @@ public class PersonDeserializerTest
                     "\"gender\": \"Male\"," +
                     "\"client_integration_id\": \"" + integrationId + "\"," +
                     "\"address\": {" +
-                        "\"client_integration_id\": \"" + minimalAddress.getId() + "\"," +
+                        "\"id\": \"" + minimalAddress.getId() + "\"," +
                         "\"address_1\": \"" + minimalAddress.getAddressLine1() + "\"," +
                         "\"city\": \"" + minimalAddress.getCity() + "\"," +
                         "\"state\": \"" + minimalAddress.getState() + "\"," +

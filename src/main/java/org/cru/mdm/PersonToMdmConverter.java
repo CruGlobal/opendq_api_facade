@@ -85,7 +85,7 @@ public class PersonToMdmConverter
         objEntityDTO.setSource(MdmConstants.SOURCE);
         objEntityDTO.setAction(action);
         objEntityDTO.setSrcId(person.getClientIntegrationId());
-        objEntityDTO.setStatus("A"); // A = Approved, P = Pending, R = Rejected TODO: What should go here?
+        objEntityDTO.setStatus(MdmStatus.APPROVED.getStatusCode()); //TODO: What should go here?
         objEntityDTO.setActive("Y"); //TODO: May be A = Active, D = Inactive
         objEntityDTO.setClientId(MdmConstants.CLIENT_ID);
 

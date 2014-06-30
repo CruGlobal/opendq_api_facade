@@ -29,7 +29,7 @@ import java.util.Map;
  */
 public class UpdateService extends AddService
 {
-    private static final String ACTION = "U";  //TODO: Is this correct?
+    private static final String ACTION = "U";
 
     @SuppressWarnings("unused")  //Used by CDI
     public UpdateService() {}

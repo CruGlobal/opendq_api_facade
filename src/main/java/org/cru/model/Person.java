@@ -23,13 +23,11 @@ public class Person
     private PersonName name;
     private List<Address> addresses;
     private String gender;
-    private String employeeNumber;
     private String accountNumber;
-    private String employeeRelayId;
-    private String relayId;
     private List<PhoneNumber> phoneNumbers;
     private String clientIntegrationId;
-    private String siebelContactId;
+    private Authentication authentication;
+    private LinkedIdentities linkedIdentities;
 
     public String getMdmPartyId()
     {
@@ -104,16 +102,6 @@ public class Person
         this.gender = gender;
     }
 
-    public String getEmployeeNumber()
-    {
-        return employeeNumber;
-    }
-
-    public void setEmployeeNumber(String employeeNumber)
-    {
-        this.employeeNumber = employeeNumber;
-    }
-
     public String getAccountNumber()
     {
         return accountNumber;
@@ -122,26 +110,6 @@ public class Person
     public void setAccountNumber(String accountNumber)
     {
         this.accountNumber = accountNumber;
-    }
-
-    public String getEmployeeRelayId()
-    {
-        return employeeRelayId;
-    }
-
-    public void setEmployeeRelayId(String employeeRelayId)
-    {
-        this.employeeRelayId = employeeRelayId;
-    }
-
-    public String getRelayId()
-    {
-        return relayId;
-    }
-
-    public void setRelayId(String relayId)
-    {
-        this.relayId = relayId;
     }
 
     public List<EmailAddress> getEmailAddresses()
@@ -174,13 +142,23 @@ public class Person
         this.clientIntegrationId = clientIntegrationId;
     }
 
-    public String getSiebelContactId()
+    public Authentication getAuthentication()
     {
-        return siebelContactId;
+        return authentication;
     }
 
-    public void setSiebelContactId(String siebelContactId)
+    public void setAuthentication(Authentication authentication)
     {
-        this.siebelContactId = siebelContactId;
+        this.authentication = authentication;
+    }
+
+    public LinkedIdentities getLinkedIdentities()
+    {
+        return linkedIdentities;
+    }
+
+    public void setLinkedIdentities(LinkedIdentities linkedIdentities)
+    {
+        this.linkedIdentities = linkedIdentities;
     }
 }

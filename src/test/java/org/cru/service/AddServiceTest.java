@@ -2,6 +2,7 @@ package org.cru.service;
 
 import org.cru.model.Address;
 import org.cru.model.EmailAddress;
+import org.cru.model.LinkedIdentities;
 import org.cru.model.Person;
 import org.cru.model.PersonName;
 import org.cru.model.PhoneNumber;
@@ -93,9 +94,12 @@ public class AddServiceTest
         List<PhoneNumber> phoneNumbers = new ArrayList<PhoneNumber>();
         phoneNumbers.add(phoneNumber);
 
+        LinkedIdentities linkedIdentities = new LinkedIdentities();
+        linkedIdentities.setSiebelContactId("1-43BK9");
+
         testPerson.setGlobalRegistryId("TEST_ID1");
         testPerson.setClientIntegrationId("1394218");
-        testPerson.setSiebelContactId("1-43BK9");
+        testPerson.setLinkedIdentities(linkedIdentities);
 
         testPerson.setName(personName);
         testPerson.setAddresses(addresses);
@@ -138,9 +142,12 @@ public class AddServiceTest
         List<PhoneNumber> phoneNumbers = new ArrayList<PhoneNumber>();
         phoneNumbers.add(phoneNumber);
 
+        LinkedIdentities linkedIdentities = new LinkedIdentities();
+        linkedIdentities.setSiebelContactId("1-6T4D4");
+
         testPerson.setGlobalRegistryId("3ikfj32-8rt4-9493-394nfa2348da");
         testPerson.setClientIntegrationId("221568");
-        testPerson.setSiebelContactId("1-6T4D4");
+        testPerson.setLinkedIdentities(linkedIdentities);
 
         testPerson.setName(personName);
         testPerson.setAddresses(addresses);

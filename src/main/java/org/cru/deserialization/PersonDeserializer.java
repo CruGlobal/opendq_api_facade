@@ -5,7 +5,9 @@ import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.DeserializationContext;
 import org.codehaus.jackson.map.JsonDeserializer;
 import org.cru.model.Address;
+import org.cru.model.Authentication;
 import org.cru.model.EmailAddress;
+import org.cru.model.LinkedIdentities;
 import org.cru.model.Person;
 import org.cru.model.PersonName;
 import org.cru.model.PhoneNumber;
@@ -38,16 +40,8 @@ public class PersonDeserializer extends JsonDeserializer<Person>
         person.setAddresses(handleOneOrMoreAddresses(data.path("address")));
         person.setEmailAddresses(handleOneOrMoreEmailAddresses(data.path("email_address")));
         person.setPhoneNumbers(handleOneOrMorePhoneNumbers(data.path("phone_number")));
-
-        //Handle linked identities
-        JsonNode linkedIdentitiesNode = data.path("linked_identities");
-        person.setEmployeeNumber(linkedIdentitiesNode.path("employee_number").asText());
-        person.setSiebelContactId(linkedIdentitiesNode.path("siebel_contact_id").asText());
-
-        //Handle authentication data
-        JsonNode authenticationNode = data.path("authentication");
-        person.setEmployeeRelayId(authenticationNode.path("relay_guid").asText());
-        person.setRelayId(authenticationNode.path("relay_guid").asText());
+        person.setAuthentication(deserializeAuthentication(data.path("authentication")));
+        person.setLinkedIdentities(deserializeLinkedIdentities(data.path("linked_identities")));
 
         return person;
     }
@@ -156,5 +150,22 @@ public class PersonDeserializer extends JsonDeserializer<Person>
         phoneNumber.setNumber(phoneNumberNode.path("number").asText());
 
         return phoneNumber;
+    }
+
+    private Authentication deserializeAuthentication(JsonNode authenticationNode)
+    {
+        Authentication authentication = new Authentication();
+        authentication.setRelayGuid(authenticationNode.path("relay_guid").asText());
+
+        return authentication;
+    }
+
+    private LinkedIdentities deserializeLinkedIdentities(JsonNode linkedIdentitiesNode)
+    {
+        LinkedIdentities linkedIdentities = new LinkedIdentities();
+        linkedIdentities.setEmployeeNumber(linkedIdentitiesNode.path("employee_number").asText());
+        linkedIdentities.setSiebelContactId(linkedIdentitiesNode.path("siebel_contact_id").asText());
+
+        return linkedIdentities;
     }
 }

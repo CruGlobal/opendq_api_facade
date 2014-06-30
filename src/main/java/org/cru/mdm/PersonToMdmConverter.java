@@ -222,8 +222,8 @@ public class PersonToMdmConverter
 
         personAttributes.setObjAdId(person.getMdmPersonAttributesId());
         personAttributes.setField1(MdmConstants.SOURCE);
-        personAttributes.setField2(person.getEmployeeNumber());
-        personAttributes.setField3(person.getSiebelContactId());
+        personAttributes.setField2(person.getLinkedIdentities().getEmployeeNumber());
+        personAttributes.setField3(person.getLinkedIdentities().getSiebelContactId());
         personAttributes.setField4(new DateTime().toString());  //TODO: What date/time should go here?
         personAttributes.setFromDate(today.toString(opendqDatePattern));  // This is overwritten on insert
         personAttributes.setTypId(MdmConstants.TYP_ID);

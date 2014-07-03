@@ -8,7 +8,11 @@ import com.infosolvetech.rtmatch.pdi4.ServiceResult;
 import org.cru.util.OpenDQProperties;
 
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+import javax.xml.namespace.QName;
 import java.net.ConnectException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Parent service for holding common functionality between
@@ -50,7 +54,19 @@ public class IndexingService
 
     DataManagementWSImpl configureMdmService()
     {
-        DataManagementWSImplService mdmService = new DataManagementWSImplService();
+        QName qName = new QName(openDQProperties.getProperty("namespaceURI"), openDQProperties.getProperty("serviceName"));
+        URL wsdlUrl;
+
+        try
+        {
+            wsdlUrl = new URL(openDQProperties.getProperty("wsdlUrl"));
+        }
+        catch(MalformedURLException e)
+        {
+            throw new WebApplicationException(Response.serverError().entity(e.getMessage()).build());
+        }
+
+        DataManagementWSImplService mdmService = new DataManagementWSImplService(wsdlUrl, qName);
         return mdmService.getDataManagementWSImplPort();
     }
 }

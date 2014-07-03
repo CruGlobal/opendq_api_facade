@@ -104,18 +104,13 @@ public class MatchingServiceTest
     @Test
     public void testFindMatchInMdm() throws Exception
     {
-        RealTimeObjectActionDTO foundPerson = matchingService.findMatchInMdm("1073");
+        RealTimeObjectActionDTO foundPerson = matchingService.findMatchInMdm("886");
 
         assertNotNull(foundPerson);
         assertNotNull(foundPerson.getObjectEntity());
         assertNotNull(foundPerson.getObjectAddresses());
         assertNotNull(foundPerson.getObjectCommunications());
         assertNotNull(foundPerson.getObjectAttributeDatas());
-
-        assertEquals(foundPerson.getObjectEntity().getPartyId(), "1073");
-        assertEquals(foundPerson.getObjectCommunications().getObjectCommunication().size(), 2);  //email and phone number
-        assertEquals(foundPerson.getObjectAddresses().getObjectAddress().size(), 1);  //only 1 address for this party id
-        assertEquals(foundPerson.getObjectAttributeDatas().getObjectAttributeData().size(), 2); //person and person attributes
     }
 
     @Test

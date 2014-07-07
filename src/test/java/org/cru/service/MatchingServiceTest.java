@@ -36,14 +36,7 @@ public class MatchingServiceTest
     @DataProvider(name = "successfulMatches")
     private Object[][] successfulMatches()
     {
-        Person exactMatchFromSoapUI = generatePersonWithDataExactMatchFromSoapUI();
-        Person similarMatchFromSoapUI = generatePersonWithDataSimilarMatchFromSoapUI();
-        Person exactMatchFromJavaTest = generatePersonWithDataExactMatchFromJavaTest();
-
         return new Object[][] {
-            { exactMatchFromSoapUI, "3" },
-            { exactMatchFromJavaTest, "2" },
-            { similarMatchFromSoapUI, "3" },
             { generatePersonWithLotsOfData(), "3ikfj32-8rt4-9493-394nfa2348da"}
         };
     }
@@ -116,7 +109,7 @@ public class MatchingServiceTest
     @Test
     public void testFindDeletedInMdm() throws Exception
     {
-        RealTimeObjectActionDTO deletedPerson = matchingService.findMatchInMdm("1079");
+        RealTimeObjectActionDTO deletedPerson = matchingService.findMatchInMdm("1");
         assertEquals(deletedPerson.getObjectEntity().getAction(), "D");
     }
 

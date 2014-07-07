@@ -7,6 +7,7 @@ import com.infosolvetech.rtmatch.pdi4.ServiceResult;
 import org.cru.model.MatchResponse;
 import org.cru.model.Person;
 import org.cru.model.SearchResponse;
+import org.cru.qualifiers.Delete;
 import org.cru.qualifiers.Match;
 import org.cru.util.OpenDQProperties;
 import org.cru.util.ResponseMessage;
@@ -33,7 +34,7 @@ public class MatchingService extends IndexingService
     public MatchingService() {}
 
     @Inject
-    public MatchingService(OpenDQProperties openDQProperties, DeleteService deleteService)
+    public MatchingService(OpenDQProperties openDQProperties, @Delete DeleteService deleteService)
     {
         this.openDQProperties = openDQProperties;
         this.deleteService = deleteService;

@@ -10,7 +10,6 @@ import org.cru.model.Person;
 import org.cru.model.PersonName;
 import org.cru.model.PhoneNumber;
 import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -19,6 +18,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 /**
@@ -123,6 +123,7 @@ public class PersonDeserializerTest
         Person testPerson = personDeserializer.deserialize(jsonParser, context);
 
         commonPersonAssertions(testPerson, minimalPersonName, minimalAddress);
+        assertNull(testPerson.getName().getMiddleName());
     }
 
     private void commonPersonAssertions(Person testPerson)
@@ -441,9 +442,6 @@ public class PersonDeserializerTest
         Address testAddress1 = new Address();
         testAddress1.setId(integrationId);
         testAddress1.setAddressLine1("Add 1");
-        testAddress1.setAddressLine2("");
-        testAddress1.setAddressLine3("");
-        testAddress1.setAddressLine4("");
         testAddress1.setCity("City3");
         testAddress1.setState("AK");
         testAddress1.setZipCode("22222");
@@ -468,9 +466,6 @@ public class PersonDeserializerTest
         testPersonName.setFirstName("TestFirstName");
         testPersonName.setLastName("TestLastName");
         testPersonName.setTitle("Mr.");
-        testPersonName.setMiddleName("");
-        testPersonName.setPreferredName("");
-        testPersonName.setSuffix("");
 
         return testPersonName;
     }

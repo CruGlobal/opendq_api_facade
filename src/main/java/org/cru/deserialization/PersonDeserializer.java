@@ -17,6 +17,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +49,8 @@ public class PersonDeserializer extends JsonDeserializer<Person>
         person.setLinkedIdentities(deserializeLinkedIdentities(data.path("linked_identities")));
         person.setClientUpdatedAt(deserializeDateTime(data.path("client_updated_at")));
 
+        setEmptyStringsToNull(person);
+
         return person;
     }
 
@@ -57,7 +60,7 @@ public class PersonDeserializer extends JsonDeserializer<Person>
 
         if(addressData.isArray())
         {
-            for (JsonNode addressNode : addressData)
+            for(JsonNode addressNode : addressData)
             {
                 addresses.add(deserializeAddress(addressNode));
             }
@@ -180,5 +183,51 @@ public class PersonDeserializer extends JsonDeserializer<Person>
         if(Strings.isNullOrEmpty(dateTimeString)) return null;
         DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
         return formatter.parseDateTime(dateTimeString);
+    }
+
+    private void setEmptyStringsToNull(Person person)
+    {
+        handleEmptyStrings(person);
+        handleEmptyStrings(person.getName());
+        handleEmptyStrings(person.getAuthentication());
+        handleEmptyStrings(person.getLinkedIdentities());
+
+        for(Address address : person.getAddresses())
+        {
+            handleEmptyStrings(address);
+        }
+
+        for(EmailAddress emailAddress : person.getEmailAddresses())
+        {
+            handleEmptyStrings(emailAddress);
+        }
+
+        for(PhoneNumber phoneNumber : person.getPhoneNumbers())
+        {
+            handleEmptyStrings(phoneNumber);
+        }
+    }
+
+    private void handleEmptyStrings(Object object)
+    {
+        for(Field field : object.getClass().getDeclaredFields())
+        {
+            if(String.class.equals(field.getType()))
+            {
+                field.setAccessible(true);
+                try
+                {
+                    if("".equals(field.get(object)))
+                    {
+                        field.set(object, null);
+                    }
+                }
+                catch(IllegalAccessException e)
+                {
+                    // Since we have field.setAccessible(true) above, this exception cannot be thrown
+                    System.err.println("This can't happen: " + e.getMessage());
+                }
+            }
+        }
     }
 }

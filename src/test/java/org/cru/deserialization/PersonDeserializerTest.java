@@ -124,6 +124,8 @@ public class PersonDeserializerTest
 
         commonPersonAssertions(testPerson, minimalPersonName, minimalAddress);
         assertNull(testPerson.getName().getMiddleName());
+        assertTrue(testPerson.getEmailAddresses().isEmpty());
+        assertTrue(testPerson.getPhoneNumbers().isEmpty());
     }
 
     private void commonPersonAssertions(Person testPerson)

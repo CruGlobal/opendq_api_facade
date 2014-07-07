@@ -42,9 +42,9 @@ public class PersonDeserializer extends JsonDeserializer<Person>
         person.setAccountNumber(data.path("account_number").asText());
         person.setClientIntegrationId(data.path("client_integration_id").asText());
 
-        person.setAddresses(handleOneOrMoreAddresses(data.path("address")));
-        person.setEmailAddresses(handleOneOrMoreEmailAddresses(data.path("email_address")));
-        person.setPhoneNumbers(handleOneOrMorePhoneNumbers(data.path("phone_number")));
+        person.setAddresses(handleZeroOrMoreAddresses(data.path("address")));
+        person.setEmailAddresses(handleZeroOrMoreEmailAddresses(data.path("email_address")));
+        person.setPhoneNumbers(handleZeroOrMorePhoneNumbers(data.path("phone_number")));
         person.setAuthentication(deserializeAuthentication(data.path("authentication")));
         person.setLinkedIdentities(deserializeLinkedIdentities(data.path("linked_identities")));
         person.setClientUpdatedAt(deserializeDateTime(data.path("client_updated_at")));
@@ -54,11 +54,12 @@ public class PersonDeserializer extends JsonDeserializer<Person>
         return person;
     }
 
-    private List<Address> handleOneOrMoreAddresses(JsonNode addressData)
+    private List<Address> handleZeroOrMoreAddresses(JsonNode addressData)
     {
         List<Address> addresses = new ArrayList<Address>();
 
-        if(addressData.isArray())
+        if(addressData.isMissingNode()) return addresses;
+        else if(addressData.isArray())
         {
             for(JsonNode addressNode : addressData)
             {
@@ -73,11 +74,12 @@ public class PersonDeserializer extends JsonDeserializer<Person>
         return addresses;
     }
 
-    private List<EmailAddress> handleOneOrMoreEmailAddresses(JsonNode emailAddressData)
+    private List<EmailAddress> handleZeroOrMoreEmailAddresses(JsonNode emailAddressData)
     {
         List<EmailAddress> emailAddresses = new ArrayList<EmailAddress>();
 
-        if(emailAddressData.isArray())
+        if(emailAddressData.isMissingNode()) return emailAddresses;
+        else if(emailAddressData.isArray())
         {
             for(JsonNode emailAddressNode : emailAddressData)
             {
@@ -92,12 +94,12 @@ public class PersonDeserializer extends JsonDeserializer<Person>
         return emailAddresses;
     }
 
-
-    private List<PhoneNumber> handleOneOrMorePhoneNumbers(JsonNode phoneNumberData)
+    private List<PhoneNumber> handleZeroOrMorePhoneNumbers(JsonNode phoneNumberData)
     {
         List<PhoneNumber> phoneNumbers = new ArrayList<PhoneNumber>();
 
-        if(phoneNumberData.isArray())
+        if(phoneNumberData.isMissingNode()) return phoneNumbers;
+        else if(phoneNumberData.isArray())
         {
             for(JsonNode phoneNumberNode : phoneNumberData)
             {

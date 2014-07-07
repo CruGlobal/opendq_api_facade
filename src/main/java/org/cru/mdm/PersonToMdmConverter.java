@@ -86,7 +86,7 @@ public class PersonToMdmConverter
         objEntityDTO.setAction(action);
         objEntityDTO.setSrcId(person.getClientIntegrationId());
         objEntityDTO.setStatus(MdmStatus.APPROVED.getStatusCode()); //TODO: What should go here?
-        objEntityDTO.setActive("Y"); //TODO: May be A = Active, D = Inactive
+        objEntityDTO.setActive("Y"); //TODO: Should this ever be 'N'?
         objEntityDTO.setClientId(MdmConstants.CLIENT_ID);
 
         return objEntityDTO;
@@ -119,6 +119,7 @@ public class PersonToMdmConverter
             addressToAdd.setUserCreated(MdmConstants.USER);
             addressToAdd.setSource(MdmConstants.SOURCE);
             addressToAdd.setAction(action);
+            addressToAdd.setUserDef1(address.getId());
 
             //TODO: This should come in from the json
             if(numAddress == 0) addressToAdd.setCodId(MdmCodes.MAILING_ADDRESS.getId());
@@ -164,6 +165,7 @@ public class PersonToMdmConverter
                 emailCommunication.setAction(action);
                 emailCommunication.setClientId(MdmConstants.CLIENT_ID);
                 emailCommunication.setTypId(MdmConstants.TYP_ID);
+                emailCommunication.setUserDef1(personEmail.getId());
 
                 innerList.add(emailCommunication);
                 numEmail++;
@@ -190,7 +192,8 @@ public class PersonToMdmConverter
                 phoneCommunication.setUserCreated(MdmConstants.USER);
                 phoneCommunication.setSource(MdmConstants.SOURCE);
                 phoneCommunication.setAction(action);
-                phoneCommunication.setUserDef1(personPhone.getLocation());
+                phoneCommunication.setUserDef1(personPhone.getId());
+                phoneCommunication.setUserDef2(personPhone.getLocation());
                 phoneCommunication.setClientId(MdmConstants.CLIENT_ID);
                 phoneCommunication.setTypId(MdmConstants.TYP_ID);
 

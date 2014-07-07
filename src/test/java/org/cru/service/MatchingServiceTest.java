@@ -104,6 +104,25 @@ public class MatchingServiceTest
         assertNotNull(foundPerson.getObjectAddresses());
         assertNotNull(foundPerson.getObjectCommunications());
         assertNotNull(foundPerson.getObjectAttributeDatas());
+
+        // Person with multiple communications and attribute data rows
+        foundPerson = matchingService.findMatchInMdm("885");
+        assertNotNull(foundPerson);
+        assertNotNull(foundPerson.getObjectEntity());
+        assertNotNull(foundPerson.getObjectAddresses());
+        assertNotNull(foundPerson.getObjectCommunications());
+        assertEquals(foundPerson.getObjectCommunications().getObjectCommunication().size(), 2);
+        assertNotNull(foundPerson.getObjectAttributeDatas());
+        assertEquals(foundPerson.getObjectAttributeDatas().getObjectAttributeData().size(), 2);
+
+        // Person with multiple addresses
+        foundPerson = matchingService.findMatchInMdm("196");
+        assertNotNull(foundPerson);
+        assertNotNull(foundPerson.getObjectEntity());
+        assertNotNull(foundPerson.getObjectAddresses());
+        assertEquals(foundPerson.getObjectAddresses().getObjectAddress().size(), 5);
+        assertNotNull(foundPerson.getObjectCommunications());
+        assertNotNull(foundPerson.getObjectAttributeDatas());
     }
 
     @Test

@@ -73,7 +73,7 @@ public class PersonToMdmConverter
         }
     }
 
-    ObjEntityDTO createObjEntity(Person person, LocalDate today)
+    private ObjEntityDTO createObjEntity(Person person, LocalDate today)
     {
         ObjEntityDTO objEntityDTO = new ObjEntityDTO();
 
@@ -93,7 +93,7 @@ public class PersonToMdmConverter
         return objEntityDTO;
     }
 
-    ObjAddressDTOList createAddressDTOList(List<Address> addresses, LocalDate today)
+    private ObjAddressDTOList createAddressDTOList(List<Address> addresses, LocalDate today)
     {
         ObjAddressDTOList addressDTOList = new ObjAddressDTOList();
         List<ObjAddressDTO> internalList = addressDTOList.getObjectAddress();
@@ -137,7 +137,7 @@ public class PersonToMdmConverter
         return addressDTOList;
     }
 
-    ObjCommunicationDTOList createObjCommunicationList(Person person, LocalDate today)
+    private ObjCommunicationDTOList createObjCommunicationList(Person person, LocalDate today)
     {
         List<EmailAddress> personEmails = person.getEmailAddresses();
         List<PhoneNumber> personPhoneNumbers = person.getPhoneNumbers();
@@ -206,7 +206,7 @@ public class PersonToMdmConverter
         return communicationDTOList;
     }
 
-    ObjAttributeDataDTOList createAttributeDataDTOList(Person person, LocalDate today)
+    private ObjAttributeDataDTOList createAttributeDataDTOList(Person person, LocalDate today)
     {
         ObjAttributeDataDTOList objAttributeDataDTOList = new ObjAttributeDataDTOList();
         List<ObjAttributeDataDTO> internalList = objAttributeDataDTOList.getObjectAttributeData();
@@ -251,7 +251,7 @@ public class PersonToMdmConverter
         return personAttributes;
     }
 
-    ObjAttributeDataDTO createPersonAttributeData(Person person, LocalDate today)
+    private ObjAttributeDataDTO createPersonAttributeData(Person person, LocalDate today)
     {
         ObjAttributeDataDTO attributeData = new ObjAttributeDataDTO();
         PersonName personName = person.getName();

@@ -3,6 +3,7 @@ package org.cru.model;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.cru.deserialization.PersonDeserializer;
 import org.cru.mdm.MdmConstants;
+import org.joda.time.DateTime;
 
 import java.util.List;
 
@@ -28,6 +29,7 @@ public class Person
     private String clientIntegrationId;
     private Authentication authentication;
     private LinkedIdentities linkedIdentities;
+    private DateTime clientUpdatedAt;
 
     public String getMdmPartyId()
     {
@@ -160,5 +162,15 @@ public class Person
     public void setLinkedIdentities(LinkedIdentities linkedIdentities)
     {
         this.linkedIdentities = linkedIdentities;
+    }
+
+    public DateTime getClientUpdatedAt()
+    {
+        return clientUpdatedAt;
+    }
+
+    public void setClientUpdatedAt(DateTime clientUpdatedAt)
+    {
+        this.clientUpdatedAt = clientUpdatedAt;
     }
 }

@@ -1,5 +1,6 @@
 package org.cru.deserialization;
 
+import com.google.common.base.Strings;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.DeserializationContext;
@@ -11,6 +12,9 @@ import org.cru.model.LinkedIdentities;
 import org.cru.model.Person;
 import org.cru.model.PersonName;
 import org.cru.model.PhoneNumber;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,6 +46,7 @@ public class PersonDeserializer extends JsonDeserializer<Person>
         person.setPhoneNumbers(handleOneOrMorePhoneNumbers(data.path("phone_number")));
         person.setAuthentication(deserializeAuthentication(data.path("authentication")));
         person.setLinkedIdentities(deserializeLinkedIdentities(data.path("linked_identities")));
+        person.setClientUpdatedAt(deserializeDateTime(data.path("client_updated_at")));
 
         return person;
     }
@@ -167,5 +172,13 @@ public class PersonDeserializer extends JsonDeserializer<Person>
         linkedIdentities.setSiebelContactId(linkedIdentitiesNode.path("siebel_contact_id").asText());
 
         return linkedIdentities;
+    }
+
+    private DateTime deserializeDateTime(JsonNode dateTime)
+    {
+        String dateTimeString = dateTime.asText();
+        if(Strings.isNullOrEmpty(dateTimeString)) return null;
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+        return formatter.parseDateTime(dateTimeString);
     }
 }

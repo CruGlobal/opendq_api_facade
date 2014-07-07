@@ -9,6 +9,8 @@ import org.cru.model.Address;
 import org.cru.model.Person;
 import org.cru.model.PersonName;
 import org.cru.model.PhoneNumber;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -36,6 +38,7 @@ public class PersonDeserializerTest
     private String relayGuid = "be20d878-dd9e-11e3-9615-12768b82bfd5";
     private String contactId = "1-31dav";
     private String employeeNumber = "111111111";
+    private String testDateTime = "2014-06-21 13:41:21";
 
     private Address testAddress1 = createTestAddress1();
     private Address testAddress2 = createTestAddress2();
@@ -137,6 +140,8 @@ public class PersonDeserializerTest
         assertEquals(testPerson.getLinkedIdentities().getSiebelContactId(), contactId);
         assertEquals(testPerson.getLinkedIdentities().getEmployeeNumber(), employeeNumber);
 
+        assertEquals(testPerson.getClientUpdatedAt().toString(DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")), testDateTime);
+
         //Address
         assertFalse(testPerson.getAddresses().isEmpty());
         Address address = testPerson.getAddresses().get(0);
@@ -198,7 +203,8 @@ public class PersonDeserializerTest
                     "\"linked_identities\": {" +
                         "\"siebel_contact_id\": \"" + contactId + "\"," +
                         "\"employee_number\": \"" + employeeNumber + "\"" +
-                    "}" +
+                    "}," +
+                    "\"client_updated_at\": \"" + testDateTime + "\"" +
                 "}" +
             "}";
     }
@@ -256,7 +262,8 @@ public class PersonDeserializerTest
                     "\"linked_identities\": {" +
                         "\"siebel_contact_id\": \"" + contactId + "\"," +
                         "\"employee_number\": \"" + employeeNumber + "\"" +
-                    "}" +
+                    "}," +
+                    "\"client_updated_at\": \"" + testDateTime + "\"" +
                 "}" +
             "}";
     }
@@ -307,7 +314,8 @@ public class PersonDeserializerTest
                     "\"linked_identities\": {" +
                         "\"siebel_contact_id\": \"" + contactId + "\"," +
                         "\"employee_number\": \"" + employeeNumber + "\"" +
-                    "}" +
+                    "}," +
+                    "\"client_updated_at\": \"" + testDateTime + "\"" +
                 "}" +
             "}";
     }
@@ -359,7 +367,8 @@ public class PersonDeserializerTest
                     "\"linked_identities\": {" +
                         "\"siebel_contact_id\": \"" + contactId + "\"," +
                         "\"employee_number\": \"" + employeeNumber + "\"" +
-                    "}" +
+                    "}," +
+                    "\"client_updated_at\": \"" + testDateTime + "\"" +
                 "}" +
             "}";
     }
@@ -389,7 +398,8 @@ public class PersonDeserializerTest
                     "\"linked_identities\": {" +
                         "\"siebel_contact_id\": \"" + contactId + "\"," +
                         "\"employee_number\": \"" + employeeNumber + "\"" +
-                    "}" +
+                    "}," +
+                    "\"client_updated_at\": \"" + testDateTime + "\"" +
                 "}" +
             "}";
     }

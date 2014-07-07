@@ -15,6 +15,7 @@ import org.cru.model.PersonName;
 import org.cru.model.PhoneNumber;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
 
 import java.util.List;
 
@@ -227,7 +228,16 @@ public class PersonToMdmConverter
         personAttributes.setField1(MdmConstants.SOURCE);
         personAttributes.setField2(person.getLinkedIdentities().getEmployeeNumber());
         personAttributes.setField3(person.getLinkedIdentities().getSiebelContactId());
-        personAttributes.setField4(new DateTime().toString());  //TODO: Source Modified Date
+
+        if(person.getClientUpdatedAt() == null)
+        {
+            personAttributes.setField4(null);
+        }
+        else
+        {
+            personAttributes.setField4(person.getClientUpdatedAt().toString(DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")));
+        }
+
         personAttributes.setFromDate(today.toString(opendqDatePattern));  // This is overwritten on insert
         personAttributes.setTypId(MdmConstants.TYP_ID);
         personAttributes.setDateCreated(today.toString(opendqDatePattern));

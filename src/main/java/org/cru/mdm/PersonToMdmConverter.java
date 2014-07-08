@@ -224,8 +224,12 @@ public class PersonToMdmConverter
 
         personAttributes.setObjAdId(person.getMdmPersonAttributesId());
         personAttributes.setField1(MdmConstants.SOURCE);
-        personAttributes.setField2(person.getLinkedIdentities().getEmployeeNumber());
-        personAttributes.setField3(person.getLinkedIdentities().getSiebelContactId());
+
+        if(person.getLinkedIdentities() != null)
+        {
+            personAttributes.setField2(person.getLinkedIdentities().getEmployeeNumber());
+            personAttributes.setField3(person.getLinkedIdentities().getSiebelContactId());
+        }
 
         if(person.getClientUpdatedAt() == null)
         {

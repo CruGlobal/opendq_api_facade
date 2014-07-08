@@ -5,6 +5,7 @@ import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.PropertyNamingStrategy;
+import org.cru.model.ClientData;
 import org.cru.model.Person;
 
 import javax.ws.rs.WebApplicationException;
@@ -25,11 +26,11 @@ public class PersonDeserializer
             .setPropertyNamingStrategy(PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES)
             .configure(DeserializationConfig.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
         Person person;
-        json = removeSurroundingObjectIfNecessary(json);
 
         try
         {
-            person = objectMapper.readValue(json, Person.class);
+            ClientData data = objectMapper.readValue(json, ClientData.class);
+            person = data.getPerson();
         }
         catch(JsonParseException jpe)
         {
@@ -53,16 +54,5 @@ public class PersonDeserializer
         if(person == null) throw new WebApplicationException("Failed to create Person object.");
 
         return person;
-    }
-
-    private String removeSurroundingObjectIfNecessary(String json)
-    {
-        //The parsing will not work if the json is in the format {"person": {...}} so let's remove it
-        if(json.contains("{\"person\":"))
-        {
-            json = json.replace("{\"person\":", "");
-            json = json.substring(0, json.lastIndexOf("}"));
-        }
-        return json;
     }
 }

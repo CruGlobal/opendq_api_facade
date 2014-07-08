@@ -1,7 +1,8 @@
 package org.cru.model;
 
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
-import org.cru.deserialization.PersonDeserializer;
+import org.cru.deserialization.DateTimeDeserializer;
 import org.cru.mdm.MdmConstants;
 import org.joda.time.DateTime;
 
@@ -12,24 +13,33 @@ import java.util.List;
  *
  * Created by William.Randall on 6/6/14.
  */
-@JsonDeserialize(using = PersonDeserializer.class)
 public class Person
 {
     private String mdmPartyId;
     private String mdmPersonId;
     private String mdmPersonAttributesId;
 
-    private String globalRegistryId;
+    private String id;  // Global Registry ID
+    @JsonProperty("email_address")
     private List<EmailAddress> emailAddresses;
-    private PersonName name;
+    @JsonProperty("address")
     private List<Address> addresses;
     private String gender;
     private String accountNumber;
+    @JsonProperty("phone_number")
     private List<PhoneNumber> phoneNumbers;
     private String clientIntegrationId;
     private Authentication authentication;
     private LinkedIdentities linkedIdentities;
     private DateTime clientUpdatedAt;
+
+    //Name values
+    private String firstName;
+    private String middleName;
+    private String lastName;
+    private String title;
+    private String suffix;
+    private String preferredName;
 
     public String getMdmPartyId()
     {
@@ -64,24 +74,14 @@ public class Person
         this.mdmPersonAttributesId = mdmPersonAttributesId;
     }
 
-    public String getGlobalRegistryId()
+    public String getId()
     {
-        return globalRegistryId;
+        return id;
     }
 
-    public void setGlobalRegistryId(String globalRegistryId)
+    public void setId(String id)
     {
-        this.globalRegistryId = globalRegistryId;
-    }
-
-    public PersonName getName()
-    {
-        return name;
-    }
-
-    public void setName(PersonName name)
-    {
-        this.name = name;
+        this.id = id;
     }
 
     public List<Address> getAddresses()
@@ -149,6 +149,7 @@ public class Person
         return authentication;
     }
 
+    @JsonDeserialize(contentAs = Authentication.class)
     public void setAuthentication(Authentication authentication)
     {
         this.authentication = authentication;
@@ -159,6 +160,7 @@ public class Person
         return linkedIdentities;
     }
 
+    @JsonDeserialize(contentAs = LinkedIdentities.class)
     public void setLinkedIdentities(LinkedIdentities linkedIdentities)
     {
         this.linkedIdentities = linkedIdentities;
@@ -169,8 +171,69 @@ public class Person
         return clientUpdatedAt;
     }
 
+    @JsonDeserialize(using = DateTimeDeserializer.class)
     public void setClientUpdatedAt(DateTime clientUpdatedAt)
     {
         this.clientUpdatedAt = clientUpdatedAt;
+    }
+
+    public String getFirstName()
+    {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName)
+    {
+        this.firstName = firstName;
+    }
+
+    public String getMiddleName()
+    {
+        return middleName;
+    }
+
+    public void setMiddleName(String middleName)
+    {
+        this.middleName = middleName;
+    }
+
+    public String getLastName()
+    {
+        return lastName;
+    }
+
+    public void setLastName(String lastName)
+    {
+        this.lastName = lastName;
+    }
+
+    public String getTitle()
+    {
+        return title;
+    }
+
+    public void setTitle(String title)
+    {
+        this.title = title;
+    }
+
+    public String getSuffix()
+    {
+        return suffix;
+    }
+
+    public void setSuffix(String suffix)
+    {
+        this.suffix = suffix;
+    }
+
+    public String getPreferredName()
+    {
+        return preferredName;
+    }
+
+    public void setPreferredName(String preferredName)
+    {
+        this.preferredName = preferredName;
     }
 }

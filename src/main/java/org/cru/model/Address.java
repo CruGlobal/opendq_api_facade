@@ -1,5 +1,6 @@
 package org.cru.model;
 
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.cru.mdm.MdmConstants;
 
 /**
@@ -12,9 +13,13 @@ public class Address
     private String mdmAddressId;
 
     private String id;
+    @JsonProperty("address_1")
     private String addressLine1;
+    @JsonProperty("address_2")
     private String addressLine2;
+    @JsonProperty("address_3")
     private String addressLine3;
+    @JsonProperty("address_4")
     private String addressLine4;
     private String city;
     private String state;

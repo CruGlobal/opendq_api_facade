@@ -95,11 +95,11 @@ public class AddService extends IndexingService
         Map<String, String> fieldNamesAndValues = new LinkedHashMap<String, String>();
 
         //NOTE: Only 10 fields can be set
-        fieldNamesAndValues.put("FIELD1", person.getName().getFirstName());
-        fieldNamesAndValues.put("FIELD2", person.getName().getLastName());
+        fieldNamesAndValues.put("FIELD1", person.getFirstName());
+        fieldNamesAndValues.put("FIELD2", person.getLastName());
         fieldNamesAndValues.put("FIELD3", person.getAddresses().get(0).getAddressLine1());
         fieldNamesAndValues.put("FIELD4", person.getAddresses().get(0).getCity());
-        fieldNamesAndValues.put("FIELD5", person.getGlobalRegistryId());
+        fieldNamesAndValues.put("FIELD5", person.getId());
         fieldNamesAndValues.put("FIELD6", mdmPerson.getObjectEntity().getPartyId());
 
         return fieldNamesAndValues;

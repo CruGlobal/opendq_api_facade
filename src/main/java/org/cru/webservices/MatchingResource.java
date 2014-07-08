@@ -6,6 +6,7 @@ import org.cru.model.Person;
 import org.cru.qualifiers.Match;
 import org.cru.service.AddressNormalizationService;
 import org.cru.service.MatchingService;
+import org.cru.service.PersonDeserializer;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -29,14 +30,18 @@ public class MatchingResource
     private AddressNormalizationService addressNormalizationService;
     @Inject @Match
     private MatchingService matchingService;
+    @Inject
+    private PersonDeserializer personDeserializer;
 
     @SuppressWarnings("unused")  //used by Clients
     @POST
     @Path("/match")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findMatchingPerson(Person person)
+    public Response findMatchingPerson(String json)
     {
+        Person person = personDeserializer.deserializePerson(json);
+
         for(Address personAddress : person.getAddresses())
         {
             addressNormalizationService.normalizeAddress(personAddress);

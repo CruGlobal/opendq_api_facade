@@ -3,6 +3,7 @@ package org.cru.webservices;
 import org.cru.model.Person;
 import org.cru.qualifiers.Add;
 import org.cru.service.AddService;
+import org.cru.service.PersonDeserializer;
 import org.cru.util.ResponseMessage;
 
 import javax.inject.Inject;
@@ -24,13 +25,17 @@ public class AddResource
 {
     @Inject @Add
     private AddService addService;
+    @Inject
+    private PersonDeserializer personDeserializer;
 
     @SuppressWarnings("unused")  //used by Clients
     @POST
     @Path("/add")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addPerson(Person person)
+    public Response addPerson(String json)
     {
+        Person person = personDeserializer.deserializePerson(json);
+
         //TODO: Do we want to check for a match here before adding?
         try
         {

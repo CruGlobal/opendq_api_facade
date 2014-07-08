@@ -107,8 +107,8 @@ public class MatchingService extends IndexingService
         // Order must match the transformation file
         List<String> searchValues = new ArrayList<String>();
 
-        searchValues.add(person.getName().getFirstName());
-        searchValues.add(person.getName().getLastName());
+        searchValues.add(person.getFirstName());
+        searchValues.add(person.getLastName());
         searchValues.add(person.getAddresses().get(0).getAddressLine1());
         searchValues.add(person.getAddresses().get(0).getCity());
 

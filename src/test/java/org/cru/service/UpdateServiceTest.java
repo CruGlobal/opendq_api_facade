@@ -11,7 +11,6 @@ import org.cru.mdm.MdmCodes;
 import org.cru.model.Address;
 import org.cru.model.EmailAddress;
 import org.cru.model.Person;
-import org.cru.model.PersonName;
 import org.cru.model.PhoneNumber;
 import org.cru.util.OpenDQProperties;
 import org.testng.annotations.BeforeClass;
@@ -70,10 +69,9 @@ public class UpdateServiceTest
         List<Address> addresses = new ArrayList<Address>();
         addresses.add(testAddress);
 
-        PersonName personName = new PersonName();
-        personName.setTitle("Mrs.");
-        personName.setFirstName("Nom");
-        personName.setLastName("Tom");
+        testPerson.setTitle("Mrs.");
+        testPerson.setFirstName("Nom");
+        testPerson.setLastName("Tom");
 
         EmailAddress emailAddress = new EmailAddress();
         emailAddress.setEmail("nom.nom@crutest.org");
@@ -88,11 +86,10 @@ public class UpdateServiceTest
         List<PhoneNumber> phoneNumbers = new ArrayList<PhoneNumber>();
         phoneNumbers.add(phoneNumber);
 
-        testPerson.setGlobalRegistryId("3ikfj32-8rt4-9493-394nfa2348da");
+        testPerson.setId("3ikfj32-8rt4-9493-394nfa2348da");
         testPerson.setClientIntegrationId("221568");
         testPerson.getLinkedIdentities().setSiebelContactId("1-6T4D4");
 
-        testPerson.setName(personName);
         testPerson.setAddresses(addresses);
         testPerson.setEmailAddresses(emailAddresses);
         testPerson.setPhoneNumbers(phoneNumbers);

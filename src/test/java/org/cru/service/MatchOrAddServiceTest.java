@@ -3,7 +3,6 @@ package org.cru.service;
 import org.cru.model.Address;
 import org.cru.model.MatchResponse;
 import org.cru.model.Person;
-import org.cru.model.PersonName;
 import org.cru.util.DeletedIndexesFileIO;
 import org.cru.util.OafProperties;
 import org.cru.util.OpenDQProperties;
@@ -65,7 +64,7 @@ public class MatchOrAddServiceTest
 
         matchResponse = matchOrAddService.matchOrAddPerson(testPerson);
         assertNotNull(matchResponse);
-        assertEquals(matchResponse.getMatchId(), testPerson.getGlobalRegistryId());  //now it should find it
+        assertEquals(matchResponse.getMatchId(), testPerson.getId());  //now it should find it
     }
 
     private Person createTestPerson()
@@ -76,15 +75,13 @@ public class MatchOrAddServiceTest
         address.setAddressLine1("AddOrMatch Line 1");
         address.setCity("Indianapolis");
 
-        PersonName personName = new PersonName();
-        personName.setFirstName("AddOrMatch");
-        personName.setLastName("AddOrMatchLastName");
+        testPerson.setFirstName("AddOrMatch");
+        testPerson.setLastName("AddOrMatchLastName");
 
         List<Address> addresses = new ArrayList<Address>();
         addresses.add(address);
         testPerson.setAddresses(addresses);
-        testPerson.setName(personName);
-        testPerson.setGlobalRegistryId("5");
+        testPerson.setId("5");
 
         return testPerson;
     }

@@ -3,6 +3,7 @@ package org.cru.webservices;
 import org.cru.model.MatchResponse;
 import org.cru.model.Person;
 import org.cru.service.MatchOrAddService;
+import org.cru.service.PersonDeserializer;
 import org.cru.util.ResponseMessage;
 
 import javax.inject.Inject;
@@ -26,14 +27,17 @@ public class MatchOrAddResource
 {
     @Inject
     private MatchOrAddService matchOrAddService;
+    @Inject
+    private PersonDeserializer personDeserializer;
 
     @SuppressWarnings("unused")  //used by Clients
     @POST
     @Path("/match-or-add")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response matchOrAddPerson(Person person)
+    public Response matchOrAddPerson(String json)
     {
+        Person person = personDeserializer.deserializePerson(json);
         try
         {
             MatchResponse matchResponse = matchOrAddService.matchOrAddPerson(person);

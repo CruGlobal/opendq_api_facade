@@ -240,6 +240,14 @@ public class PersonToMdmConverter
             personAttributes.setField4(person.getClientUpdatedAt().toString(DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")));
         }
 
+        //TODO: Determine where these should actually go
+        personAttributes.setField5(person.getAccountNumber());
+
+        if(person.getAuthentication() != null)
+        {
+            personAttributes.setField6(person.getAuthentication().getRelayGuid());
+        }
+
         personAttributes.setFromDate(today.toString(opendqDatePattern));  // This is overwritten on insert
         personAttributes.setTypId(MdmConstants.TYP_ID);
         personAttributes.setDateCreated(today.toString(opendqDatePattern));
@@ -264,6 +272,7 @@ public class PersonToMdmConverter
         attributeData.setField4(person.getLastName());
         attributeData.setField5(person.getSuffix());
         attributeData.setField6(person.getGender());
+        attributeData.setField7(person.getPreferredName());  //TODO: Is this where we want it?
 
         attributeData.setFromDate(today.toString(opendqDatePattern));  // This is overwritten on insert
         attributeData.setTypId(MdmConstants.TYP_ID);

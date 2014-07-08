@@ -25,6 +25,7 @@ public class PersonDeserializer
             .setPropertyNamingStrategy(PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES)
             .configure(DeserializationConfig.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
         Person person;
+        json = removeSurroundingObjectIfNecessary(json);
 
         try
         {
@@ -52,5 +53,16 @@ public class PersonDeserializer
         if(person == null) throw new WebApplicationException("Failed to create Person object.");
 
         return person;
+    }
+
+    private String removeSurroundingObjectIfNecessary(String json)
+    {
+        //The parsing will not work if the json is in the format {"person": {...}} so let's remove it
+        if(json.contains("{\"person\":"))
+        {
+            json = json.replace("{\"person\":", "");
+            json = json.substring(0, json.lastIndexOf("}"));
+        }
+        return json;
     }
 }

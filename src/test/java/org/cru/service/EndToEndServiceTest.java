@@ -6,7 +6,6 @@ import org.cru.model.Address;
 import org.cru.model.EmailAddress;
 import org.cru.model.MatchResponse;
 import org.cru.model.Person;
-import org.cru.model.PersonName;
 import org.cru.model.SearchResponse;
 import org.cru.postalsoft.PostalsoftServiceWrapper;
 import org.cru.util.DeletedIndexesFileIO;
@@ -189,15 +188,13 @@ public class EndToEndServiceTest
         testAddress.setZipCode("38437");
         testAddress.setCountry("USA");
 
-        PersonName personName = new PersonName();
-        personName.setTitle("Mr.");
-        personName.setFirstName("EE3");
-        personName.setLastName("EE4");
+        testPerson.setTitle("Mr.");
+        testPerson.setFirstName("EE3");
+        testPerson.setLastName("EE4");
 
         List<Address> addresses = new ArrayList<Address>();
         addresses.add(testAddress);
         testPerson.setAddresses(addresses);
-        testPerson.setName(personName);
         testPerson.setGlobalRegistryId("afd65af4-hj546fg-xn51rg-5asdf4");
 
         return testPerson;

@@ -11,9 +11,7 @@ import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import org.cru.model.Address;
 import org.cru.model.EmailAddress;
 import org.cru.model.Person;
-import org.cru.model.PersonName;
 import org.cru.model.PhoneNumber;
-import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 
@@ -254,14 +252,13 @@ public class PersonToMdmConverter
     private ObjAttributeDataDTO createPersonAttributeData(Person person, LocalDate today)
     {
         ObjAttributeDataDTO attributeData = new ObjAttributeDataDTO();
-        PersonName personName = person.getName();
 
         attributeData.setObjAdId(person.getMdmPersonId());
-        attributeData.setField1(personName.getTitle());
-        attributeData.setField2(personName.getFirstName());
-        attributeData.setField3(personName.getMiddleName());
-        attributeData.setField4(personName.getLastName());
-        attributeData.setField5(personName.getSuffix());
+        attributeData.setField1(person.getTitle());
+        attributeData.setField2(person.getFirstName());
+        attributeData.setField3(person.getMiddleName());
+        attributeData.setField4(person.getLastName());
+        attributeData.setField5(person.getSuffix());
         attributeData.setField6(person.getGender());
 
         attributeData.setFromDate(today.toString(opendqDatePattern));  // This is overwritten on insert

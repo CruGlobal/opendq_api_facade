@@ -10,7 +10,6 @@ import org.cru.model.Authentication;
 import org.cru.model.EmailAddress;
 import org.cru.model.LinkedIdentities;
 import org.cru.model.Person;
-import org.cru.model.PersonName;
 import org.cru.model.PhoneNumber;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -37,7 +36,7 @@ public class PersonDeserializer extends JsonDeserializer<Person>
         Person person = new Person();
 
         person.setGlobalRegistryId(data.path("id").asText());
-        person.setName(deserializeName(data));
+        deserializeName(person, data);
         person.setGender(data.path("gender").asText());
         person.setAccountNumber(data.path("account_number").asText());
         person.setClientIntegrationId(data.path("client_integration_id").asText());
@@ -114,17 +113,14 @@ public class PersonDeserializer extends JsonDeserializer<Person>
         return phoneNumbers;
     }
 
-    private PersonName deserializeName(JsonNode data)
+    private void deserializeName(Person person, JsonNode data)
     {
-        PersonName personName = new PersonName();
-        personName.setTitle(data.path("title").asText());
-        personName.setFirstName(data.path("first_name").asText());
-        personName.setMiddleName(data.path("middle_name").asText());
-        personName.setLastName(data.path("last_name").asText());
-        personName.setPreferredName(data.path("preferred_name").asText());
-        personName.setSuffix(data.path("suffix").asText());
-
-        return personName;
+        person.setTitle(data.path("title").asText());
+        person.setFirstName(data.path("first_name").asText());
+        person.setMiddleName(data.path("middle_name").asText());
+        person.setLastName(data.path("last_name").asText());
+        person.setPreferredName(data.path("preferred_name").asText());
+        person.setSuffix(data.path("suffix").asText());
     }
 
     private Address deserializeAddress(JsonNode addressNode)
@@ -190,7 +186,6 @@ public class PersonDeserializer extends JsonDeserializer<Person>
     private void setEmptyStringsToNull(Person person)
     {
         handleEmptyStrings(person);
-        handleEmptyStrings(person.getName());
         handleEmptyStrings(person.getAuthentication());
         handleEmptyStrings(person.getLinkedIdentities());
 

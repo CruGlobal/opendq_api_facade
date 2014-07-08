@@ -17,7 +17,7 @@ opendq_api_facade
 {
     "person": {
         "id": "String",
-        "email_address": [
+        "email_address": [  //Could be single object or array
             {
                 "id": "String",
                 "email": "String"
@@ -34,13 +34,14 @@ opendq_api_facade
         "title": "String",
         "suffix": "String",
         "gender": "String",
-        "phone_number": {
+        "phone_number": {   //Could be single object or array
             "id": "String",
             "number": "String",
             "location": "String"
         },
         "client_integration_id": "String",
-        "address": {
+        "account_number": "String",
+        "address": {    //Could be single object or array
             "id": "String",
             "address_1": "String",
             "address_2": "String",
@@ -54,10 +55,11 @@ opendq_api_facade
         "authentication": {
             "relay_guid": "String"
         },
-        "linked_identies": {
-            "seibel_contact_id": "String",
+        "linked_identities": {
+            "siebel_contact_id": "String",
             "employee_number": "String"
-        }
+        },
+        "client_updated_at": "yyyy-MM-dd HH:mm:ss"
     }
 }
 </pre>

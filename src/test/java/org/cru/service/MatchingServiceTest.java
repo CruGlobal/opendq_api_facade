@@ -77,7 +77,7 @@ public class MatchingServiceTest
         List<Address> addresses = new ArrayList<Address>();
         addresses.add(address);
         deletedPerson.setAddresses(addresses);
-        deletedPerson.setGlobalRegistryId("6");
+        deletedPerson.setId("6");
 
         MatchResponse matchResponse = matchingService.findMatch(deletedPerson, "Match");
         assertNull(matchResponse);
@@ -217,7 +217,7 @@ public class MatchingServiceTest
         LinkedIdentities linkedIdentities = new LinkedIdentities();
         linkedIdentities.setSiebelContactId("1-6T4D4");
 
-        testPerson.setGlobalRegistryId("3ikfj32-8rt4-9493-394nfa2348da");
+        testPerson.setId("3ikfj32-8rt4-9493-394nfa2348da");
         testPerson.setClientIntegrationId("221568");
         testPerson.setLinkedIdentities(linkedIdentities);
 

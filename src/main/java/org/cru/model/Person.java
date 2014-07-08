@@ -19,7 +19,7 @@ public class Person
     private String mdmPersonId;
     private String mdmPersonAttributesId;
 
-    private String globalRegistryId;
+    private String id;  // Global Registry ID
     private List<EmailAddress> emailAddresses;
     private List<Address> addresses;
     private String gender;
@@ -71,16 +71,15 @@ public class Person
         this.mdmPersonAttributesId = mdmPersonAttributesId;
     }
 
-    public String getGlobalRegistryId()
+    public String getId()
     {
-        return globalRegistryId;
+        return id;
     }
 
-    public void setGlobalRegistryId(String globalRegistryId)
+    public void setId(String id)
     {
-        this.globalRegistryId = globalRegistryId;
+        this.id = id;
     }
-
 
     public List<Address> getAddresses()
     {

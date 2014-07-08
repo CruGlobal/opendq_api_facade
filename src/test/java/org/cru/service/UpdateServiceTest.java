@@ -86,7 +86,7 @@ public class UpdateServiceTest
         List<PhoneNumber> phoneNumbers = new ArrayList<PhoneNumber>();
         phoneNumbers.add(phoneNumber);
 
-        testPerson.setGlobalRegistryId("3ikfj32-8rt4-9493-394nfa2348da");
+        testPerson.setId("3ikfj32-8rt4-9493-394nfa2348da");
         testPerson.setClientIntegrationId("221568");
         testPerson.getLinkedIdentities().setSiebelContactId("1-6T4D4");
 

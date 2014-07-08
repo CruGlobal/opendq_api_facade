@@ -39,13 +39,13 @@ public class MatchOrUpdateService
 
         if(matchResponse == null)
         {
-            SearchResponse searchResponse = matchingService.findMatchById(person.getGlobalRegistryId(), "MatchId");
+            SearchResponse searchResponse = matchingService.findMatchById(person.getId(), "MatchId");
 
             if(searchResponse == null)
             {
                 throw new WebApplicationException(
                     Response.status(Response.Status.NOT_FOUND)
-                        .entity("Could not find Person in the index using global registry id: " + person.getGlobalRegistryId())
+                        .entity("Could not find Person in the index using global registry id: " + person.getId())
                         .build());
             }
 

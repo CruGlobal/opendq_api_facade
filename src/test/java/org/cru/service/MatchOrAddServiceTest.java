@@ -64,7 +64,7 @@ public class MatchOrAddServiceTest
 
         matchResponse = matchOrAddService.matchOrAddPerson(testPerson);
         assertNotNull(matchResponse);
-        assertEquals(matchResponse.getMatchId(), testPerson.getGlobalRegistryId());  //now it should find it
+        assertEquals(matchResponse.getMatchId(), testPerson.getId());  //now it should find it
     }
 
     private Person createTestPerson()
@@ -81,7 +81,7 @@ public class MatchOrAddServiceTest
         List<Address> addresses = new ArrayList<Address>();
         addresses.add(address);
         testPerson.setAddresses(addresses);
-        testPerson.setGlobalRegistryId("5");
+        testPerson.setId("5");
 
         return testPerson;
     }

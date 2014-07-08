@@ -35,7 +35,7 @@ public class PersonDeserializer extends JsonDeserializer<Person>
         JsonNode data = root.path("person");
         Person person = new Person();
 
-        person.setGlobalRegistryId(data.path("id").asText());
+        person.setId(data.path("id").asText());
         deserializeName(person, data);
         person.setGender(data.path("gender").asText());
         person.setAccountNumber(data.path("account_number").asText());

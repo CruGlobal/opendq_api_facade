@@ -95,7 +95,7 @@ public class AddServiceTest
         LinkedIdentities linkedIdentities = new LinkedIdentities();
         linkedIdentities.setSiebelContactId("1-43BK9");
 
-        testPerson.setGlobalRegistryId("TEST_ID1");
+        testPerson.setId("TEST_ID1");
         testPerson.setClientIntegrationId("1394218");
         testPerson.setLinkedIdentities(linkedIdentities);
 
@@ -141,7 +141,7 @@ public class AddServiceTest
         LinkedIdentities linkedIdentities = new LinkedIdentities();
         linkedIdentities.setSiebelContactId("1-6T4D4");
 
-        testPerson.setGlobalRegistryId("3ikfj32-8rt4-9493-394nfa2348da");
+        testPerson.setId("3ikfj32-8rt4-9493-394nfa2348da");
         testPerson.setClientIntegrationId("221568");
         testPerson.setLinkedIdentities(linkedIdentities);
 

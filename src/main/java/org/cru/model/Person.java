@@ -1,7 +1,8 @@
 package org.cru.model;
 
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
-import org.cru.deserialization.PersonDeserializer;
+import org.cru.deserialization.DateTimeDeserializer;
 import org.cru.mdm.MdmConstants;
 import org.joda.time.DateTime;
 
@@ -12,7 +13,6 @@ import java.util.List;
  *
  * Created by William.Randall on 6/6/14.
  */
-@JsonDeserialize(using = PersonDeserializer.class)
 public class Person
 {
     private String mdmPartyId;
@@ -20,10 +20,13 @@ public class Person
     private String mdmPersonAttributesId;
 
     private String id;  // Global Registry ID
+    @JsonProperty("email_address")
     private List<EmailAddress> emailAddresses;
+    @JsonProperty("address")
     private List<Address> addresses;
     private String gender;
     private String accountNumber;
+    @JsonProperty("phone_number")
     private List<PhoneNumber> phoneNumbers;
     private String clientIntegrationId;
     private Authentication authentication;
@@ -146,6 +149,7 @@ public class Person
         return authentication;
     }
 
+    @JsonDeserialize(contentAs = Authentication.class)
     public void setAuthentication(Authentication authentication)
     {
         this.authentication = authentication;
@@ -156,6 +160,7 @@ public class Person
         return linkedIdentities;
     }
 
+    @JsonDeserialize(contentAs = LinkedIdentities.class)
     public void setLinkedIdentities(LinkedIdentities linkedIdentities)
     {
         this.linkedIdentities = linkedIdentities;
@@ -166,6 +171,7 @@ public class Person
         return clientUpdatedAt;
     }
 
+    @JsonDeserialize(using = DateTimeDeserializer.class)
     public void setClientUpdatedAt(DateTime clientUpdatedAt)
     {
         this.clientUpdatedAt = clientUpdatedAt;

@@ -1,16 +1,12 @@
 package org.cru.webservices;
 
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.DeserializationConfig;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.PropertyNamingStrategy;
 import org.cru.model.Address;
 import org.cru.model.MatchResponse;
 import org.cru.model.Person;
 import org.cru.qualifiers.Match;
 import org.cru.service.AddressNormalizationService;
 import org.cru.service.MatchingService;
+import org.cru.service.PersonDeserializer;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -20,7 +16,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
 import java.net.ConnectException;
 
 /**
@@ -35,6 +30,8 @@ public class MatchingResource
     private AddressNormalizationService addressNormalizationService;
     @Inject @Match
     private MatchingService matchingService;
+    @Inject
+    private PersonDeserializer personDeserializer;
 
     @SuppressWarnings("unused")  //used by Clients
     @POST
@@ -43,36 +40,7 @@ public class MatchingResource
     @Produces(MediaType.APPLICATION_JSON)
     public Response findMatchingPerson(String json)
     {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper
-            .setPropertyNamingStrategy(PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES)
-            .configure(DeserializationConfig.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
-        Person person;
-
-        try
-        {
-            person = objectMapper.readValue(json, Person.class);
-        }
-        catch(JsonParseException jpe)
-        {
-            throw new WebApplicationException(
-                Response.serverError().entity(jpe.getMessage()).build()
-            );
-        }
-        catch(JsonMappingException jme)
-        {
-            throw new WebApplicationException(
-                Response.serverError().entity(jme.getMessage()).build()
-            );
-        }
-        catch(IOException ioe)
-        {
-            throw new WebApplicationException(
-                Response.serverError().entity(ioe.getMessage()).build()
-            );
-        }
-
-        if(person == null) throw new WebApplicationException("Failed to create Person object.");
+        Person person = personDeserializer.deserializePerson(json);
 
         for(Address personAddress : person.getAddresses())
         {

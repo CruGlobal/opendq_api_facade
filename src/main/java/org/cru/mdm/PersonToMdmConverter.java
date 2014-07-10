@@ -272,7 +272,16 @@ public class PersonToMdmConverter
         attributeData.setField4(person.getLastName());
         attributeData.setField5(person.getSuffix());
         attributeData.setField6(person.getGender());
-        attributeData.setField7(person.getPreferredName());  //TODO: Is this where we want it?
+
+        if(person.getAuthentication() != null)
+        {
+            attributeData.setField7(person.getAuthentication().getRelayGuid());
+            attributeData.setField9(person.getAuthentication().getEmployeeRelayGuid());
+        }
+        if(person.getLinkedIdentities() != null)
+        {
+            attributeData.setField8(person.getLinkedIdentities().getEmployeeNumber());
+        }
 
         attributeData.setFromDate(today.toString(opendqDatePattern));  // This is overwritten on insert
         attributeData.setTypId(MdmConstants.TYP_ID);

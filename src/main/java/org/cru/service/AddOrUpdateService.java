@@ -3,7 +3,6 @@ package org.cru.service;
 import org.cru.model.MatchResponse;
 import org.cru.model.Person;
 import org.cru.qualifiers.Add;
-import org.cru.qualifiers.Match;
 
 import javax.inject.Inject;
 import java.net.ConnectException;

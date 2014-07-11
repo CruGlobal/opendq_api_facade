@@ -41,20 +41,24 @@ public class UpdateResource
 
             if(matchOrUpdateResponse == null)
             {
-                return Response.ok().entity(ResponseMessage.UPDATED.getMessage()).build();
+                throw new WebApplicationException(
+                    Response.serverError()
+                    .entity("Could not find Person with global registry id: " + person.getId())
+                    .build());
             }
             else if(matchOrUpdateResponse.getMessage().equals(ResponseMessage.CONFLICT.getMessage()))
             {
                 return Response.status(Response.Status.CONFLICT).entity(matchOrUpdateResponse).build();
             }
+
+            return Response.ok().entity(matchOrUpdateResponse).build();
         }
         catch(ConnectException ce)
         {
             throw new WebApplicationException(
-                Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                Response.serverError()
                 .entity(ce.getMessage())
                 .build());
         }
-        return Response.ok().entity(ResponseMessage.UPDATED.getMessage()).build();
     }
 }

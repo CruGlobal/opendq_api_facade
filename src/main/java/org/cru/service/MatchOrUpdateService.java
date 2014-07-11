@@ -43,10 +43,7 @@ public class MatchOrUpdateService
 
             if(searchResponse == null)
             {
-                throw new WebApplicationException(
-                    Response.status(Response.Status.NOT_FOUND)
-                        .entity("Could not find Person in the index using global registry id: " + person.getId())
-                        .build());
+                return null;
             }
 
             String partyId = (String) searchResponse.getResultValues().get("partyId");
@@ -54,20 +51,27 @@ public class MatchOrUpdateService
 
             if(foundMdmPerson == null)
             {
-                throw new WebApplicationException(
-                    Response.status(Response.Status.NOT_FOUND)
-                        .entity("Could not find Person in MDM using party id: " + partyId)
-                        .build());
+                return null;
             }
 
             updateService.updatePerson(person, foundMdmPerson, "MatchOrUpdate");
+
+            if(matchResponse == null)
+            {
+                matchResponse = new MatchResponse();
+                matchResponse.setMatchId(person.getId());
+
+                //We didn't find the match based on the normal index search values, so let's indicate that in some way
+                matchResponse.setConfidenceLevel(0.0D);
+            }
+            matchResponse.setMessage(ResponseMessage.UPDATED.getMessage());
+
+            return matchResponse;
         }
         else   // This means there is a match found for the updated information
         {
             matchResponse.setMessage(ResponseMessage.CONFLICT.getMessage());
             return matchResponse;
         }
-
-        return null;
     }
 }

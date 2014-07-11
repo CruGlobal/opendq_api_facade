@@ -8,6 +8,7 @@ opendq_api_facade
   <li>/oaf/rest/update</li>
   <li>/oaf/rest/add</li>
   <li>/oaf/rest/match-or-add</li>
+  <li>/oaf/rest/add-or-update</li>
   <li>/oaf/rest/delete</li>
 </ul>
 
@@ -73,6 +74,11 @@ curl -H "Content-Type: application/json" -d '{"person":{"id":"k3rfjs3-f8g9-hfi8-
 <h4>Update</h4>
 <pre>
 curl -H "Content-Type: application/json" -d '{"person":{"id":"54sf6-53ef5-f4a53-5af56a","email_address":{"id":"12345","email":"play@bum.com"},"last_name":"Bum","first_name":"Play","title":"Mr.","gender":"Male","phone_number":{"id":"987654","number":"2222222222","location":"mobile"},"client_integration_id":"555555","address":{"id":"456123","address_1":"54 Oaf Dr","address_2":"Apt D","city":"Orlando","state":"FL","zip_code":"32828","country":"USA"},"authentication":{"relay_guid":"534f-a5ef-7f35-fa4s-adf54a8g8"},"account_number":"5463289","linked_identities":{"siebel_contact_id":"1-D46SA","employee_number":"987654321"},"client_updated_at":"2014-06-21 13:41:21"}}'  http://localhost:8080/oaf/rest/update
+</pre>
+
+<h4>Add or Update</h4>
+<pre>
+curl -H "Content-Type: application/json" -d '{"person":{"id":"2ad345e","email_address":{"id":"2a","email":"nh@hn.net"},"last_name":"Nh","first_name":"Hn","title":"Mrs.","gender":"Female","phone_number":{"id":"2b","number":"3333334444","location":"mobile"},"client_integration_id":"2a","address":{"id":"2a","address_1":"55 James St","city":"Orlando","state":"FL","zip_code":"32825","country":"USA"},"authentication":{"relay_guid":"2a"},"account_number":"2a","linked_identities":{"siebel_contact_id":"2a","employee_number":"2a"},"client_updated_at":"2014-06-21 13:41:21"}}'  http://localhost:8080/oaf/rest/add-or-update
 </pre>
 
 <h4>Delete</h4>

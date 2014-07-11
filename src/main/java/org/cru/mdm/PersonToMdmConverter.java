@@ -15,6 +15,7 @@ import org.cru.model.PhoneNumber;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -121,8 +122,8 @@ public class PersonToMdmConverter
             addressToAdd.setUserDef1(address.getId());
 
             //TODO: This should come in from the json
-            if(numAddress == 0) addressToAdd.setCodId(MdmCodes.MAILING_ADDRESS.getId());
-            else addressToAdd.setCodId(MdmCodes.BILLING_ADDRESS.getId());
+            if(numAddress == 0) addressToAdd.setCodId(MdmCodes.HOME_ADDRESS.getId());
+            else addressToAdd.setCodId(MdmCodes.OFFICE_ADDRESS.getId());
 
             addressToAdd.setClientId(MdmConstants.CLIENT_ID);
             addressToAdd.setTypId(MdmConstants.TYP_ID);
@@ -153,8 +154,8 @@ public class PersonToMdmConverter
                 emailCommunication.setPartyId(person.getMdmPartyId());
 
                 //TODO: This should come in from the json
-                if(numEmail == 0) emailCommunication.setCodId(MdmCodes.PRIMARY_EMAIL.getId());
-                else emailCommunication.setCodId(MdmCodes.SECONDARY_EMAIL.getId());
+                if(numEmail == 0) emailCommunication.setCodId(MdmCodes.PERSONAL_EMAIL.getId());
+                else emailCommunication.setCodId(MdmCodes.WORK_EMAIL.getId());
 
                 emailCommunication.setCommdata(personEmail.getEmail());
                 emailCommunication.setComExclusionType("N");  //TODO: May need to get from client
@@ -182,8 +183,8 @@ public class PersonToMdmConverter
                 phoneCommunication.setPartyId(person.getMdmPartyId());
 
                 //TODO: This should come in from the json (determined by location perhaps)
-                if(numPhone == 0) phoneCommunication.setCodId(MdmCodes.PRIMARY_PHONE.getId());
-                else phoneCommunication.setCodId(MdmCodes.SECONDARY_PHONE.getId());
+                if(numPhone == 0) phoneCommunication.setCodId(MdmCodes.HOME_PHONE.getId());
+                else phoneCommunication.setCodId("99");
 
                 phoneCommunication.setCommdata(personPhone.getNumber());
                 phoneCommunication.setComExclusionType("N");  //TODO: May need to get from client
@@ -209,54 +210,141 @@ public class PersonToMdmConverter
         ObjAttributeDataDTOList objAttributeDataDTOList = new ObjAttributeDataDTOList();
         List<ObjAttributeDataDTO> internalList = objAttributeDataDTOList.getObjectAttributeData();
 
-        internalList.add(createPersonAttributesAttributeData(person, today));
+        internalList.addAll(createPersonAttributesAttributeData(person, today));
         internalList.add(createPersonAttributeData(person, today));
 
         return objAttributeDataDTOList;
     }
 
-    /**
-     * This includes account information
-     */
-    ObjAttributeDataDTO createPersonAttributesAttributeData(Person person, LocalDate today)
+    void setCommonAttributeData(ObjAttributeDataDTO attributeData, Person person, LocalDate today)
     {
-        ObjAttributeDataDTO personAttributes = new ObjAttributeDataDTO();
+        attributeData.setObjAdId(person.getMdmPersonAttributesId());
+        attributeData.setFromDate(today.toString(opendqDatePattern));  // This is overwritten on insert
+        attributeData.setTypId(MdmConstants.TYP_ID);
+        attributeData.setDateCreated(today.toString(opendqDatePattern));
+        attributeData.setUserCreated(MdmConstants.USER);
+        attributeData.setSource(MdmConstants.SOURCE);
+        attributeData.setAction(action);
+        attributeData.setMultDetTypeLev1("PERSONATTRIBUTES");
+        attributeData.setClientId(MdmConstants.CLIENT_ID);
+    }
 
-        personAttributes.setObjAdId(person.getMdmPersonAttributesId());
-        personAttributes.setField1(MdmConstants.SOURCE);
+    ObjAttributeDataDTO createSourceDetails(Person person, LocalDate today)
+    {
+        ObjAttributeDataDTO sourceDetails = new ObjAttributeDataDTO();
+        setCommonAttributeData(sourceDetails, person, today);
+        sourceDetails.setMultDetTypeLev2("SOURCEDETAILS");
+
+        sourceDetails.setField1(MdmConstants.SOURCE); //TODO: Source System
+        sourceDetails.setField2(MdmConstants.SOURCE); //TODO: Source ID
+
+        return sourceDetails;
+    }
+
+    ObjAttributeDataDTO createHouseholdData(Person person, LocalDate today)
+    {
+        ObjAttributeDataDTO householdData = new ObjAttributeDataDTO();
+        setCommonAttributeData(householdData, person, today);
+        householdData.setMultDetTypeLev2("HOUSEHOLD");
+
+        householdData.setField1(person.getId()); //TODO: Object ID
+        householdData.setField2(person.getFirstName());
+        householdData.setField3(person.getLastName());
+
+        return householdData;
+    }
+
+    ObjAttributeDataDTO createAccountData(Person person, LocalDate today)
+    {
+        ObjAttributeDataDTO accountData = new ObjAttributeDataDTO();
+        setCommonAttributeData(accountData, person, today);
+        accountData.setMultDetTypeLev2("ACCOUNTDATA");
+
+        accountData.setField1(MdmConstants.SOURCE); //TODO: Account Source name
 
         if(person.getLinkedIdentities() != null)
         {
-            personAttributes.setField2(person.getLinkedIdentities().getEmployeeNumber());
-            personAttributes.setField3(person.getLinkedIdentities().getSiebelContactId());
+            accountData.setField2(person.getAccountNumber());  //TODO: Is this correct?
+            accountData.setField3(person.getLinkedIdentities().getSiebelContactId());
         }
 
         if(person.getClientUpdatedAt() == null)
         {
-            personAttributes.setField4(null);
+            accountData.setField4(null);
         }
         else
         {
-            personAttributes.setField4(person.getClientUpdatedAt().toString(DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")));
+            accountData.setField4(person.getClientUpdatedAt().toString(DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")));
         }
 
-        //TODO: Determine where these should actually go
-        personAttributes.setField5(person.getAccountNumber());
+        return accountData;
+    }
+
+    ObjAttributeDataDTO createRelayDetails(Person person, LocalDate today)
+    {
+        ObjAttributeDataDTO relayDetails = new ObjAttributeDataDTO();
+        setCommonAttributeData(relayDetails, person, today);
+        relayDetails.setMultDetTypeLev2("RELAYDETAILS");
 
         if(person.getAuthentication() != null)
         {
-            personAttributes.setField6(person.getAuthentication().getRelayGuid());
+            relayDetails.setField1(MdmConstants.SOURCE); //TODO: SourceNm
+            relayDetails.setField2(person.getAuthentication().getEmployeeRelayGuid());
+            relayDetails.setField3(person.getAuthentication().getRelayGuid());
+
+            return relayDetails;
+        }
+        return null;
+    }
+
+    ObjAttributeDataDTO createIdentityData(Person person, LocalDate today)
+    {
+        ObjAttributeDataDTO identityData = new ObjAttributeDataDTO();
+        setCommonAttributeData(identityData, person, today);
+        identityData.setMultDetTypeLev2("IDENTITIES");
+
+        identityData.setField1("Name"); //TODO: Name
+        identityData.setField2("Identifier"); //TODO: Identifier
+        identityData.setField3("Source System"); //TODO: Source Systems
+
+        if(person.getClientUpdatedAt() == null)
+        {
+            identityData.setField4(null);
+        }
+        else
+        {
+            identityData.setField4(person.getClientUpdatedAt().toString(DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")));
         }
 
-        personAttributes.setFromDate(today.toString(opendqDatePattern));  // This is overwritten on insert
-        personAttributes.setTypId(MdmConstants.TYP_ID);
-        personAttributes.setDateCreated(today.toString(opendqDatePattern));
-        personAttributes.setUserCreated(MdmConstants.USER);
-        personAttributes.setSource(MdmConstants.SOURCE);
-        personAttributes.setAction(action);
-        personAttributes.setMultDetTypeLev1("PERSONATTRIBUTES");
-        personAttributes.setMultDetTypeLev2("AccountData");
-        personAttributes.setClientId(MdmConstants.CLIENT_ID);
+        return identityData;
+    }
+
+    ObjAttributeDataDTO createAuthProviderData(Person person, LocalDate today)
+    {
+        ObjAttributeDataDTO authProviderData = new ObjAttributeDataDTO();
+        setCommonAttributeData(authProviderData, person, today);
+        authProviderData.setMultDetTypeLev2("AUTHPROVIDER");
+
+        authProviderData.setField1("Auth Source Name"); //TODO: Auth Source Name
+        authProviderData.setField2("Auth Source Identifier"); //TODO: Auth Source Identifier
+        authProviderData.setField3("Auth Create Date"); //TODO: Auth Create Date
+
+        return authProviderData;
+    }
+
+    /**
+     * This includes account information
+     */
+    List<ObjAttributeDataDTO> createPersonAttributesAttributeData(Person person, LocalDate today)
+    {
+        List<ObjAttributeDataDTO> personAttributes = new ArrayList<ObjAttributeDataDTO>();
+
+        personAttributes.add(createSourceDetails(person, today));
+        personAttributes.add(createHouseholdData(person, today));
+        personAttributes.add(createAccountData(person, today));
+        personAttributes.add(createRelayDetails(person, today));
+        personAttributes.add(createIdentityData(person, today));
+        personAttributes.add(createAuthProviderData(person, today));
 
         return personAttributes;
     }
@@ -272,7 +360,16 @@ public class PersonToMdmConverter
         attributeData.setField4(person.getLastName());
         attributeData.setField5(person.getSuffix());
         attributeData.setField6(person.getGender());
-        attributeData.setField7(person.getPreferredName());  //TODO: Is this where we want it?
+
+        if(person.getAuthentication() != null)
+        {
+            attributeData.setField7(person.getAuthentication().getRelayGuid());
+            attributeData.setField9(person.getAuthentication().getEmployeeRelayGuid());
+        }
+        if(person.getLinkedIdentities() != null)
+        {
+            attributeData.setField8(person.getLinkedIdentities().getEmployeeNumber());
+        }
 
         attributeData.setFromDate(today.toString(opendqDatePattern));  // This is overwritten on insert
         attributeData.setTypId(MdmConstants.TYP_ID);

@@ -44,6 +44,7 @@ public class UpdateService extends AddService
     public void updatePerson(Person person, RealTimeObjectActionDTO foundPerson, String slotName) throws ConnectException
     {
         this.slotName = slotName;
+        this.stepName = "RtIndex";
         for(Address address : person.getAddresses())
         {
             addressNormalizationService.normalizeAddress(address);

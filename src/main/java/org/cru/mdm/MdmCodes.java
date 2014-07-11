@@ -7,12 +7,11 @@ package org.cru.mdm;
  */
 public enum MdmCodes
 {
-    MAILING_ADDRESS("15"),
-    BILLING_ADDRESS("16"),
-    PRIMARY_EMAIL("23"),
-    SECONDARY_EMAIL("25"),
-    PRIMARY_PHONE("29"),
-    SECONDARY_PHONE("30");
+    PERSONAL_EMAIL("1"),
+    WORK_EMAIL("2"),
+    HOME_PHONE("3"),
+    HOME_ADDRESS("4"),
+    OFFICE_ADDRESS("5");
 
     private String id;
 

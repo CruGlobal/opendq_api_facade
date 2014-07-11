@@ -122,8 +122,8 @@ public class PersonToMdmConverter
             addressToAdd.setUserDef1(address.getId());
 
             //TODO: This should come in from the json
-            if(numAddress == 0) addressToAdd.setCodId(MdmCodes.MAILING_ADDRESS.getId());
-            else addressToAdd.setCodId(MdmCodes.BILLING_ADDRESS.getId());
+            if(numAddress == 0) addressToAdd.setCodId(MdmCodes.HOME_ADDRESS.getId());
+            else addressToAdd.setCodId(MdmCodes.OFFICE_ADDRESS.getId());
 
             addressToAdd.setClientId(MdmConstants.CLIENT_ID);
             addressToAdd.setTypId(MdmConstants.TYP_ID);
@@ -154,8 +154,8 @@ public class PersonToMdmConverter
                 emailCommunication.setPartyId(person.getMdmPartyId());
 
                 //TODO: This should come in from the json
-                if(numEmail == 0) emailCommunication.setCodId(MdmCodes.PRIMARY_EMAIL.getId());
-                else emailCommunication.setCodId(MdmCodes.SECONDARY_EMAIL.getId());
+                if(numEmail == 0) emailCommunication.setCodId(MdmCodes.PERSONAL_EMAIL.getId());
+                else emailCommunication.setCodId(MdmCodes.WORK_EMAIL.getId());
 
                 emailCommunication.setCommdata(personEmail.getEmail());
                 emailCommunication.setComExclusionType("N");  //TODO: May need to get from client
@@ -183,8 +183,8 @@ public class PersonToMdmConverter
                 phoneCommunication.setPartyId(person.getMdmPartyId());
 
                 //TODO: This should come in from the json (determined by location perhaps)
-                if(numPhone == 0) phoneCommunication.setCodId(MdmCodes.PRIMARY_PHONE.getId());
-                else phoneCommunication.setCodId(MdmCodes.SECONDARY_PHONE.getId());
+                if(numPhone == 0) phoneCommunication.setCodId(MdmCodes.HOME_PHONE.getId());
+                else phoneCommunication.setCodId("99");
 
                 phoneCommunication.setCommdata(personPhone.getNumber());
                 phoneCommunication.setComExclusionType("N");  //TODO: May need to get from client

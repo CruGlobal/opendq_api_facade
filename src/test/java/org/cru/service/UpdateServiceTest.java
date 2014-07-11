@@ -111,7 +111,7 @@ public class UpdateServiceTest
 
         ObjAddressDTO objAddress = new ObjAddressDTO();
         objAddress.setAddressId("786");
-        objAddress.setCodId(MdmCodes.MAILING_ADDRESS.getId());
+        objAddress.setCodId(MdmCodes.HOME_ADDRESS.getId());
         objAddress.setAddressLine1("1125 Blvd Way");
         objAddress.setCityName("Las Vegas");
         objAddress.setStateName("NV");
@@ -125,13 +125,13 @@ public class UpdateServiceTest
 
         ObjCommunicationDTO emailCommunication = new ObjCommunicationDTO();
         emailCommunication.setComId("648");
-        emailCommunication.setCodId(MdmCodes.PRIMARY_EMAIL.getId());
+        emailCommunication.setCodId(MdmCodes.PERSONAL_EMAIL.getId());
         emailCommunication.setPartyId(partyId);
         emailCommunication.setCommdata("nom.nom@crutest.org");
 
         ObjCommunicationDTO phoneCommunication = new ObjCommunicationDTO();
         phoneCommunication.setComId("649");
-        phoneCommunication.setCodId(MdmCodes.PRIMARY_PHONE.getId());
+        phoneCommunication.setCodId(MdmCodes.HOME_PHONE.getId());
         phoneCommunication.setPartyId(partyId);
         phoneCommunication.setCommdata("5555555553");
         phoneCommunication.setUserDef1("work");

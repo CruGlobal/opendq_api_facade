@@ -60,6 +60,8 @@ public class MatchOrUpdateService
             {
                 matchResponse = new MatchResponse();
                 matchResponse.setMatchId(person.getId());
+
+                //We didn't find the match based on the normal index search values, so let's indicate that in some way
                 matchResponse.setConfidenceLevel(0.0D);
             }
             matchResponse.setMessage(ResponseMessage.UPDATED.getMessage());

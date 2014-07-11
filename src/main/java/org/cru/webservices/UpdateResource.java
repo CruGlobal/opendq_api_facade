@@ -39,14 +39,11 @@ public class UpdateResource
         {
             MatchResponse matchOrUpdateResponse = matchOrUpdateService.matchOrUpdatePerson(person);
 
-            if(matchOrUpdateResponse == null)
-            {
-                return Response.ok().entity(ResponseMessage.UPDATED.getMessage()).build();
-            }
-            else if(matchOrUpdateResponse.getMessage().equals(ResponseMessage.CONFLICT.getMessage()))
+            if(matchOrUpdateResponse.getMessage().equals(ResponseMessage.CONFLICT.getMessage()))
             {
                 return Response.status(Response.Status.CONFLICT).entity(matchOrUpdateResponse).build();
             }
+            return Response.ok().entity(matchOrUpdateResponse).build();
         }
         catch(ConnectException ce)
         {
@@ -55,6 +52,5 @@ public class UpdateResource
                 .entity(ce.getMessage())
                 .build());
         }
-        return Response.ok().entity(ResponseMessage.UPDATED.getMessage()).build();
     }
 }

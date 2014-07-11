@@ -61,13 +61,21 @@ public class MatchOrUpdateService
             }
 
             updateService.updatePerson(person, foundMdmPerson, "MatchOrUpdate");
+
+            if(matchResponse == null)
+            {
+                matchResponse = new MatchResponse();
+                matchResponse.setMatchId(person.getId());
+                matchResponse.setConfidenceLevel(0.0D);
+            }
+            matchResponse.setMessage(ResponseMessage.UPDATED.getMessage());
+
+            return matchResponse;
         }
         else   // This means there is a match found for the updated information
         {
             matchResponse.setMessage(ResponseMessage.CONFLICT.getMessage());
             return matchResponse;
         }
-
-        return null;
     }
 }

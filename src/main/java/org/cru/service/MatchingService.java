@@ -118,6 +118,7 @@ public class MatchingService extends IndexingService
         return searchResponse;
     }
 
+    //TODO: This will probably be different for each type of index we are searching
     Map<String, Object> buildResultValues(List<Object> searchResultValues)
     {
         Map<String, Object> valueMap = new HashMap<String, Object>();

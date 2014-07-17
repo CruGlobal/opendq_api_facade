@@ -8,6 +8,7 @@ import com.infosolve.openmdm.webservices.provider.impl.ObjCommunicationDTO;
 import com.infosolve.openmdm.webservices.provider.impl.ObjCommunicationDTOList;
 import com.infosolve.openmdm.webservices.provider.impl.ObjEntityDTO;
 import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
+import org.cru.data.TestPeople;
 import org.cru.mdm.MdmCodes;
 import org.cru.model.Address;
 import org.cru.model.EmailAddress;
@@ -59,48 +60,11 @@ public class UpdateServiceTest
 
     private Person createTestPersonGotMarried()
     {
-        Person testPerson = new Person();
+        Person testPerson = TestPeople.generatePersonWithLotsOfData();
 
-        Address testAddress = new Address();
-        testAddress.setId("kses34223-dk43-9493-394nfa2348d1");
-        testAddress.setAddressLine1("1126 Blvd Way");
-        testAddress.setCity("Las Vegas");
-        testAddress.setState("NV");
-        testAddress.setZipCode("84253");
-        testAddress.setCountry("USA");
-        List<Address> addresses = new ArrayList<Address>();
-        addresses.add(testAddress);
-
+        testPerson.getAddresses().get(0).setAddressLine1("1126 Blvd Way");
         testPerson.setTitle("Mrs.");
-        testPerson.setFirstName("Nom");
         testPerson.setLastName("Tom");
-
-        EmailAddress emailAddress = new EmailAddress();
-        emailAddress.setEmail("nom.nom@crutest.org");
-        emailAddress.setId("kses34223-dk43-9493-394nfa2348d2");
-        List<EmailAddress> emailAddresses = new ArrayList<EmailAddress>();
-        emailAddresses.add(emailAddress);
-
-        PhoneNumber phoneNumber = new PhoneNumber();
-        phoneNumber.setNumber("5555555553");
-        phoneNumber.setLocation("work");
-        phoneNumber.setId("kses34223-dk43-9493-394nfa2348d3");
-        List<PhoneNumber> phoneNumbers = new ArrayList<PhoneNumber>();
-        phoneNumbers.add(phoneNumber);
-
-        testPerson.setId("3ikfj32-8rt4-9493-394nfa2348da");
-        testPerson.setClientIntegrationId("221568");
-
-        List<LinkedIdentity> identitiesList = Lists.newArrayList();
-        LinkedIdentity identity = new LinkedIdentity();
-        identity.setClientIntegrationId("1-6T4D4");
-        identitiesList.add(identity);
-        testPerson.setLinkedIdentities(identitiesList);
-
-        testPerson.setAddresses(addresses);
-        testPerson.setEmailAddresses(emailAddresses);
-        testPerson.setPhoneNumbers(phoneNumbers);
-        testPerson.setGender("F");
 
         return testPerson;
     }

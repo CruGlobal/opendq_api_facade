@@ -83,12 +83,22 @@ public class MatchingServiceTest
         assertNull(matchResponse);
     }
 
-    @Test
-    public void testFindMatchById() throws Exception
+    @DataProvider
+    private Object[][] getIdsToMatch()
     {
-        SearchResponse searchResponse = matchingService.findMatchById("3ikfj32-8rt4-9493-394nfa2348da", "MatchId");
+        return new Object[][] {
+            { "3ikfj32-8rt4-9493-394nfa2348da" },
+            { "2a332-45e-35fv-aw3a2" },
+            { "2a332-45e" }
+        };
+    }
+
+    @Test(dataProvider = "getIdsToMatch")
+    public void testFindMatchById(String id) throws Exception
+    {
+        SearchResponse searchResponse = matchingService.findMatchById(id, "MatchId");
         assertNotNull(searchResponse);
-        assertEquals(searchResponse.getId(), "3ikfj32-8rt4-9493-394nfa2348da");
+        assertEquals(searchResponse.getId(), id);
     }
 
     @Test

@@ -1,12 +1,14 @@
 package org.cru.service;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
 import com.infosolve.openmdm.webservices.provider.impl.DataManagementWSImpl;
 import com.infosolve.openmdm.webservices.provider.impl.ObjAddressDTO;
 import com.infosolve.openmdm.webservices.provider.impl.ObjAttributeDataDTO;
 import com.infosolve.openmdm.webservices.provider.impl.ObjCommunicationDTO;
 import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import com.infosolvetech.rtmatch.pdi4.RuntimeMatchWS;
+import org.cru.mdm.MdmCodes;
 import org.cru.mdm.PersonToMdmConverter;
 import org.cru.model.Address;
 import org.cru.model.EmailAddress;
@@ -113,6 +115,7 @@ public class UpdateService extends AddService
     private void setEmailIds(List<ObjCommunicationDTO> foundCommunications, Person person)
     {
         List<EmailAddress> passedInEmails = person.getEmailAddresses();
+        List<MdmCodes> validEmailCodes = ImmutableList.of(MdmCodes.PERSONAL_EMAIL, MdmCodes.WORK_EMAIL);
 
         if(passedInEmails == null || passedInEmails.isEmpty()) return;
 
@@ -120,7 +123,10 @@ public class UpdateService extends AddService
 
         for(ObjCommunicationDTO communication : foundCommunications)
         {
-            existingEmailIds.put(communication.getUserDef1(), communication.getComId());
+            if(validEmailCodes.contains(MdmCodes.getCodeWithId(communication.getCodId())))
+            {
+                existingEmailIds.put(communication.getUserDef1(), communication.getComId());
+            }
         }
 
         for(EmailAddress emailAddress : passedInEmails)
@@ -136,6 +142,7 @@ public class UpdateService extends AddService
     private void setPhoneIds(List<ObjCommunicationDTO> foundCommunications, Person person)
     {
         List<PhoneNumber> passedInPhones = person.getPhoneNumbers();
+        List<MdmCodes> validPhoneCodes = ImmutableList.of(MdmCodes.HOME_PHONE);
 
         if(passedInPhones == null || passedInPhones.isEmpty()) return;
 
@@ -143,7 +150,10 @@ public class UpdateService extends AddService
 
         for(ObjCommunicationDTO communication : foundCommunications)
         {
-            existingPhoneIds.put(communication.getUserDef2(), communication.getComId());
+            if(validPhoneCodes.contains(MdmCodes.getCodeWithId(communication.getCodId())))
+            {
+                existingPhoneIds.put(communication.getUserDef1(), communication.getComId());
+            }
         }
 
         for(PhoneNumber phoneNumber : passedInPhones)

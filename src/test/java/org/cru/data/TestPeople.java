@@ -2,6 +2,7 @@ package org.cru.data;
 
 import com.google.common.collect.Lists;
 import org.cru.model.Address;
+import org.cru.model.Authentication;
 import org.cru.model.EmailAddress;
 import org.cru.model.LinkedIdentity;
 import org.cru.model.Person;
@@ -52,9 +53,13 @@ public class TestPeople
         LinkedIdentity linkedIdentity = new LinkedIdentity();
         linkedIdentity.setClientIntegrationId("1-6T4D4");
 
+        Authentication authentication = new Authentication();
+        authentication.setRelayGuid("Re1ay-6u1d");
+
         testPerson.setId("3ikfj32-8rt4-9493-394nfa2348da");
         testPerson.setClientIntegrationId("1-6T4D4");
         testPerson.setLinkedIdentities(Lists.newArrayList(linkedIdentity));
+        testPerson.setAuthentication(authentication);
 
         testPerson.setAddresses(addresses);
         testPerson.setEmailAddresses(emailAddresses);

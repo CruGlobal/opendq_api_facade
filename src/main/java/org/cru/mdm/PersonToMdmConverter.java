@@ -382,6 +382,7 @@ public class PersonToMdmConverter
     {
         if(personAttribute != null) personAttributes.add(personAttribute);
     }
+    
     private void addIfNotEmpty(List<ObjAttributeDataDTO> personAttributes, List<ObjAttributeDataDTO> personAttributeList)
     {
         if(personAttributeList != null && !personAttributeList.isEmpty()) personAttributes.addAll(personAttributeList);

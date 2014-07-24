@@ -37,7 +37,7 @@ public class MatchOrUpdateService
 
         if(matchResponse == null || matchResponse.getMatchId().equalsIgnoreCase(person.getId()))
         {
-            SearchResponse searchResponse = matchingService.findMatchById(person.getId(), "MatchId");
+            SearchResponse searchResponse = matchingService.searchForPerson(person, "Match");
 
             if(searchResponse == null)
             {

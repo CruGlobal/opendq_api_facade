@@ -42,43 +42,24 @@ public class MatchingService extends IndexingService
 
     public MatchResponse findMatch(Person person, String slotName) throws ConnectException
     {
+        SearchResponse searchResponse = searchForPerson(person, slotName);
+        if(searchResponse == null) return null;
+
+        MatchResponse matchResponse = new MatchResponse();
+        matchResponse.setConfidenceLevel(searchResponse.getScore());
+        matchResponse.setMatchId(searchResponse.getId());
+        matchResponse.setMessage(ResponseMessage.FOUND.getMessage());
+        return matchResponse;
+    }
+
+    public SearchResponse searchForPerson(Person person, String slotName) throws ConnectException
+    {
         this.slotName = slotName;
         this.stepName = "RtMatch";
         SearchResponse searchResponse = searchSlot(callRuntimeMatchService(), createSearchValuesFromPerson(person));
 
         if(searchResponse == null) return null;
-
-        String matchId = searchResponse.getId();
-
-        if(matchHasBeenDeleted(matchId)) return null;
-
-        MatchResponse matchResponse = new MatchResponse();
-        matchResponse.setConfidenceLevel(searchResponse.getScore());
-        matchResponse.setMatchId(matchId);
-        matchResponse.setMessage(ResponseMessage.FOUND.getMessage());
-        return matchResponse;
-    }
-
-    public SearchResponse findMatchById(String rowId, String slotName) throws ConnectException
-    {
-        this.slotName = slotName;
-        this.stepName = "RtMatchId";
-
-        //The way the index search works requires the values above the row id to be set as well
-        List<String> searchValues = new ArrayList<String>();
-        searchValues.add("");
-        searchValues.add("");
-        searchValues.add("");
-        searchValues.add("");
-        searchValues.add(rowId);
-
-        SearchResponse searchResponse = searchSlot(callRuntimeMatchService(), searchValues);
-
-        if(searchResponse == null) return null;
-
-        String matchId = searchResponse.getId();
-
-        if(matchHasBeenDeleted(matchId)) return null;
+        if(matchHasBeenDeleted(searchResponse.getId())) return null;
 
         return searchResponse;
     }

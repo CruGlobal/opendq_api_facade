@@ -97,7 +97,7 @@ public class EndToEndServiceTest
         checkFindPersonWithMatch(testPerson);
 
         //We should be able to find the index data by Global Registry ID now
-        SearchResponse foundIndex = checkFindById(testPerson.getId());
+        SearchResponse foundIndex = matchingService.searchForPerson(testPerson, "Match");
         String partyId = (String) foundIndex.getResultValues().get("partyId");
 
         //Make an update to the person
@@ -137,15 +137,6 @@ public class EndToEndServiceTest
         MatchResponse matchResponse = matchingService.findMatch(testPerson, "Match");
         assertNotNull(matchResponse);
         assertEquals(matchResponse.getMatchId(), testPerson.getId());
-    }
-
-    private SearchResponse checkFindById(String id) throws Exception
-    {
-        SearchResponse foundIndex = matchingService.findMatchById(id, "MatchId");
-        assertNotNull(foundIndex);
-        assertNotNull(foundIndex.getResultValues().get("partyId"));
-        assertEquals(foundIndex.getId(), id);
-        return foundIndex;
     }
 
     private void checkUpdatePerson(Person testPerson, String partyId) throws Exception

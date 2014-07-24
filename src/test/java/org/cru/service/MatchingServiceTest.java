@@ -7,7 +7,6 @@ import org.cru.model.LinkedIdentities;
 import org.cru.model.MatchResponse;
 import org.cru.model.Person;
 import org.cru.model.PhoneNumber;
-import org.cru.model.SearchResponse;
 import org.cru.util.DeletedIndexesFileIO;
 import org.cru.util.OafProperties;
 import org.cru.util.OpenDQProperties;
@@ -91,14 +90,6 @@ public class MatchingServiceTest
             { "2a332-45e-35fv-aw3a2" },
             { "2a332-45e" }
         };
-    }
-
-    @Test(dataProvider = "getIdsToMatch")
-    public void testFindMatchById(String id) throws Exception
-    {
-        SearchResponse searchResponse = matchingService.findMatchById(id, "MatchId");
-        assertNotNull(searchResponse);
-        assertEquals(searchResponse.getId(), id);
     }
 
     @Test

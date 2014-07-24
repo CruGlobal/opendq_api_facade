@@ -73,11 +73,11 @@ curl -H "Content-Type: application/json" -d '{"person":{"id":"k3rfjs3-f8g9-hfi8-
 
 <h5>Responses</h5>
 <pre>
-{
+[{
   matchId: "k3rfjs3-f8g9-hfi8-5521-12a6er5423"
   confidenceLevel: 1
   message: "Found a match"
-}
+}]
 </pre>
 <h4>Update</h4>
 <pre>

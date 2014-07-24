@@ -19,6 +19,7 @@ import org.cru.model.PhoneNumber;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,7 @@ public class PersonToMdmConverter
 {
     private String opendqDatePattern = "MM/dd/YYYY";
     private String action;
+    private DateTimeFormatter dateFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 
     public PersonToMdmConverter(String action)
     {
@@ -266,7 +268,7 @@ public class PersonToMdmConverter
             }
             else
             {
-                accountData.setField4(person.getClientUpdatedAt().toString(DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")));
+                accountData.setField4(person.getClientUpdatedAt().toString(dateFormatter));
             }
 
             accountDataList.add(accountData);
@@ -315,7 +317,7 @@ public class PersonToMdmConverter
             }
             else
             {
-                identityData.setField4(person.getClientUpdatedAt().toString(DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")));
+                identityData.setField4(person.getClientUpdatedAt().toString(dateFormatter));
             }
 
             identityDataList.add(identityData);
@@ -353,7 +355,7 @@ public class PersonToMdmConverter
 
         authProviderData.setField1(name);
         authProviderData.setField2(id);
-        authProviderData.setField3(new DateTime().toString(DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")));
+        authProviderData.setField3(new DateTime().toString(dateFormatter));
 
         authProviderDataList.add(authProviderData);
     }

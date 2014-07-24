@@ -62,13 +62,13 @@ public class MatchOrUpdateService
                 //We didn't find the match based on the normal index search values, so let's indicate that in some way
                 matchResponse.setConfidenceLevel(0.0D);
             }
-            matchResponse.setAction(Action.UPDATE.toString());
+            matchResponse.setAction(Action.UPDATE);
 
             return matchResponse;
         }
         else   // This means there is a match found for the updated information
         {
-            matchResponse.setAction(Action.CONFLICT.toString());
+            matchResponse.setAction(Action.CONFLICT);
             return matchResponse;
         }
     }

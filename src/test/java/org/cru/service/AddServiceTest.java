@@ -1,8 +1,9 @@
 package org.cru.service;
 
+import com.beust.jcommander.internal.Lists;
 import org.cru.model.Address;
 import org.cru.model.EmailAddress;
-import org.cru.model.LinkedIdentities;
+import org.cru.model.LinkedIdentity;
 import org.cru.model.Person;
 import org.cru.model.PhoneNumber;
 import org.cru.util.OpenDQProperties;
@@ -92,12 +93,15 @@ public class AddServiceTest
         List<PhoneNumber> phoneNumbers = new ArrayList<PhoneNumber>();
         phoneNumbers.add(phoneNumber);
 
-        LinkedIdentities linkedIdentities = new LinkedIdentities();
-        linkedIdentities.setSiebelContactId("1-43BK9");
+        LinkedIdentity linkedIdentity = new LinkedIdentity();
+        linkedIdentity.setClientIntegrationId("1-43BK9");
 
         testPerson.setId("TEST_ID1");
-        testPerson.setClientIntegrationId("1394218");
-        testPerson.setLinkedIdentities(linkedIdentities);
+        testPerson.setClientIntegrationId("1-43BK9");
+
+        List<LinkedIdentity> identitiesList = Lists.newArrayList();
+        identitiesList.add(linkedIdentity);
+        testPerson.setLinkedIdentities(identitiesList);
 
         testPerson.setAddresses(addresses);
         testPerson.setEmailAddresses(emailAddresses);
@@ -138,12 +142,14 @@ public class AddServiceTest
         List<PhoneNumber> phoneNumbers = new ArrayList<PhoneNumber>();
         phoneNumbers.add(phoneNumber);
 
-        LinkedIdentities linkedIdentities = new LinkedIdentities();
-        linkedIdentities.setSiebelContactId("1-6T4D4");
+        List<LinkedIdentity> identitiesList = Lists.newArrayList();
+        LinkedIdentity linkedIdentity = new LinkedIdentity();
+        linkedIdentity.setClientIntegrationId("1-6T4D4");
+        identitiesList.add(linkedIdentity);
 
         testPerson.setId("3ikfj32-8rt4-9493-394nfa2348da");
-        testPerson.setClientIntegrationId("221568");
-        testPerson.setLinkedIdentities(linkedIdentities);
+        testPerson.setClientIntegrationId("1-6T4D4");
+        testPerson.setLinkedIdentities(identitiesList);
 
         testPerson.setAddresses(addresses);
         testPerson.setEmailAddresses(emailAddresses);

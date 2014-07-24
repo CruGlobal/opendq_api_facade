@@ -24,4 +24,16 @@ public enum MdmCodes
     {
         return id;
     }
+
+    public static MdmCodes getCodeWithId(String id)
+    {
+        for(MdmCodes code : MdmCodes.values())
+        {
+            if(code.id.equalsIgnoreCase(id))
+            {
+                return code;
+            }
+        }
+        throw new IllegalArgumentException(id + " is not a valid code ID");
+    }
 }

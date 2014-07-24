@@ -1,9 +1,10 @@
 package org.cru.service;
 
+import com.beust.jcommander.internal.Lists;
 import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import org.cru.model.Address;
 import org.cru.model.EmailAddress;
-import org.cru.model.LinkedIdentities;
+import org.cru.model.LinkedIdentity;
 import org.cru.model.MatchResponse;
 import org.cru.model.Person;
 import org.cru.model.PhoneNumber;
@@ -83,12 +84,22 @@ public class MatchingServiceTest
         assertNull(matchResponse);
     }
 
-    @Test
-    public void testFindMatchById() throws Exception
+    @DataProvider
+    private Object[][] getIdsToMatch()
     {
-        SearchResponse searchResponse = matchingService.findMatchById("3ikfj32-8rt4-9493-394nfa2348da", "MatchId");
+        return new Object[][] {
+            { "3ikfj32-8rt4-9493-394nfa2348da" },
+            { "2a332-45e-35fv-aw3a2" },
+            { "2a332-45e" }
+        };
+    }
+
+    @Test(dataProvider = "getIdsToMatch")
+    public void testFindMatchById(String id) throws Exception
+    {
+        SearchResponse searchResponse = matchingService.findMatchById(id, "MatchId");
         assertNotNull(searchResponse);
-        assertEquals(searchResponse.getId(), "3ikfj32-8rt4-9493-394nfa2348da");
+        assertEquals(searchResponse.getId(), id);
     }
 
     @Test
@@ -214,12 +225,14 @@ public class MatchingServiceTest
         List<PhoneNumber> phoneNumbers = new ArrayList<PhoneNumber>();
         phoneNumbers.add(phoneNumber);
 
-        LinkedIdentities linkedIdentities = new LinkedIdentities();
-        linkedIdentities.setSiebelContactId("1-6T4D4");
+        List<LinkedIdentity> identitiesList = Lists.newArrayList();
+        LinkedIdentity linkedIdentity = new LinkedIdentity();
+        linkedIdentity.setClientIntegrationId("1-6T4D4");
+        identitiesList.add(linkedIdentity);
 
         testPerson.setId("3ikfj32-8rt4-9493-394nfa2348da");
-        testPerson.setClientIntegrationId("221568");
-        testPerson.setLinkedIdentities(linkedIdentities);
+        testPerson.setClientIntegrationId("1-6T4D4");
+        testPerson.setLinkedIdentities(identitiesList);
 
         testPerson.setAddresses(addresses);
         testPerson.setEmailAddresses(emailAddresses);

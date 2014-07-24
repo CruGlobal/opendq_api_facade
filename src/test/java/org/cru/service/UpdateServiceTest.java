@@ -1,5 +1,6 @@
 package org.cru.service;
 
+import com.beust.jcommander.internal.Lists;
 import com.infosolve.openmdm.webservices.provider.impl.ObjAddressDTO;
 import com.infosolve.openmdm.webservices.provider.impl.ObjAddressDTOList;
 import com.infosolve.openmdm.webservices.provider.impl.ObjAttributeDataDTO;
@@ -10,6 +11,7 @@ import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import org.cru.mdm.MdmCodes;
 import org.cru.model.Address;
 import org.cru.model.EmailAddress;
+import org.cru.model.LinkedIdentity;
 import org.cru.model.Person;
 import org.cru.model.PhoneNumber;
 import org.cru.util.OpenDQProperties;
@@ -88,7 +90,12 @@ public class UpdateServiceTest
 
         testPerson.setId("3ikfj32-8rt4-9493-394nfa2348da");
         testPerson.setClientIntegrationId("221568");
-        testPerson.getLinkedIdentities().setSiebelContactId("1-6T4D4");
+
+        List<LinkedIdentity> identitiesList = Lists.newArrayList();
+        LinkedIdentity identity = new LinkedIdentity();
+        identity.setClientIntegrationId("1-6T4D4");
+        identitiesList.add(identity);
+        testPerson.setLinkedIdentities(identitiesList);
 
         testPerson.setAddresses(addresses);
         testPerson.setEmailAddresses(emailAddresses);

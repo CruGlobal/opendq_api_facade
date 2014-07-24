@@ -54,12 +54,12 @@ public class IndexingService
 
     DataManagementWSImpl configureMdmService()
     {
-        QName qName = new QName(openDQProperties.getProperty("namespaceURI"), openDQProperties.getProperty("serviceName"));
+        QName qName = new QName(openDQProperties.getProperty("mdm.namespaceURI"), openDQProperties.getProperty("mdm.serviceName"));
         URL wsdlUrl;
 
         try
         {
-            wsdlUrl = new URL(openDQProperties.getProperty("wsdlUrl"));
+            wsdlUrl = new URL(openDQProperties.getProperty("mdm.wsdlUrl"));
         }
         catch(MalformedURLException e)
         {

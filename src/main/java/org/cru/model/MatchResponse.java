@@ -12,7 +12,7 @@ public class MatchResponse
 {
     private String matchId;
     private double confidenceLevel;
-    private Action action;
+    private String action;
 
     public String getMatchId()
     {
@@ -36,11 +36,11 @@ public class MatchResponse
 
     public String getAction()
     {
-        return action.toString();
+        return action;
     }
 
     public void setAction(Action action)
     {
-        this.action = action;
+        this.action = action.toString();
     }
 }

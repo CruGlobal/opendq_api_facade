@@ -49,7 +49,7 @@ public class MatchOrAddResource
             }
             else
             {
-                return Response.ok().entity(Action.ADD.toString()).build();
+                return Response.ok().entity(buildResponseEntity(person.getId())).build();
             }
         }
         catch(ConnectException ce)
@@ -59,5 +59,14 @@ public class MatchOrAddResource
                 .entity(ce.getMessage())
                 .build());
         }
+    }
+
+    private MatchResponse buildResponseEntity(String id)
+    {
+        MatchResponse matchResponse = new MatchResponse();
+        matchResponse.setConfidenceLevel(1.0D);
+        matchResponse.setMatchId(id);
+        matchResponse.setAction(Action.ADD);
+        return matchResponse;
     }
 }

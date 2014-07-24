@@ -1,5 +1,6 @@
 package org.cru.webservices;
 
+import org.cru.model.MatchResponse;
 import org.cru.model.Person;
 import org.cru.qualifiers.Add;
 import org.cru.service.AddService;
@@ -10,6 +11,7 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -32,6 +34,7 @@ public class AddResource
     @POST
     @Path("/add")
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response addPerson(String json)
     {
         Person person = personDeserializer.deserializePerson(json);
@@ -49,6 +52,15 @@ public class AddResource
                     .build());
         }
 
-        return Response.ok().entity(Action.ADD.toString()).build();
+        return Response.ok().entity(buildResponseEntity(person.getId())).build();
+    }
+
+    private MatchResponse buildResponseEntity(String id)
+    {
+        MatchResponse matchResponse = new MatchResponse();
+        matchResponse.setConfidenceLevel(1.0D);
+        matchResponse.setMatchId(id);
+        matchResponse.setAction(Action.ADD);
+        return matchResponse;
     }
 }

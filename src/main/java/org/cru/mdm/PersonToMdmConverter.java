@@ -97,7 +97,6 @@ public class PersonToMdmConverter
         ObjAddressDTOList addressDTOList = new ObjAddressDTOList();
         List<ObjAddressDTO> internalList = addressDTOList.getObjectAddress();
 
-        int numAddress = 0;
         for(Address address : addresses)
         {
             ObjAddressDTO addressToAdd = new ObjAddressDTO();
@@ -121,16 +120,11 @@ public class PersonToMdmConverter
             addressToAdd.setAction(action);
             addressToAdd.setUserDef1(address.getId());
 
-            //TODO: This should come in from the json
-            if(numAddress == 0) addressToAdd.setCodId(MdmCodes.HOME_ADDRESS.getId());
-            else addressToAdd.setCodId(MdmCodes.OFFICE_ADDRESS.getId());
-
+            addressToAdd.setCodId(MdmCodes.HOME_ADDRESS.getId());
             addressToAdd.setClientId(MdmConstants.CLIENT_ID);
             addressToAdd.setTypId(MdmConstants.TYP_ID);
 
-
             internalList.add(addressToAdd);
-            numAddress++;
         }
 
         return addressDTOList;
@@ -145,17 +139,13 @@ public class PersonToMdmConverter
 
         if(personEmails != null && !personEmails.isEmpty())
         {
-            int numEmail = 0;
             for(EmailAddress personEmail : personEmails)
             {
                 ObjCommunicationDTO emailCommunication = new ObjCommunicationDTO();
 
                 emailCommunication.setComId(personEmail.getMdmCommunicationId());
                 emailCommunication.setPartyId(person.getMdmPartyId());
-
-                //TODO: This should come in from the json
-                if(numEmail == 0) emailCommunication.setCodId(MdmCodes.PERSONAL_EMAIL.getId());
-                else emailCommunication.setCodId(MdmCodes.WORK_EMAIL.getId());
+                emailCommunication.setCodId(MdmCodes.PERSONAL_EMAIL.getId());
 
                 emailCommunication.setCommdata(personEmail.getEmail());
                 emailCommunication.setComExclusionType("N");
@@ -168,23 +158,18 @@ public class PersonToMdmConverter
                 emailCommunication.setUserDef1(personEmail.getId());
 
                 innerList.add(emailCommunication);
-                numEmail++;
             }
         }
 
         if(personPhoneNumbers != null && !personPhoneNumbers.isEmpty())
         {
-            int numPhone = 0;
             for(PhoneNumber personPhone : personPhoneNumbers)
             {
                 ObjCommunicationDTO phoneCommunication = new ObjCommunicationDTO();
 
                 phoneCommunication.setComId(personPhone.getMdmCommunicationId());
                 phoneCommunication.setPartyId(person.getMdmPartyId());
-
-                //TODO: This should come in from the json (determined by location perhaps)
-                if(numPhone == 0) phoneCommunication.setCodId(MdmCodes.HOME_PHONE.getId());
-                else phoneCommunication.setCodId("99");
+                phoneCommunication.setCodId(MdmCodes.HOME_PHONE.getId());
 
                 phoneCommunication.setCommdata(personPhone.getNumber());
                 phoneCommunication.setComExclusionType("N");
@@ -198,7 +183,6 @@ public class PersonToMdmConverter
                 phoneCommunication.setTypId(MdmConstants.TYP_ID);
 
                 innerList.add(phoneCommunication);
-                numPhone++;
             }
         }
 

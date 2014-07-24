@@ -307,7 +307,7 @@ public class PersonToMdmConverter
             setCommonAttributeData(identityData, person, today);
             identityData.setMultDetTypeLev2("IDENTITIES");
 
-            identityData.setField1("Name"); //TODO: Name
+            identityData.setField1(identity.getSystemId()); //TODO: Name
             identityData.setField2(identity.getClientIntegrationId());
             identityData.setField3(identity.getSystemId());
 

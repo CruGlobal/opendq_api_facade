@@ -336,6 +336,7 @@ public class PersonToMdmConverter
         addAuthProviderIfAvailable(authProviderDataList, person, "Google Apps", personAuthentication.getGoogleAppsUid(), today);
         addAuthProviderIfAvailable(authProviderDataList, person, "Relay", personAuthentication.getRelayGuid(), today);
         addAuthProviderIfAvailable(authProviderDataList, person, "Relay (Employee)", personAuthentication.getEmployeeRelayGuid(), today);
+        addAuthProviderIfAvailable(authProviderDataList, person, "The Key", personAuthentication.getKeyGuid(), today);
 
         return authProviderDataList;
     }

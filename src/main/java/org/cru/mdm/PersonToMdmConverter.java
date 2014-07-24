@@ -1,5 +1,7 @@
 package org.cru.mdm;
 
+import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import com.infosolve.openmdm.webservices.provider.impl.ObjAddressDTO;
 import com.infosolve.openmdm.webservices.provider.impl.ObjAddressDTOList;
 import com.infosolve.openmdm.webservices.provider.impl.ObjAttributeDataDTO;
@@ -10,6 +12,7 @@ import com.infosolve.openmdm.webservices.provider.impl.ObjEntityDTO;
 import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import org.cru.model.Address;
 import org.cru.model.EmailAddress;
+import org.cru.model.LinkedIdentity;
 import org.cru.model.Person;
 import org.cru.model.PhoneNumber;
 import org.joda.time.LocalDate;
@@ -238,30 +241,36 @@ public class PersonToMdmConverter
         return householdData;
     }
 
-    ObjAttributeDataDTO createAccountData(Person person, LocalDate today)
+    List<ObjAttributeDataDTO> createAccountData(Person person, LocalDate today)
     {
-        ObjAttributeDataDTO accountData = new ObjAttributeDataDTO();
-        setCommonAttributeData(accountData, person, today);
-        accountData.setMultDetTypeLev2("ACCOUNTDATA");
+        List<ObjAttributeDataDTO> accountDataList = Lists.newArrayList();
+        List<LinkedIdentity> identitiesList = person.getLinkedIdentities();
 
-        accountData.setField1(MdmConstants.SOURCE); //TODO: Account Source name
+        if(identitiesList == null || identitiesList.isEmpty()) return null;
 
-        if(person.getLinkedIdentities() != null)
+        for(LinkedIdentity identity : identitiesList)
         {
+            ObjAttributeDataDTO accountData = new ObjAttributeDataDTO();
+            setCommonAttributeData(accountData, person, today);
+            accountData.setMultDetTypeLev2("ACCOUNTDATA");
+
+            accountData.setField1(identity.getSystemId());
             accountData.setField2(person.getAccountNumber());  //TODO: Is this correct?
-            accountData.setField3(person.getLinkedIdentities().getSiebelContactId());
+            accountData.setField3(identity.getClientIntegrationId());
+
+            if(person.getClientUpdatedAt() == null)
+            {
+                accountData.setField4(null);
+            }
+            else
+            {
+                accountData.setField4(person.getClientUpdatedAt().toString(DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")));
+            }
+
+            accountDataList.add(accountData);
         }
 
-        if(person.getClientUpdatedAt() == null)
-        {
-            accountData.setField4(null);
-        }
-        else
-        {
-            accountData.setField4(person.getClientUpdatedAt().toString(DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")));
-        }
-
-        return accountData;
+        return accountDataList;
     }
 
     ObjAttributeDataDTO createRelayDetails(Person person, LocalDate today)
@@ -281,26 +290,36 @@ public class PersonToMdmConverter
         return null;
     }
 
-    ObjAttributeDataDTO createIdentityData(Person person, LocalDate today)
+    List<ObjAttributeDataDTO> createIdentityData(Person person, LocalDate today)
     {
-        ObjAttributeDataDTO identityData = new ObjAttributeDataDTO();
-        setCommonAttributeData(identityData, person, today);
-        identityData.setMultDetTypeLev2("IDENTITIES");
+        List<ObjAttributeDataDTO> identityDataList = Lists.newArrayList();
+        List<LinkedIdentity> identitiesList = person.getLinkedIdentities();
 
-        identityData.setField1("Name"); //TODO: Name
-        identityData.setField2("Identifier"); //TODO: Identifier
-        identityData.setField3("Source System"); //TODO: Source Systems
+        if(identitiesList == null || identitiesList.isEmpty()) return null;
 
-        if(person.getClientUpdatedAt() == null)
+        for(LinkedIdentity identity : identitiesList)
         {
-            identityData.setField4(null);
-        }
-        else
-        {
-            identityData.setField4(person.getClientUpdatedAt().toString(DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")));
+            ObjAttributeDataDTO identityData = new ObjAttributeDataDTO();
+            setCommonAttributeData(identityData, person, today);
+            identityData.setMultDetTypeLev2("IDENTITIES");
+
+            identityData.setField1("Name"); //TODO: Name
+            identityData.setField2(identity.getClientIntegrationId());
+            identityData.setField3(identity.getSystemId());
+
+            if(person.getClientUpdatedAt() == null)
+            {
+                identityData.setField4(null);
+            }
+            else
+            {
+                identityData.setField4(person.getClientUpdatedAt().toString(DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")));
+            }
+
+            identityDataList.add(identityData);
         }
 
-        return identityData;
+        return identityDataList;
     }
 
     ObjAttributeDataDTO createAuthProviderData(Person person, LocalDate today)
@@ -325,9 +344,9 @@ public class PersonToMdmConverter
 
         personAttributes.add(createSourceDetails(person, today));
         personAttributes.add(createHouseholdData(person, today));
-        personAttributes.add(createAccountData(person, today));
+        personAttributes.addAll(createAccountData(person, today));
         personAttributes.add(createRelayDetails(person, today));
-        personAttributes.add(createIdentityData(person, today));
+        personAttributes.addAll(createIdentityData(person, today));
         personAttributes.add(createAuthProviderData(person, today));
 
         return personAttributes;
@@ -350,9 +369,17 @@ public class PersonToMdmConverter
             attributeData.setField7(person.getAuthentication().getRelayGuid());
             attributeData.setField9(person.getAuthentication().getEmployeeRelayGuid());
         }
-        if(person.getLinkedIdentities() != null)
+
+        List<LinkedIdentity> identitiesList = person.getLinkedIdentities();
+        if(identitiesList != null && !identitiesList.isEmpty())
         {
-            attributeData.setField8(person.getLinkedIdentities().getEmployeeNumber());
+            for(LinkedIdentity identity : identitiesList)
+            {
+                if(!Strings.isNullOrEmpty(identity.getEmployeeNumber()))
+                {
+                    attributeData.setField8(identity.getEmployeeNumber());
+                }
+            }
         }
 
         attributeData.setFromDate(today.toString(opendqDatePattern));  // This is overwritten on insert

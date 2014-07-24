@@ -226,8 +226,8 @@ public class PersonToMdmConverter
         setCommonAttributeData(sourceDetails, person, today);
         sourceDetails.setMultDetTypeLev2("SOURCEDETAILS");
 
-        sourceDetails.setField1(person.getSource().getSystemId()); //TODO: Source System
-        sourceDetails.setField2(person.getSource().getSystemId()); //TODO: Source ID
+        sourceDetails.setField1(person.getSource().getSystemId());
+        sourceDetails.setField2(person.getSource().getSystemId());
 
         return sourceDetails;
     }

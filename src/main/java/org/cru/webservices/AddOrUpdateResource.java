@@ -4,7 +4,7 @@ import org.cru.model.MatchResponse;
 import org.cru.model.Person;
 import org.cru.service.AddOrUpdateService;
 import org.cru.service.PersonDeserializer;
-import org.cru.util.ResponseMessage;
+import org.cru.util.Action;
 
 import javax.inject.Inject;
 import javax.ws.rs.POST;
@@ -42,10 +42,11 @@ public class AddOrUpdateResource
 
             if(addOrUpdateResponse == null)
             {
-                return Response.ok().entity(ResponseMessage.ADDED.getMessage()).build();
+                return Response.ok().entity(Action.ADD.toString()).build();
             }
-            else if(addOrUpdateResponse.getMessage().equals(ResponseMessage.CONFLICT.getMessage()))
+            else if(addOrUpdateResponse.getAction().equals(Action.CONFLICT.toString()))
             {
+                addOrUpdateResponse.setAction(Action.UPDATE.toString());
                 return Response.status(Response.Status.CONFLICT).entity(addOrUpdateResponse).build();
             }
             else

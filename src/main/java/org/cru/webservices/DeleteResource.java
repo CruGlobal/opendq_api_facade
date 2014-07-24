@@ -15,7 +15,7 @@ import java.net.ConnectException;
 
 import org.cru.service.MatchingService;
 import org.cru.service.PersonDeserializer;
-import org.cru.util.ResponseMessage;
+import org.cru.util.Action;
 
 /**
  * Endpoint to delete a {@link Person} from the index
@@ -51,6 +51,6 @@ public class DeleteResource
                 .build());
         }
 
-        return Response.ok().entity(ResponseMessage.DELETED.getMessage()).build();
+        return Response.ok().entity(Action.DELETE.toString()).build();
     }
 }

@@ -32,6 +32,7 @@ public class Person
     private Authentication authentication;
     private LinkedIdentities linkedIdentities;
     private DateTime clientUpdatedAt;
+    private Source source;
 
     //Name values
     private String firstName;
@@ -175,6 +176,17 @@ public class Person
     public void setClientUpdatedAt(DateTime clientUpdatedAt)
     {
         this.clientUpdatedAt = clientUpdatedAt;
+    }
+
+    public Source getSource()
+    {
+        return source;
+    }
+
+    @JsonDeserialize(contentAs = Source.class)
+    public void setSource(Source source)
+    {
+        this.source = source;
     }
 
     public String getFirstName()

@@ -9,8 +9,8 @@ import org.cru.model.Person;
 import org.cru.model.SearchResponse;
 import org.cru.qualifiers.Delete;
 import org.cru.qualifiers.Match;
+import org.cru.util.Action;
 import org.cru.util.OpenDQProperties;
-import org.cru.util.ResponseMessage;
 
 import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
@@ -55,7 +55,7 @@ public class MatchingService extends IndexingService
         MatchResponse matchResponse = new MatchResponse();
         matchResponse.setConfidenceLevel(searchResponse.getScore());
         matchResponse.setMatchId(matchId);
-        matchResponse.setMessage(ResponseMessage.FOUND.getMessage());
+        matchResponse.setAction(Action.MATCH.toString());
         return matchResponse;
     }
 

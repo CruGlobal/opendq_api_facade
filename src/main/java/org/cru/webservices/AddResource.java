@@ -4,7 +4,7 @@ import org.cru.model.Person;
 import org.cru.qualifiers.Add;
 import org.cru.service.AddService;
 import org.cru.service.PersonDeserializer;
-import org.cru.util.ResponseMessage;
+import org.cru.util.Action;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -49,6 +49,6 @@ public class AddResource
                     .build());
         }
 
-        return Response.ok().entity(ResponseMessage.ADDED.getMessage()).build();
+        return Response.ok().entity(Action.ADD.toString()).build();
     }
 }

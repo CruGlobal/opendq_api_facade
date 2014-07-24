@@ -4,7 +4,7 @@ import org.cru.model.MatchResponse;
 import org.cru.model.Person;
 import org.cru.service.MatchOrUpdateService;
 import org.cru.service.PersonDeserializer;
-import org.cru.util.ResponseMessage;
+import org.cru.util.Action;
 
 import javax.inject.Inject;
 import javax.ws.rs.POST;
@@ -46,8 +46,9 @@ public class UpdateResource
                     .entity("Could not find Person with global registry id: " + person.getId())
                     .build());
             }
-            else if(matchOrUpdateResponse.getMessage().equals(ResponseMessage.CONFLICT.getMessage()))
+            else if(matchOrUpdateResponse.getAction().equals(Action.CONFLICT.toString()))
             {
+                matchOrUpdateResponse.setAction(Action.UPDATE.toString());
                 return Response.status(Response.Status.CONFLICT).entity(matchOrUpdateResponse).build();
             }
 

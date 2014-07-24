@@ -11,7 +11,7 @@ public class MatchResponse
 {
     private String matchId;
     private double confidenceLevel;
-    private String message;
+    private String action;
 
     public String getMatchId()
     {
@@ -33,13 +33,13 @@ public class MatchResponse
         this.confidenceLevel = confidenceLevel;
     }
 
-    public String getMessage()
+    public String getAction()
     {
-        return message;
+        return action;
     }
 
-    public void setMessage(String message)
+    public void setAction(String action)
     {
-        this.message = message;
+        this.action = action;
     }
 }

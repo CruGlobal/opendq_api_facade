@@ -4,7 +4,7 @@ import org.cru.model.MatchResponse;
 import org.cru.model.Person;
 import org.cru.service.MatchOrAddService;
 import org.cru.service.PersonDeserializer;
-import org.cru.util.ResponseMessage;
+import org.cru.util.Action;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -49,7 +49,7 @@ public class MatchOrAddResource
             }
             else
             {
-                return Response.ok().entity(ResponseMessage.ADDED.getMessage()).build();
+                return Response.ok().entity(Action.ADD.toString()).build();
             }
         }
         catch(ConnectException ce)

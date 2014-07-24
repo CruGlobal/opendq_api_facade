@@ -5,7 +5,7 @@ import org.cru.model.MatchResponse;
 import org.cru.model.Person;
 import org.cru.model.SearchResponse;
 import org.cru.qualifiers.Match;
-import org.cru.util.ResponseMessage;
+import org.cru.util.Action;
 
 import javax.inject.Inject;
 import java.net.ConnectException;
@@ -62,13 +62,13 @@ public class MatchOrUpdateService
                 //We didn't find the match based on the normal index search values, so let's indicate that in some way
                 matchResponse.setConfidenceLevel(0.0D);
             }
-            matchResponse.setMessage(ResponseMessage.UPDATED.getMessage());
+            matchResponse.setAction(Action.UPDATE.toString());
 
             return matchResponse;
         }
         else   // This means there is a match found for the updated information
         {
-            matchResponse.setMessage(ResponseMessage.CONFLICT.getMessage());
+            matchResponse.setAction(Action.CONFLICT.toString());
             return matchResponse;
         }
     }

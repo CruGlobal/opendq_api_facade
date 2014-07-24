@@ -78,15 +78,15 @@ public class PersonToMdmConverter
 
         objEntityDTO.setPartyId(person.getMdmPartyId());
         objEntityDTO.setTypId(MdmConstants.TYP_ID);
-        objEntityDTO.setCustomer("Y"); //TODO: Not Always...Come from Client?
+        objEntityDTO.setCustomer("Y");
         objEntityDTO.setFromDate(today.toString(opendqDatePattern));  // This is overwritten on insert
         objEntityDTO.setDateCreated(today.toString(opendqDatePattern));
         objEntityDTO.setUserCreated(MdmConstants.USER);
         objEntityDTO.setSource(MdmConstants.SOURCE);
         objEntityDTO.setAction(action);
         objEntityDTO.setSrcId(person.getClientIntegrationId());
-        objEntityDTO.setStatus(MdmStatus.APPROVED.getStatusCode()); //TODO: What should go here?
-        objEntityDTO.setActive("Y"); //TODO: Should this ever be 'N'?
+        objEntityDTO.setStatus(MdmStatus.APPROVED.getStatusCode());
+        objEntityDTO.setActive("Y");
         objEntityDTO.setClientId(MdmConstants.CLIENT_ID);
 
         return objEntityDTO;
@@ -103,7 +103,7 @@ public class PersonToMdmConverter
             ObjAddressDTO addressToAdd = new ObjAddressDTO();
 
             addressToAdd.setAddressId(address.getMdmAddressId());
-            addressToAdd.setComExclusionType("N");  //TODO: May need to get from client
+            addressToAdd.setComExclusionType("N");
 
             addressToAdd.setAddressLine1(address.getAddressLine1());
             addressToAdd.setAddressLine2(address.getAddressLine2());
@@ -158,7 +158,7 @@ public class PersonToMdmConverter
                 else emailCommunication.setCodId(MdmCodes.WORK_EMAIL.getId());
 
                 emailCommunication.setCommdata(personEmail.getEmail());
-                emailCommunication.setComExclusionType("N");  //TODO: May need to get from client
+                emailCommunication.setComExclusionType("N");
                 emailCommunication.setDateCreated(today.toString(opendqDatePattern));
                 emailCommunication.setUserCreated(MdmConstants.USER);
                 emailCommunication.setSource(MdmConstants.SOURCE);
@@ -187,7 +187,7 @@ public class PersonToMdmConverter
                 else phoneCommunication.setCodId("99");
 
                 phoneCommunication.setCommdata(personPhone.getNumber());
-                phoneCommunication.setComExclusionType("N");  //TODO: May need to get from client
+                phoneCommunication.setComExclusionType("N");
                 phoneCommunication.setDateCreated(today.toString(opendqDatePattern));
                 phoneCommunication.setUserCreated(MdmConstants.USER);
                 phoneCommunication.setSource(MdmConstants.SOURCE);

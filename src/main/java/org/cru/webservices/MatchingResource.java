@@ -7,6 +7,7 @@ import org.cru.qualifiers.Match;
 import org.cru.service.AddressNormalizationService;
 import org.cru.service.MatchingService;
 import org.cru.service.PersonDeserializer;
+import org.cru.util.Action;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -59,7 +60,7 @@ public class MatchingResource
             }
             else
             {
-                return Response.status(Response.Status.NOT_FOUND).build();
+                return Response.status(Response.Status.NOT_FOUND).entity(buildResponseEntity()).build();
             }
         }
         catch(ConnectException ce)
@@ -69,5 +70,14 @@ public class MatchingResource
                 .entity(ce.getMessage())
                 .build());
         }
+    }
+
+    private MatchResponse buildResponseEntity()
+    {
+        MatchResponse matchResponse = new MatchResponse();
+        matchResponse.setConfidenceLevel(0.0D);
+        matchResponse.setMatchId("Not Found");
+        matchResponse.setAction(Action.MATCH);
+        return matchResponse;
     }
 }

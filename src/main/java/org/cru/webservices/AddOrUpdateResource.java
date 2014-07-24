@@ -7,6 +7,7 @@ import org.cru.service.PersonDeserializer;
 import org.cru.util.Action;
 
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -32,6 +33,7 @@ public class AddOrUpdateResource
     @Path("/add-or-update")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response addOrUpdatePerson(String json)
     {
         Person person = personDeserializer.deserializePerson(json);
@@ -42,7 +44,7 @@ public class AddOrUpdateResource
 
             if(addOrUpdateResponse == null)
             {
-                return Response.ok().entity(Action.ADD.toString()).build();
+                return Response.ok().entity(buildResponseEntity(person.getId())).build();
             }
             else if(addOrUpdateResponse.getAction().equals(Action.CONFLICT.toString()))
             {
@@ -58,5 +60,14 @@ public class AddOrUpdateResource
         {
             return Response.serverError().entity(ce.getMessage()).build();
         }
+    }
+
+    private MatchResponse buildResponseEntity(String id)
+    {
+        MatchResponse matchResponse = new MatchResponse();
+        matchResponse.setConfidenceLevel(1.0D);
+        matchResponse.setMatchId(id);
+        matchResponse.setAction(Action.ADD);
+        return matchResponse;
     }
 }

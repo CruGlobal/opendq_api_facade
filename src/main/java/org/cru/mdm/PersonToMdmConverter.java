@@ -330,57 +330,32 @@ public class PersonToMdmConverter
         if(personAuthentication == null) return null;
 
         List<ObjAttributeDataDTO> authProviderDataList = Lists.newArrayList();
-
-        if(!Strings.isNullOrEmpty(personAuthentication.getFacebookUid()))
-        {
-            ObjAttributeDataDTO authProviderData = new ObjAttributeDataDTO();
-            setCommonAttributeData(authProviderData, person, today);
-            authProviderData.setMultDetTypeLev2("AUTHPROVIDER");
-
-            authProviderData.setField1("Facebook");
-            authProviderData.setField2(personAuthentication.getFacebookUid());
-            authProviderData.setField3(new DateTime().toString(DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")));
-
-            authProviderDataList.add(authProviderData);
-        }
-        if(!Strings.isNullOrEmpty(personAuthentication.getGoogleAppsUid()))
-        {
-            ObjAttributeDataDTO authProviderData = new ObjAttributeDataDTO();
-            setCommonAttributeData(authProviderData, person, today);
-            authProviderData.setMultDetTypeLev2("AUTHPROVIDER");
-
-            authProviderData.setField1("Google Apps");
-            authProviderData.setField2(personAuthentication.getGoogleAppsUid());
-            authProviderData.setField3(new DateTime().toString(DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")));
-
-            authProviderDataList.add(authProviderData);
-        }
-        if(!Strings.isNullOrEmpty(personAuthentication.getRelayGuid()))
-        {
-            ObjAttributeDataDTO authProviderData = new ObjAttributeDataDTO();
-            setCommonAttributeData(authProviderData, person, today);
-            authProviderData.setMultDetTypeLev2("AUTHPROVIDER");
-
-            authProviderData.setField1("Relay");
-            authProviderData.setField2(personAuthentication.getRelayGuid());
-            authProviderData.setField3(new DateTime().toString(DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")));
-
-            authProviderDataList.add(authProviderData);
-        }
-        if(!Strings.isNullOrEmpty(personAuthentication.getRelayGuid()))
-        {
-            ObjAttributeDataDTO authProviderData = new ObjAttributeDataDTO();
-            setCommonAttributeData(authProviderData, person, today);
-            authProviderData.setMultDetTypeLev2("AUTHPROVIDER");
-
-            authProviderData.setField1("Relay (Employee)");
-            authProviderData.setField2(personAuthentication.getEmployeeRelayGuid());
-            authProviderData.setField3(new DateTime().toString(DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")));
-
-            authProviderDataList.add(authProviderData);
-        }
+        addAuthProviderIfAvailable(authProviderDataList, person, "Facebook", personAuthentication.getFacebookUid(), today);
+        addAuthProviderIfAvailable(authProviderDataList, person, "Google Apps", personAuthentication.getGoogleAppsUid(), today);
+        addAuthProviderIfAvailable(authProviderDataList, person, "Relay", personAuthentication.getRelayGuid(), today);
+        addAuthProviderIfAvailable(authProviderDataList, person, "Relay (Employee)", personAuthentication.getEmployeeRelayGuid(), today);
 
         return authProviderDataList;
+    }
+
+    private void addAuthProviderIfAvailable(
+        List<ObjAttributeDataDTO> authProviderDataList,
+        Person person,
+        String name,
+        String id,
+        LocalDate today)
+    {
+        if(Strings.isNullOrEmpty(id)) return;
+
+        ObjAttributeDataDTO authProviderData = new ObjAttributeDataDTO();
+        setCommonAttributeData(authProviderData, person, today);
+        authProviderData.setMultDetTypeLev2("AUTHPROVIDER");
+
+        authProviderData.setField1(name);
+        authProviderData.setField2(id);
+        authProviderData.setField3(new DateTime().toString(DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")));
+
+        authProviderDataList.add(authProviderData);
     }
 
     /**

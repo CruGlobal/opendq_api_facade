@@ -1,7 +1,6 @@
 package org.cru.service;
 
 import org.cru.model.Person;
-import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.testng.annotations.BeforeClass;
@@ -65,9 +64,9 @@ public class PersonDeserializerTest
 
         assertEquals(deserializedPerson.getAccountNumber(), "123456789");
 
-        assertNotNull(deserializedPerson.getLinkedIdentities());
-        assertEquals(deserializedPerson.getLinkedIdentities().getSiebelContactId(), "1-FG32A");
-        assertEquals(deserializedPerson.getLinkedIdentities().getEmployeeNumber(), "012345678");
+        assertEquals(deserializedPerson.getLinkedIdentities().size(), 1);
+        assertEquals(deserializedPerson.getLinkedIdentities().get(0).getClientIntegrationId(), "1-FG32A");
+        assertEquals(deserializedPerson.getLinkedIdentities().get(0).getEmployeeNumber(), "012345678");
 
         assertEquals(deserializedPerson.getClientUpdatedAt(), dateTimeFormatter.parseDateTime("2014-06-21 13:41:21"));
 
@@ -111,7 +110,7 @@ public class PersonDeserializerTest
             "        }," +
             "        \"account_number\": \"123456789\"," +
             "        \"linked_identities\": {" +
-            "            \"siebel_contact_id\": \"1-FG32A\"," +
+            "            \"client_integration_id\": \"1-FG32A\"," +
             "            \"employee_number\": \"012345678\"" +
             "        }," +
             "        \"client_updated_at\": \"2014-06-21 13:41:21\"," +

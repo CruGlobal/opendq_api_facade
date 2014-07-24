@@ -61,6 +61,7 @@ public class PersonDeserializerTest
 
         assertNotNull(deserializedPerson.getAuthentication());
         assertEquals(deserializedPerson.getAuthentication().getRelayGuid(), "f435f4-5f5e-8934-fjda-jk2354oia");
+        assertEquals(deserializedPerson.getAuthentication().getFacebookUid(), "500015648");
 
         assertEquals(deserializedPerson.getAccountNumber(), "123456789");
 
@@ -106,7 +107,8 @@ public class PersonDeserializerTest
             "            \"country\": \"USA\"" +
             "        }," +
             "        \"authentication\": {" +
-            "            \"relay_guid\": \"f435f4-5f5e-8934-fjda-jk2354oia\"" +
+            "            \"relay_guid\": \"f435f4-5f5e-8934-fjda-jk2354oia\"," +
+            "            \"facebook_uid\": 500015648" +
             "        }," +
             "        \"account_number\": \"123456789\"," +
             "        \"linked_identities\": {" +

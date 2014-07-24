@@ -11,10 +11,12 @@ import com.infosolve.openmdm.webservices.provider.impl.ObjCommunicationDTOList;
 import com.infosolve.openmdm.webservices.provider.impl.ObjEntityDTO;
 import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import org.cru.model.Address;
+import org.cru.model.Authentication;
 import org.cru.model.EmailAddress;
 import org.cru.model.LinkedIdentity;
 import org.cru.model.Person;
 import org.cru.model.PhoneNumber;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 
@@ -322,17 +324,63 @@ public class PersonToMdmConverter
         return identityDataList;
     }
 
-    ObjAttributeDataDTO createAuthProviderData(Person person, LocalDate today)
+    List<ObjAttributeDataDTO> createAuthProviderData(Person person, LocalDate today)
     {
-        ObjAttributeDataDTO authProviderData = new ObjAttributeDataDTO();
-        setCommonAttributeData(authProviderData, person, today);
-        authProviderData.setMultDetTypeLev2("AUTHPROVIDER");
+        Authentication personAuthentication = person.getAuthentication();
+        if(personAuthentication == null) return null;
 
-        authProviderData.setField1("Auth Source Name"); //TODO: Auth Source Name
-        authProviderData.setField2("Auth Source Identifier"); //TODO: Auth Source Identifier
-        authProviderData.setField3("Auth Create Date"); //TODO: Auth Create Date
+        List<ObjAttributeDataDTO> authProviderDataList = Lists.newArrayList();
 
-        return authProviderData;
+        if(!Strings.isNullOrEmpty(personAuthentication.getFacebookUid()))
+        {
+            ObjAttributeDataDTO authProviderData = new ObjAttributeDataDTO();
+            setCommonAttributeData(authProviderData, person, today);
+            authProviderData.setMultDetTypeLev2("AUTHPROVIDER");
+
+            authProviderData.setField1("Facebook");
+            authProviderData.setField2(personAuthentication.getFacebookUid());
+            authProviderData.setField3(new DateTime().toString(DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")));
+
+            authProviderDataList.add(authProviderData);
+        }
+        if(!Strings.isNullOrEmpty(personAuthentication.getGoogleAppsUid()))
+        {
+            ObjAttributeDataDTO authProviderData = new ObjAttributeDataDTO();
+            setCommonAttributeData(authProviderData, person, today);
+            authProviderData.setMultDetTypeLev2("AUTHPROVIDER");
+
+            authProviderData.setField1("Google Apps");
+            authProviderData.setField2(personAuthentication.getGoogleAppsUid());
+            authProviderData.setField3(new DateTime().toString(DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")));
+
+            authProviderDataList.add(authProviderData);
+        }
+        if(!Strings.isNullOrEmpty(personAuthentication.getRelayGuid()))
+        {
+            ObjAttributeDataDTO authProviderData = new ObjAttributeDataDTO();
+            setCommonAttributeData(authProviderData, person, today);
+            authProviderData.setMultDetTypeLev2("AUTHPROVIDER");
+
+            authProviderData.setField1("Relay");
+            authProviderData.setField2(personAuthentication.getRelayGuid());
+            authProviderData.setField3(new DateTime().toString(DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")));
+
+            authProviderDataList.add(authProviderData);
+        }
+        if(!Strings.isNullOrEmpty(personAuthentication.getRelayGuid()))
+        {
+            ObjAttributeDataDTO authProviderData = new ObjAttributeDataDTO();
+            setCommonAttributeData(authProviderData, person, today);
+            authProviderData.setMultDetTypeLev2("AUTHPROVIDER");
+
+            authProviderData.setField1("Relay (Employee)");
+            authProviderData.setField2(personAuthentication.getEmployeeRelayGuid());
+            authProviderData.setField3(new DateTime().toString(DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")));
+
+            authProviderDataList.add(authProviderData);
+        }
+
+        return authProviderDataList;
     }
 
     /**
@@ -347,7 +395,7 @@ public class PersonToMdmConverter
         personAttributes.addAll(createAccountData(person, today));
         personAttributes.add(createRelayDetails(person, today));
         personAttributes.addAll(createIdentityData(person, today));
-        personAttributes.add(createAuthProviderData(person, today));
+        personAttributes.addAll(createAuthProviderData(person, today));
 
         return personAttributes;
     }

@@ -1,5 +1,6 @@
 package org.cru.model;
 
+import org.cru.util.Action;
 import org.cru.webservices.MatchingResource;
 
 /**
@@ -11,7 +12,7 @@ public class MatchResponse
 {
     private String matchId;
     private double confidenceLevel;
-    private String action;
+    private Action action;
 
     public String getMatchId()
     {
@@ -35,10 +36,10 @@ public class MatchResponse
 
     public String getAction()
     {
-        return action;
+        return action.toString();
     }
 
-    public void setAction(String action)
+    public void setAction(Action action)
     {
         this.action = action;
     }

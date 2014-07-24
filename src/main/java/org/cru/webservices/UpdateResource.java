@@ -48,7 +48,7 @@ public class UpdateResource
             }
             else if(matchOrUpdateResponse.getAction().equals(Action.CONFLICT.toString()))
             {
-                matchOrUpdateResponse.setAction(Action.UPDATE.toString());
+                matchOrUpdateResponse.setAction(Action.UPDATE);
                 return Response.status(Response.Status.CONFLICT).entity(matchOrUpdateResponse).build();
             }
 

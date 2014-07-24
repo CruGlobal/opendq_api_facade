@@ -55,7 +55,7 @@ public class MatchingService extends IndexingService
         MatchResponse matchResponse = new MatchResponse();
         matchResponse.setConfidenceLevel(searchResponse.getScore());
         matchResponse.setMatchId(matchId);
-        matchResponse.setAction(Action.MATCH.toString());
+        matchResponse.setAction(Action.MATCH);
         return matchResponse;
     }
 

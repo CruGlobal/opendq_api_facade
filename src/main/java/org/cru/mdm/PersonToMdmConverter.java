@@ -39,7 +39,7 @@ public class PersonToMdmConverter
 
         RealTimeObjectActionDTO realTimeObject = new RealTimeObjectActionDTO();
 
-        addAddressesIfExist(realTimeObject, createAddressDTOList(person.getAddresses(), today));
+        addAddressesIfExist(realTimeObject, createAddressDTOList(person.getAddresses(), today, person.getSource().getSystemId()));
         addAttributeDataIfExists(realTimeObject, createAttributeDataDTOList(person, today));
         addCommunicationsIfExist(realTimeObject, createObjCommunicationList(person, today));
 
@@ -82,7 +82,7 @@ public class PersonToMdmConverter
         objEntityDTO.setFromDate(today.toString(opendqDatePattern));  // This is overwritten on insert
         objEntityDTO.setDateCreated(today.toString(opendqDatePattern));
         objEntityDTO.setUserCreated(MdmConstants.USER);
-        objEntityDTO.setSource(MdmConstants.SOURCE);
+        objEntityDTO.setSource(person.getSource().getSystemId());
         objEntityDTO.setAction(action);
         objEntityDTO.setSrcId(person.getClientIntegrationId());
         objEntityDTO.setStatus(MdmStatus.APPROVED.getStatusCode());
@@ -92,7 +92,7 @@ public class PersonToMdmConverter
         return objEntityDTO;
     }
 
-    private ObjAddressDTOList createAddressDTOList(List<Address> addresses, LocalDate today)
+    private ObjAddressDTOList createAddressDTOList(List<Address> addresses, LocalDate today, String sourceId)
     {
         ObjAddressDTOList addressDTOList = new ObjAddressDTOList();
         List<ObjAddressDTO> internalList = addressDTOList.getObjectAddress();
@@ -116,7 +116,7 @@ public class PersonToMdmConverter
             addressToAdd.setFromDate(today.toString(opendqDatePattern));  // This is overwritten on insert
             addressToAdd.setDateCreated(today.toString(opendqDatePattern));
             addressToAdd.setUserCreated(MdmConstants.USER);
-            addressToAdd.setSource(MdmConstants.SOURCE);
+            addressToAdd.setSource(sourceId);
             addressToAdd.setAction(action);
             addressToAdd.setUserDef1(address.getId());
 
@@ -151,7 +151,7 @@ public class PersonToMdmConverter
                 emailCommunication.setComExclusionType("N");
                 emailCommunication.setDateCreated(today.toString(opendqDatePattern));
                 emailCommunication.setUserCreated(MdmConstants.USER);
-                emailCommunication.setSource(MdmConstants.SOURCE);
+                emailCommunication.setSource(person.getSource().getSystemId());
                 emailCommunication.setAction(action);
                 emailCommunication.setClientId(MdmConstants.CLIENT_ID);
                 emailCommunication.setTypId(MdmConstants.TYP_ID);
@@ -175,7 +175,7 @@ public class PersonToMdmConverter
                 phoneCommunication.setComExclusionType("N");
                 phoneCommunication.setDateCreated(today.toString(opendqDatePattern));
                 phoneCommunication.setUserCreated(MdmConstants.USER);
-                phoneCommunication.setSource(MdmConstants.SOURCE);
+                phoneCommunication.setSource(person.getSource().getSystemId());
                 phoneCommunication.setAction(action);
                 phoneCommunication.setUserDef1(personPhone.getId());
                 phoneCommunication.setUserDef2(personPhone.getLocation());
@@ -207,7 +207,7 @@ public class PersonToMdmConverter
         attributeData.setTypId(MdmConstants.TYP_ID);
         attributeData.setDateCreated(today.toString(opendqDatePattern));
         attributeData.setUserCreated(MdmConstants.USER);
-        attributeData.setSource(MdmConstants.SOURCE);
+        attributeData.setSource(person.getSource().getSystemId());
         attributeData.setAction(action);
         attributeData.setMultDetTypeLev1("PERSONATTRIBUTES");
         attributeData.setClientId(MdmConstants.CLIENT_ID);
@@ -219,8 +219,8 @@ public class PersonToMdmConverter
         setCommonAttributeData(sourceDetails, person, today);
         sourceDetails.setMultDetTypeLev2("SOURCEDETAILS");
 
-        sourceDetails.setField1(MdmConstants.SOURCE); //TODO: Source System
-        sourceDetails.setField2(MdmConstants.SOURCE); //TODO: Source ID
+        sourceDetails.setField1(person.getSource().getSystemId()); //TODO: Source System
+        sourceDetails.setField2(person.getSource().getSystemId()); //TODO: Source ID
 
         return sourceDetails;
     }
@@ -272,7 +272,7 @@ public class PersonToMdmConverter
 
         if(person.getAuthentication() != null)
         {
-            relayDetails.setField1(MdmConstants.SOURCE); //TODO: SourceNm
+            relayDetails.setField1(person.getSource().getSystemId());
             relayDetails.setField2(person.getAuthentication().getEmployeeRelayGuid());
             relayDetails.setField3(person.getAuthentication().getRelayGuid());
 
@@ -359,7 +359,7 @@ public class PersonToMdmConverter
         attributeData.setTypId(MdmConstants.TYP_ID);
         attributeData.setDateCreated(today.toString(opendqDatePattern));
         attributeData.setUserCreated(MdmConstants.USER);
-        attributeData.setSource(MdmConstants.SOURCE);
+        attributeData.setSource(person.getSource().getSystemId());
         attributeData.setAction(action);
         attributeData.setMultDetTypeLev1("PERSON");
         attributeData.setClientId(MdmConstants.CLIENT_ID);

@@ -56,9 +56,9 @@ opendq_api_facade
         "authentication": {
             "relay_guid": "String"
         },
-        "linked_identities": {
-            "siebel_contact_id": "String",
-            "employee_number": "String"
+        "linked_identities": { //Could be single object or array
+            "system_id": "String",
+            "client_integration_id": "String"
         },
         "client_updated_at": "yyyy-MM-dd HH:mm:ss"
     }

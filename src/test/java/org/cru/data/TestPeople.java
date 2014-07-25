@@ -4,11 +4,13 @@ import com.google.common.collect.Lists;
 import com.infosolve.openmdm.webservices.provider.impl.ObjAddressDTO;
 import com.infosolve.openmdm.webservices.provider.impl.ObjAddressDTOList;
 import com.infosolve.openmdm.webservices.provider.impl.ObjAttributeDataDTO;
+import com.infosolve.openmdm.webservices.provider.impl.ObjAttributeDataDTOList;
 import com.infosolve.openmdm.webservices.provider.impl.ObjCommunicationDTO;
 import com.infosolve.openmdm.webservices.provider.impl.ObjCommunicationDTOList;
 import com.infosolve.openmdm.webservices.provider.impl.ObjEntityDTO;
 import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import org.cru.mdm.MdmCodes;
+import org.cru.mdm.MdmConstants;
 import org.cru.model.Address;
 import org.cru.model.Authentication;
 import org.cru.model.EmailAddress;
@@ -16,6 +18,7 @@ import org.cru.model.LinkedIdentity;
 import org.cru.model.Person;
 import org.cru.model.PhoneNumber;
 import org.cru.model.Source;
+import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +31,8 @@ import java.util.List;
  */
 public class TestPeople
 {
+    private static String opendqDatePattern = "MM/dd/YYYY";
+
     public static Person generatePersonWithLotsOfData()
     {
         Person testPerson = new Person();
@@ -131,6 +136,7 @@ public class TestPeople
     {
         String partyId = "1073";
         RealTimeObjectActionDTO mdmPerson = new RealTimeObjectActionDTO();
+        String todayString = new LocalDate().toString(opendqDatePattern);
 
         ObjEntityDTO objEntity = new ObjEntityDTO();
         objEntity.setPartyId(partyId);
@@ -141,11 +147,20 @@ public class TestPeople
         ObjAddressDTO objAddress = new ObjAddressDTO();
         objAddress.setAddressId("786");
         objAddress.setCodId(MdmCodes.HOME_ADDRESS.getId());
+        objAddress.setComExclusionType("N");
+        
         objAddress.setAddressLine1("1125 Blvd Way");
         objAddress.setCityName("Las Vegas");
         objAddress.setStateName("NV");
         objAddress.setZip("84253");
         objAddress.setCryName("USA");
+
+        objAddress.setFromDate(todayString);
+        objAddress.setDateCreated(todayString);
+        objAddress.setUserCreated(MdmConstants.USER);
+        objAddress.setSource("OAF");
+        objAddress.setAction("U");
+        objAddress.setUserDef1("786841");
 
         ObjAddressDTOList objAddresses = new ObjAddressDTOList();
         List<ObjAddressDTO> addressInnerList = Lists.newArrayList();
@@ -157,13 +172,29 @@ public class TestPeople
         emailCommunication.setCodId(MdmCodes.PERSONAL_EMAIL.getId());
         emailCommunication.setPartyId(partyId);
         emailCommunication.setCommdata("nom.nom@crutest.org");
+        emailCommunication.setComExclusionType("N");
+        emailCommunication.setDateCreated(todayString);
+        emailCommunication.setUserCreated(MdmConstants.USER);
+        emailCommunication.setSource("OAF");
+        emailCommunication.setAction("U");
+        emailCommunication.setClientId(MdmConstants.CLIENT_ID);
+        emailCommunication.setTypId(MdmConstants.TYP_ID);
+        emailCommunication.setUserDef1("6487564");
 
         ObjCommunicationDTO phoneCommunication = new ObjCommunicationDTO();
         phoneCommunication.setComId("649");
         phoneCommunication.setCodId(MdmCodes.HOME_PHONE.getId());
         phoneCommunication.setPartyId(partyId);
         phoneCommunication.setCommdata("5555555553");
-        phoneCommunication.setUserDef1("work");
+        phoneCommunication.setComExclusionType("N");
+        phoneCommunication.setDateCreated(todayString);
+        phoneCommunication.setUserCreated(MdmConstants.USER);
+        phoneCommunication.setSource("OAF");
+        phoneCommunication.setAction("U");
+        phoneCommunication.setUserDef1("6495484");
+        phoneCommunication.setUserDef2("home");
+        phoneCommunication.setClientId(MdmConstants.CLIENT_ID);
+        phoneCommunication.setTypId(MdmConstants.TYP_ID);
 
         ObjCommunicationDTOList objCommunications = new ObjCommunicationDTOList();
         List<ObjCommunicationDTO> communicationInnerList = Lists.newArrayList();
@@ -171,14 +202,15 @@ public class TestPeople
         communicationInnerList.add(phoneCommunication);
 
 
-        ObjAttributeDataDTO personAttributeData = new ObjAttributeDataDTO();
-        personAttributeData.setObjAdId("1464");
-        personAttributeData.setField1("OAF");
-        personAttributeData.setField3("1-6T4D4");
-        personAttributeData.setMultDetTypeLev1("PERSONATTRIBUTES");
-        personAttributeData.setMultDetTypeLev2("AccountData");
+        ObjAttributeDataDTO accountData = new ObjAttributeDataDTO();
+        setCommonAttributeData(accountData);
+        accountData.setObjAdId("1464");
+        accountData.setField1("OAF");
+        accountData.setField3("1-6T4D4");
+        accountData.setMultDetTypeLev2("ACCOUNTDATA");
 
         ObjAttributeDataDTO personData = new ObjAttributeDataDTO();
+        setCommonAttributeData(personData);
         personData.setObjAdId("1465");
         personData.setField1("Ms.");  //Title
         personData.setField2("Nom");  //First Name
@@ -186,11 +218,55 @@ public class TestPeople
         personData.setField6("F");    //Gender
         personData.setMultDetTypeLev1("PERSON");
 
+        ObjAttributeDataDTO householdData = new ObjAttributeDataDTO();
+        setCommonAttributeData(householdData);
+        householdData.setObjAdId("1466");
+        householdData.setField1(partyId); //Object Id
+        householdData.setField2("Nom"); //First Name
+        householdData.setField3("Nom"); //Last Name
+        householdData.setMultDetTypeLev2("HOUSEHOLD");
 
+        ObjAttributeDataDTO identityData = new ObjAttributeDataDTO();
+        setCommonAttributeData(identityData);
+        identityData.setObjAdId("1467");
+        identityData.setField1("OAF");
+        identityData.setField2("1-6T4D4");
+        identityData.setField3("OAF");
+        identityData.setMultDetTypeLev2("IDENTITIES");
+
+        ObjAttributeDataDTO sourceDetails = new ObjAttributeDataDTO();
+        setCommonAttributeData(sourceDetails);
+        sourceDetails.setField1("OAF");
+        sourceDetails.setField2("OAF");
+        sourceDetails.setMultDetTypeLev2("SOURCEDETAILS");
+
+        ObjAttributeDataDTOList objAttributeDataDTOList = new ObjAttributeDataDTOList();
+        List<ObjAttributeDataDTO> attributeDataList = objAttributeDataDTOList.getObjectAttributeData();
+        attributeDataList.add(accountData);
+        attributeDataList.add(personData);
+        attributeDataList.add(householdData);
+        attributeDataList.add(identityData);
+        attributeDataList.add(sourceDetails);
+
+
+        mdmPerson.setObjectAttributeDatas(objAttributeDataDTOList);
         mdmPerson.setObjectEntity(objEntity);
         mdmPerson.setObjectAddresses(objAddresses);
         mdmPerson.setObjectCommunications(objCommunications);
 
         return mdmPerson;
+    }
+
+    private static void setCommonAttributeData(ObjAttributeDataDTO attributeData)
+    {
+        String todayString = new LocalDate().toString(opendqDatePattern);
+        attributeData.setFromDate(todayString);  // This is overwritten on insert
+        attributeData.setTypId(MdmConstants.TYP_ID);
+        attributeData.setDateCreated(todayString);
+        attributeData.setUserCreated(MdmConstants.USER);
+        attributeData.setSource("OAF");
+        attributeData.setAction("U");
+        attributeData.setMultDetTypeLev1("PERSONATTRIBUTES");
+        attributeData.setClientId(MdmConstants.CLIENT_ID);
     }
 }

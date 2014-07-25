@@ -31,8 +31,18 @@ public class TestPeople
         testAddress.setState("NV");
         testAddress.setZipCode("84253");
         testAddress.setCountry("USA");
-        List<Address> addresses = new ArrayList<Address>();
+
+        Address testAddress2 = new Address();
+        testAddress2.setId("65a4sdf4-dk43-9493-394nfa2348d1");
+        testAddress2.setAddressLine1("5499 Lake Dr");
+        testAddress2.setCity("Juneau");
+        testAddress2.setState("AK");
+        testAddress2.setZipCode("99954");
+        testAddress2.setCountry("USA");
+
+        List<Address> addresses = Lists.newArrayList();
         addresses.add(testAddress);
+        addresses.add(testAddress2);
 
         testPerson.setTitle("Ms.");
         testPerson.setFirstName("Nom");

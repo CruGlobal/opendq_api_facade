@@ -1,5 +1,6 @@
 package org.cru.service;
 
+import com.google.common.collect.Lists;
 import com.infosolve.openmdm.webservices.provider.impl.DataManagementWSImpl;
 import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import com.infosolvetech.rtmatch.pdi4.RuntimeMatchWS;
@@ -72,15 +73,28 @@ public class AddService extends IndexingService
 
     void addSlot(RuntimeMatchWS runtimeMatchWS, Person person, RealTimeObjectActionDTO mdmPerson)
     {
-        //while updateSlot sounds like an update, it is actually inserting an entry into the index
-        Map<String, String> fieldNamesAndValues = generateFieldNamesAndValues(person, mdmPerson);
+        if(person.getAddresses() == null || person.getAddresses().isEmpty())
+        {
+            addSlot(runtimeMatchWS, person, mdmPerson, null);
+        }
 
-        List<String> fieldNames = new ArrayList<String>();
+        for(Address personAddress : person.getAddresses())
+        {
+            addSlot(runtimeMatchWS, person, mdmPerson, personAddress);
+        }
+    }
+
+    private void addSlot(RuntimeMatchWS runtimeMatchWS, Person person, RealTimeObjectActionDTO mdmPerson, Address addressToUse)
+    {
+        Map<String, String> fieldNamesAndValues = generateFieldNamesAndValues(person, mdmPerson, addressToUse);
+
+        List<String> fieldNames = Lists.newArrayList();
         fieldNames.addAll(fieldNamesAndValues.keySet());
 
-        List<String> fieldValues = new ArrayList<String>();
+        List<String> fieldValues = Lists.newArrayList();
         fieldValues.addAll(fieldNamesAndValues.values());
 
+        //while updateSlot sounds like an update, it is actually inserting an entry into the index
         ServiceResult addResponse = runtimeMatchWS.updateSlot(slotName, fieldNames, fieldValues);
 
         if(addResponse.isError())
@@ -89,23 +103,28 @@ public class AddService extends IndexingService
         }
     }
 
-    //TODO: Handle multiple addresses, emails, phones
-    Map<String, String> generateFieldNamesAndValues(Person person, RealTimeObjectActionDTO mdmPerson)
+    Map<String, String> generateFieldNamesAndValues(Person person, RealTimeObjectActionDTO mdmPerson, Address addressToUse)
     {
         Map<String, String> fieldNamesAndValues = new LinkedHashMap<String, String>();
 
         //NOTE: Only 10 fields can be set
         fieldNamesAndValues.put("FIELD1", person.getFirstName());
         fieldNamesAndValues.put("FIELD2", person.getLastName());
-        fieldNamesAndValues.put("FIELD3", person.getAddresses().get(0).getAddressLine1());
 
-        if(person.getAddresses().get(0).getAddressLine2() == null) fieldNamesAndValues.put("FIELD4", "NULLDATA");
-        else fieldNamesAndValues.put("FIELD4", person.getAddresses().get(0).getAddressLine2());
+        if(addressToUse != null)
+        {
+            fieldNamesAndValues.put("FIELD3", addressToUse.getAddressLine1());
 
-        fieldNamesAndValues.put("FIELD5", person.getAddresses().get(0).getCity());
-        fieldNamesAndValues.put("FIELD6", person.getAddresses().get(0).getState());
-        fieldNamesAndValues.put("FIELD7", person.getAddresses().get(0).getZipCode());
+            if(addressToUse.getAddressLine2() == null) fieldNamesAndValues.put("FIELD4", "NULLDATA");
+            else fieldNamesAndValues.put("FIELD4", addressToUse.getAddressLine2());
+
+            fieldNamesAndValues.put("FIELD5", addressToUse.getCity());
+            fieldNamesAndValues.put("FIELD6", addressToUse.getState());
+            fieldNamesAndValues.put("FIELD7", addressToUse.getZipCode());
+        }
+
         fieldNamesAndValues.put("FIELD8", person.getId());
+        //FIELD10 is not currently in use
         fieldNamesAndValues.put("FIELD10", mdmPerson.getObjectEntity().getPartyId());
 
         return fieldNamesAndValues;

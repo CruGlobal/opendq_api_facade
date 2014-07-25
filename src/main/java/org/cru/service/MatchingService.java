@@ -5,6 +5,7 @@ import com.infosolve.openmdm.webservices.provider.impl.DataManagementWSImpl;
 import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import com.infosolvetech.rtmatch.pdi4.RuntimeMatchWS;
 import com.infosolvetech.rtmatch.pdi4.ServiceResult;
+import org.cru.model.Address;
 import org.cru.model.OafResponse;
 import net.java.dev.jaxb.array.AnyTypeArray;
 import org.cru.model.Person;
@@ -46,7 +47,17 @@ public class MatchingService extends IndexingService
     {
         this.slotName = slotName;
         this.stepName = "RtMatchAddr";
-        List<SearchResponse> searchResponseList = searchSlot(callRuntimeMatchService(), createSearchValuesFromPerson(person));
+        List<SearchResponse> searchResponseList = Lists.newArrayList();
+
+        if(person.getAddresses() == null || person.getAddresses().isEmpty())
+        {
+            searchResponseList.addAll(searchSlot(callRuntimeMatchService(), createSearchValuesFromPerson(person, null)));
+        }
+        for(Address personAddress : person.getAddresses())
+        {
+            searchResponseList.addAll(searchSlot(callRuntimeMatchService(), createSearchValuesFromPerson(person, personAddress)));
+        }
+
         if(searchResponseList == null || searchResponseList.isEmpty()) return null;
 
         return buildOafResponseList(buildFilteredSearchResponseList(searchResponseList));
@@ -56,7 +67,19 @@ public class MatchingService extends IndexingService
     {
         this.slotName = slotName;
         this.stepName = "RtMatchAddr";
-        List<SearchResponse> searchResponseList = searchSlot(callRuntimeMatchService(), createSearchValuesFromPerson(person));
+        List<SearchResponse> searchResponseList = Lists.newArrayList();
+
+        //Handle cases where no address was passed in
+        if(person.getAddresses() == null || person.getAddresses().isEmpty())
+        {
+            searchResponseList.addAll(searchSlot(callRuntimeMatchService(), createSearchValuesFromPerson(person, null)));
+        }
+
+        //If given more than one address, we need to make sure we search on all of them
+        for(Address personAddress : person.getAddresses())
+        {
+            searchResponseList.addAll(searchSlot(callRuntimeMatchService(), createSearchValuesFromPerson(person, personAddress)));
+        }
 
         if(searchResponseList == null || searchResponseList.isEmpty()) return null;
 
@@ -120,21 +143,24 @@ public class MatchingService extends IndexingService
         return buildSearchResponses(searchResponse);
     }
 
-    //TODO: Handle multiple addresses, emails, phones
-    private List<String> createSearchValuesFromPerson(Person person)
+    private List<String> createSearchValuesFromPerson(Person person, Address addressToSearchOn)
     {
         // Order must match the transformation file
         List<String> searchValues = new ArrayList<String>();
 
         searchValues.add(person.getFirstName());
         searchValues.add(person.getLastName());
-        searchValues.add(person.getAddresses().get(0).getAddressLine1());
 
-        if(person.getAddresses().get(0).getAddressLine2() == null) searchValues.add("NULLDATA");
-        else searchValues.add(person.getAddresses().get(0).getAddressLine2());
+        if(addressToSearchOn != null)
+        {
+            searchValues.add(addressToSearchOn.getAddressLine1());
 
-        searchValues.add(person.getAddresses().get(0).getCity());
-        searchValues.add(person.getAddresses().get(0).getState());
+            if(addressToSearchOn.getAddressLine2() == null) searchValues.add("NULLDATA");
+            else searchValues.add(addressToSearchOn.getAddressLine2());
+
+            searchValues.add(addressToSearchOn.getCity());
+            searchValues.add(addressToSearchOn.getState());
+        }
 
         return searchValues;
     }

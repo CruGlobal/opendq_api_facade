@@ -47,16 +47,7 @@ public class MatchingService extends IndexingService
     {
         this.slotName = slotName;
         this.stepName = "RtMatchAddr";
-        List<SearchResponse> searchResponseList = Lists.newArrayList();
-
-        if(person.getAddresses() == null || person.getAddresses().isEmpty())
-        {
-            searchResponseList.addAll(searchSlot(createSearchValuesFromPerson(person, null)));
-        }
-        for(Address personAddress : person.getAddresses())
-        {
-            searchResponseList.addAll(searchSlot(createSearchValuesFromPerson(person, personAddress)));
-        }
+        List<SearchResponse> searchResponseList = searchSlot(person);
 
         if(searchResponseList == null || searchResponseList.isEmpty()) return null;
 
@@ -67,19 +58,7 @@ public class MatchingService extends IndexingService
     {
         this.slotName = slotName;
         this.stepName = "RtMatchAddr";
-        List<SearchResponse> searchResponseList = Lists.newArrayList();
-
-        //Handle cases where no address was passed in
-        if(person.getAddresses() == null || person.getAddresses().isEmpty())
-        {
-            searchResponseList.addAll(searchSlot(createSearchValuesFromPerson(person, null)));
-        }
-
-        //If given more than one address, we need to make sure we search on all of them
-        for(Address personAddress : person.getAddresses())
-        {
-            searchResponseList.addAll(searchSlot(createSearchValuesFromPerson(person, personAddress)));
-        }
+        List<SearchResponse> searchResponseList = searchSlot(person);
 
         if(searchResponseList == null || searchResponseList.isEmpty()) return null;
 
@@ -129,6 +108,25 @@ public class MatchingService extends IndexingService
     {
         DataManagementWSImpl mdmService = configureMdmService();
         return mdmService.findObject(partyId);
+    }
+
+    List<SearchResponse> searchSlot(Person person) throws ConnectException
+    {
+        List<SearchResponse> searchResponseList = Lists.newArrayList();
+
+        //Handle cases where no address was passed in
+        if(person.getAddresses() == null || person.getAddresses().isEmpty())
+        {
+            searchResponseList.addAll(searchSlot(createSearchValuesFromPerson(person, null)));
+        }
+
+        //If given more than one address, we need to make sure we search on all of them
+        for(Address personAddress : person.getAddresses())
+        {
+            searchResponseList.addAll(searchSlot(createSearchValuesFromPerson(person, personAddress)));
+        }
+
+        return searchResponseList;
     }
 
     private List<SearchResponse> searchSlot(List<String> searchValues) throws ConnectException

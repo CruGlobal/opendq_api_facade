@@ -1,5 +1,6 @@
 package org.cru.webservices;
 
+import com.google.common.collect.Lists;
 import org.cru.model.OafResponse;
 import org.cru.model.Person;
 import org.cru.service.MatchOrAddService;
@@ -15,6 +16,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.ConnectException;
+import java.util.List;
 
 /**
  * Endpoint to first try to find a matching {@link Person}.  If found, return the found person.
@@ -45,7 +47,7 @@ public class MatchOrAddResource
             if(matchResponse != null)
             {
                 //Send the match back to the client
-                return Response.ok().entity(matchResponse).build();
+                return Response.ok().entity(Lists.newArrayList(matchResponse)).build();
             }
             else
             {
@@ -61,12 +63,12 @@ public class MatchOrAddResource
         }
     }
 
-    private OafResponse buildResponseEntity(String id)
+    private List<OafResponse> buildResponseEntity(String id)
     {
         OafResponse addResponse = new OafResponse();
         addResponse.setConfidenceLevel(1.0D);
         addResponse.setMatchId(id);
         addResponse.setAction(Action.ADD);
-        return addResponse;
+        return Lists.newArrayList(addResponse);
     }
 }

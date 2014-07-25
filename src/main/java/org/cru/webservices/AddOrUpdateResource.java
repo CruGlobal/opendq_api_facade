@@ -1,5 +1,6 @@
 package org.cru.webservices;
 
+import com.google.common.collect.Lists;
 import org.cru.model.OafResponse;
 import org.cru.model.Person;
 import org.cru.service.AddOrUpdateService;
@@ -14,6 +15,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.ConnectException;
+import java.util.List;
 
 /**
  * Endpoint to add a {@link Person} to the index if it does not exist
@@ -49,11 +51,11 @@ public class AddOrUpdateResource
             else if(addOrUpdateResponse.getAction().equals(Action.CONFLICT.toString()))
             {
                 addOrUpdateResponse.setAction(Action.UPDATE);
-                return Response.status(Response.Status.CONFLICT).entity(addOrUpdateResponse).build();
+                return Response.status(Response.Status.CONFLICT).entity(Lists.newArrayList(addOrUpdateResponse)).build();
             }
             else
             {
-                return Response.ok().entity(addOrUpdateResponse).build();
+                return Response.ok().entity(Lists.newArrayList(addOrUpdateResponse)).build();
             }
         }
         catch(ConnectException ce)
@@ -62,12 +64,12 @@ public class AddOrUpdateResource
         }
     }
 
-    private OafResponse buildResponseEntity(String id)
+    private List<OafResponse> buildResponseEntity(String id)
     {
         OafResponse addResponse = new OafResponse();
         addResponse.setConfidenceLevel(1.0D);
         addResponse.setMatchId(id);
         addResponse.setAction(Action.ADD);
-        return addResponse;
+        return Lists.newArrayList(addResponse);
     }
 }

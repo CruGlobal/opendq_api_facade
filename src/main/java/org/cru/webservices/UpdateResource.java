@@ -1,5 +1,6 @@
 package org.cru.webservices;
 
+import com.google.common.collect.Lists;
 import org.cru.model.OafResponse;
 import org.cru.model.Person;
 import org.cru.service.MatchOrUpdateService;
@@ -51,10 +52,10 @@ public class UpdateResource
             else if(matchOrUpdateResponse.getAction().equals(Action.CONFLICT.toString()))
             {
                 matchOrUpdateResponse.setAction(Action.UPDATE);
-                return Response.status(Response.Status.CONFLICT).entity(matchOrUpdateResponse).build();
+                return Response.status(Response.Status.CONFLICT).entity(Lists.newArrayList(matchOrUpdateResponse)).build();
             }
 
-            return Response.ok().entity(matchOrUpdateResponse).build();
+            return Response.ok().entity(Lists.newArrayList(matchOrUpdateResponse)).build();
         }
         catch(ConnectException ce)
         {

@@ -1,5 +1,6 @@
 package org.cru.webservices;
 
+import com.google.common.collect.Lists;
 import org.cru.model.Address;
 import org.cru.model.OafResponse;
 import org.cru.model.Person;
@@ -18,6 +19,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.ConnectException;
+import java.util.List;
 
 /**
  * Endpoint for clients to find a matching {@link Person} in the index
@@ -56,7 +58,7 @@ public class MatchingResource
             if(matchResponse != null)
             {
                 //Send the match back to the client
-                return Response.ok().entity(matchResponse).build();
+                return Response.ok().entity(Lists.newArrayList(matchResponse)).build();
             }
             else
             {
@@ -72,12 +74,12 @@ public class MatchingResource
         }
     }
 
-    private OafResponse buildResponseEntity()
+    private List<OafResponse> buildResponseEntity()
     {
         OafResponse matchResponse = new OafResponse();
         matchResponse.setConfidenceLevel(0.0D);
         matchResponse.setMatchId("Not Found");
         matchResponse.setAction(Action.MATCH);
-        return matchResponse;
+        return Lists.newArrayList(matchResponse);
     }
 }

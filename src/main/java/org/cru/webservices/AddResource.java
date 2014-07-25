@@ -1,5 +1,6 @@
 package org.cru.webservices;
 
+import com.google.common.collect.Lists;
 import org.cru.model.OafResponse;
 import org.cru.model.Person;
 import org.cru.qualifiers.Add;
@@ -16,6 +17,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.ConnectException;
+import java.util.List;
 
 /**
  * Endpoint to add a {@link Person} to the index
@@ -55,12 +57,12 @@ public class AddResource
         return Response.ok().entity(buildResponseEntity(person.getId())).build();
     }
 
-    private OafResponse buildResponseEntity(String id)
+    private List<OafResponse> buildResponseEntity(String id)
     {
         OafResponse addResponse = new OafResponse();
         addResponse.setConfidenceLevel(1.0D);
         addResponse.setMatchId(id);
         addResponse.setAction(Action.ADD);
-        return addResponse;
+        return Lists.newArrayList(addResponse);
     }
 }

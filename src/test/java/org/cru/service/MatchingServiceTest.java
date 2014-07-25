@@ -5,7 +5,7 @@ import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import org.cru.model.Address;
 import org.cru.model.EmailAddress;
 import org.cru.model.LinkedIdentity;
-import org.cru.model.MatchResponse;
+import org.cru.model.OafResponse;
 import org.cru.model.Person;
 import org.cru.model.PhoneNumber;
 import org.cru.util.DeletedIndexesFileIO;
@@ -57,7 +57,7 @@ public class MatchingServiceTest
     @Test(dataProvider = "successfulMatches")
     public void testFindMatch(Person person, String matchId) throws Exception
     {
-        MatchResponse matchResponse = matchingService.findMatch(person, "Match");
+        OafResponse matchResponse = matchingService.findMatch(person, "Match");
         assertNotNull(matchResponse);
         assertEquals(matchResponse.getMatchId(), matchId);
     }
@@ -79,7 +79,7 @@ public class MatchingServiceTest
         deletedPerson.setAddresses(addresses);
         deletedPerson.setId("6");
 
-        MatchResponse matchResponse = matchingService.findMatch(deletedPerson, "Match");
+        OafResponse matchResponse = matchingService.findMatch(deletedPerson, "Match");
         assertNull(matchResponse);
     }
 

@@ -4,7 +4,7 @@ import com.infosolve.openmdm.webservices.provider.impl.DataManagementWSImpl;
 import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import com.infosolvetech.rtmatch.pdi4.RuntimeMatchWS;
 import com.infosolvetech.rtmatch.pdi4.ServiceResult;
-import org.cru.model.MatchResponse;
+import org.cru.model.OafResponse;
 import org.cru.model.Person;
 import org.cru.model.SearchResponse;
 import org.cru.qualifiers.Delete;
@@ -40,12 +40,12 @@ public class MatchingService extends IndexingService
         this.deleteService = deleteService;
     }
 
-    public MatchResponse findMatch(Person person, String slotName) throws ConnectException
+    public OafResponse findMatch(Person person, String slotName) throws ConnectException
     {
         SearchResponse searchResponse = searchForPerson(person, slotName);
         if(searchResponse == null) return null;
 
-        MatchResponse matchResponse = new MatchResponse();
+        OafResponse matchResponse = new OafResponse();
         matchResponse.setConfidenceLevel(searchResponse.getScore());
         matchResponse.setMatchId(searchResponse.getId());
         matchResponse.setAction(Action.MATCH);

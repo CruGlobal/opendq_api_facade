@@ -8,7 +8,7 @@ import org.cru.webservices.MatchingResource;
  *
  * Created by William.Randall on 6/11/14.
  */
-public class MatchResponse
+public class OafResponse
 {
     private String matchId;
     private double confidenceLevel;

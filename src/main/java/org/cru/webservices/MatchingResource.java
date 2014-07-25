@@ -1,7 +1,7 @@
 package org.cru.webservices;
 
 import org.cru.model.Address;
-import org.cru.model.MatchResponse;
+import org.cru.model.OafResponse;
 import org.cru.model.Person;
 import org.cru.qualifiers.Match;
 import org.cru.service.AddressNormalizationService;
@@ -51,7 +51,7 @@ public class MatchingResource
         try
         {
             //We have a clean address, person's address is already updated
-            MatchResponse matchResponse = matchingService.findMatch(person, "Match");
+            OafResponse matchResponse = matchingService.findMatch(person, "Match");
 
             if(matchResponse != null)
             {
@@ -72,9 +72,9 @@ public class MatchingResource
         }
     }
 
-    private MatchResponse buildResponseEntity()
+    private OafResponse buildResponseEntity()
     {
-        MatchResponse matchResponse = new MatchResponse();
+        OafResponse matchResponse = new OafResponse();
         matchResponse.setConfidenceLevel(0.0D);
         matchResponse.setMatchId("Not Found");
         matchResponse.setAction(Action.MATCH);

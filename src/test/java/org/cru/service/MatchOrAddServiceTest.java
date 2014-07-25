@@ -1,7 +1,7 @@
 package org.cru.service;
 
 import org.cru.model.Address;
-import org.cru.model.MatchResponse;
+import org.cru.model.OafResponse;
 import org.cru.model.Person;
 import org.cru.util.DeletedIndexesFileIO;
 import org.cru.util.OafProperties;
@@ -59,12 +59,12 @@ public class MatchOrAddServiceTest
             when(addressNormalizationService.normalizeAddress(address)).thenReturn(false);
         }
 
-        MatchResponse matchResponse = matchOrAddService.matchOrAddPerson(testPerson);
-        assertNull(matchResponse); //it should add it first
+        OafResponse matchOrAddResponse = matchOrAddService.matchOrAddPerson(testPerson);
+        assertNull(matchOrAddResponse); //it should add it first
 
-        matchResponse = matchOrAddService.matchOrAddPerson(testPerson);
-        assertNotNull(matchResponse);
-        assertEquals(matchResponse.getMatchId(), testPerson.getId());  //now it should find it
+        matchOrAddResponse = matchOrAddService.matchOrAddPerson(testPerson);
+        assertNotNull(matchOrAddResponse);
+        assertEquals(matchOrAddResponse.getMatchId(), testPerson.getId());  //now it should find it
     }
 
     private Person createTestPerson()

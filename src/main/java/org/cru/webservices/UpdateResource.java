@@ -1,6 +1,6 @@
 package org.cru.webservices;
 
-import org.cru.model.MatchResponse;
+import org.cru.model.OafResponse;
 import org.cru.model.Person;
 import org.cru.service.MatchOrUpdateService;
 import org.cru.service.PersonDeserializer;
@@ -39,7 +39,7 @@ public class UpdateResource
         Person person = personDeserializer.deserializePerson(json);
         try
         {
-            MatchResponse matchOrUpdateResponse = matchOrUpdateService.matchOrUpdatePerson(person);
+            OafResponse matchOrUpdateResponse = matchOrUpdateService.matchOrUpdatePerson(person);
 
             if(matchOrUpdateResponse == null)
             {

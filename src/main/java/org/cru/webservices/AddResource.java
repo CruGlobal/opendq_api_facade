@@ -1,6 +1,6 @@
 package org.cru.webservices;
 
-import org.cru.model.MatchResponse;
+import org.cru.model.OafResponse;
 import org.cru.model.Person;
 import org.cru.qualifiers.Add;
 import org.cru.service.AddService;
@@ -55,12 +55,12 @@ public class AddResource
         return Response.ok().entity(buildResponseEntity(person.getId())).build();
     }
 
-    private MatchResponse buildResponseEntity(String id)
+    private OafResponse buildResponseEntity(String id)
     {
-        MatchResponse matchResponse = new MatchResponse();
-        matchResponse.setConfidenceLevel(1.0D);
-        matchResponse.setMatchId(id);
-        matchResponse.setAction(Action.ADD);
-        return matchResponse;
+        OafResponse addResponse = new OafResponse();
+        addResponse.setConfidenceLevel(1.0D);
+        addResponse.setMatchId(id);
+        addResponse.setAction(Action.ADD);
+        return addResponse;
     }
 }

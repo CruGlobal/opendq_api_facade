@@ -1,6 +1,6 @@
 package org.cru.service;
 
-import org.cru.model.MatchResponse;
+import org.cru.model.OafResponse;
 import org.cru.model.Person;
 import org.cru.qualifiers.Add;
 
@@ -31,21 +31,21 @@ public class AddOrUpdateService
         this.matchOrUpdateService = matchOrUpdateService;
     }
 
-    public MatchResponse addOrUpdate(Person person) throws ConnectException
+    public OafResponse addOrUpdate(Person person) throws ConnectException
     {
         String slotName = "AddOrUpdate";
 
-        MatchResponse matchResponse = matchOrUpdateService.matchOrUpdatePerson(person);
+        OafResponse matchOrUpdateResponse = matchOrUpdateService.matchOrUpdatePerson(person);
 
         //No match found, so add the person
-        if(matchResponse == null)
+        if(matchOrUpdateResponse == null)
         {
             addService.addPerson(person, slotName);
             return null;
         }
         else
         {
-            return matchResponse;
+            return matchOrUpdateResponse;
         }
     }
 }

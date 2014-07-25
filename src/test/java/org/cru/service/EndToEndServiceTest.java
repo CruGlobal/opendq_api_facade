@@ -4,7 +4,7 @@ import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import org.cru.cdi.PostalsoftServiceWrapperProducer;
 import org.cru.model.Address;
 import org.cru.model.EmailAddress;
-import org.cru.model.MatchResponse;
+import org.cru.model.OafResponse;
 import org.cru.model.Person;
 import org.cru.model.SearchResponse;
 import org.cru.postalsoft.PostalsoftServiceWrapper;
@@ -82,7 +82,6 @@ public class EndToEndServiceTest
     public void endToEndServiceTest() throws Exception
     {
         Person testPerson = createTestPerson();
-        MatchResponse matchResponse = null;
 
         //The person should not exist yet
         checkPersonNotExists(testPerson);
@@ -116,7 +115,7 @@ public class EndToEndServiceTest
 
     private void checkPersonNotExists(Person testPerson) throws Exception
     {
-        MatchResponse matchResponse = matchingService.findMatch(testPerson, "Match");
+        OafResponse matchResponse = matchingService.findMatch(testPerson, "Match");
         assertNull(matchResponse);
     }
 
@@ -127,14 +126,14 @@ public class EndToEndServiceTest
 
     private void checkFindPersonWithMatchOrAdd(Person testPerson) throws Exception
     {
-        MatchResponse matchResponse = matchOrAddService.matchOrAddPerson(testPerson);
-        assertNotNull(matchResponse);
-        assertEquals(matchResponse.getMatchId(), testPerson.getId());
+        OafResponse matchOrAddResponse = matchOrAddService.matchOrAddPerson(testPerson);
+        assertNotNull(matchOrAddResponse);
+        assertEquals(matchOrAddResponse.getMatchId(), testPerson.getId());
     }
 
     private void checkFindPersonWithMatch(Person testPerson) throws Exception
     {
-        MatchResponse matchResponse = matchingService.findMatch(testPerson, "Match");
+        OafResponse matchResponse = matchingService.findMatch(testPerson, "Match");
         assertNotNull(matchResponse);
         assertEquals(matchResponse.getMatchId(), testPerson.getId());
     }
@@ -157,7 +156,7 @@ public class EndToEndServiceTest
         emailAddresses.add(emailAddress);
         testPerson.setEmailAddresses(emailAddresses);
 
-        MatchResponse updateResponse = matchOrUpdateService.matchOrUpdatePerson(testPerson);
+        OafResponse updateResponse = matchOrUpdateService.matchOrUpdatePerson(testPerson);
         assertNull(updateResponse);  //will be null if updated, not null if it found a conflicting match
 
         //We should now find the updates

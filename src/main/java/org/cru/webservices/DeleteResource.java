@@ -1,6 +1,6 @@
 package org.cru.webservices;
 
-import org.cru.model.MatchResponse;
+import org.cru.model.OafResponse;
 import org.cru.model.Person;
 import org.cru.model.SearchResponse;
 import org.cru.qualifiers.Delete;
@@ -55,12 +55,12 @@ public class DeleteResource
         return Response.ok().entity(buildResponseEntity(globalRegistryId)).build();
     }
 
-    private MatchResponse buildResponseEntity(String id)
+    private OafResponse buildResponseEntity(String id)
     {
-        MatchResponse matchResponse = new MatchResponse();
-        matchResponse.setConfidenceLevel(1.0D);
-        matchResponse.setMatchId(id);
-        matchResponse.setAction(Action.DELETE);
-        return matchResponse;
+        OafResponse deleteResponse = new OafResponse();
+        deleteResponse.setConfidenceLevel(1.0D);
+        deleteResponse.setMatchId(id);
+        deleteResponse.setAction(Action.DELETE);
+        return deleteResponse;
     }
 }

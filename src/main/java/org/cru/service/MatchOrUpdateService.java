@@ -1,7 +1,7 @@
 package org.cru.service;
 
 import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
-import org.cru.model.MatchResponse;
+import org.cru.model.OafResponse;
 import org.cru.model.Person;
 import org.cru.model.SearchResponse;
 import org.cru.qualifiers.Match;
@@ -31,9 +31,9 @@ public class MatchOrUpdateService
         this.updateService = updateService;
     }
 
-    public MatchResponse matchOrUpdatePerson(Person person) throws ConnectException
+    public OafResponse matchOrUpdatePerson(Person person) throws ConnectException
     {
-        MatchResponse matchResponse = matchingService.findMatch(person, "Match");
+        OafResponse matchResponse = matchingService.findMatch(person, "Match");
 
         if(matchResponse == null || matchResponse.getMatchId().equalsIgnoreCase(person.getId()))
         {
@@ -56,7 +56,7 @@ public class MatchOrUpdateService
 
             if(matchResponse == null)
             {
-                matchResponse = new MatchResponse();
+                matchResponse = new OafResponse();
                 matchResponse.setMatchId(person.getId());
 
                 //We didn't find the match based on the normal index search values, so let's indicate that in some way

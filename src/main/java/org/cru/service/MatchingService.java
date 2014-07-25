@@ -51,11 +51,11 @@ public class MatchingService extends IndexingService
 
         if(person.getAddresses() == null || person.getAddresses().isEmpty())
         {
-            searchResponseList.addAll(searchSlot(callRuntimeMatchService(), createSearchValuesFromPerson(person, null)));
+            searchResponseList.addAll(searchSlot(createSearchValuesFromPerson(person, null)));
         }
         for(Address personAddress : person.getAddresses())
         {
-            searchResponseList.addAll(searchSlot(callRuntimeMatchService(), createSearchValuesFromPerson(person, personAddress)));
+            searchResponseList.addAll(searchSlot(createSearchValuesFromPerson(person, personAddress)));
         }
 
         if(searchResponseList == null || searchResponseList.isEmpty()) return null;
@@ -72,13 +72,13 @@ public class MatchingService extends IndexingService
         //Handle cases where no address was passed in
         if(person.getAddresses() == null || person.getAddresses().isEmpty())
         {
-            searchResponseList.addAll(searchSlot(callRuntimeMatchService(), createSearchValuesFromPerson(person, null)));
+            searchResponseList.addAll(searchSlot(createSearchValuesFromPerson(person, null)));
         }
 
         //If given more than one address, we need to make sure we search on all of them
         for(Address personAddress : person.getAddresses())
         {
-            searchResponseList.addAll(searchSlot(callRuntimeMatchService(), createSearchValuesFromPerson(person, personAddress)));
+            searchResponseList.addAll(searchSlot(createSearchValuesFromPerson(person, personAddress)));
         }
 
         if(searchResponseList == null || searchResponseList.isEmpty()) return null;
@@ -131,8 +131,9 @@ public class MatchingService extends IndexingService
         return mdmService.findObject(partyId);
     }
 
-    private List<SearchResponse> searchSlot(RuntimeMatchWS runtimeMatchWS, List<String> searchValues)
+    private List<SearchResponse> searchSlot(List<String> searchValues) throws ConnectException
     {
+        RuntimeMatchWS runtimeMatchWS = callRuntimeMatchService();
         ServiceResult searchResponse = runtimeMatchWS.searchSlot(slotName, searchValues);
 
         if(searchResponse.isError())

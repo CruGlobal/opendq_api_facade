@@ -7,7 +7,6 @@ import com.infosolve.openmdm.webservices.provider.impl.ObjAddressDTO;
 import com.infosolve.openmdm.webservices.provider.impl.ObjAttributeDataDTO;
 import com.infosolve.openmdm.webservices.provider.impl.ObjCommunicationDTO;
 import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
-import com.infosolvetech.rtmatch.pdi4.RuntimeMatchWS;
 import org.cru.mdm.MdmCodes;
 import org.cru.mdm.PersonToMdmConverter;
 import org.cru.model.Address;
@@ -53,8 +52,7 @@ public class UpdateService extends AddService
         }
 
         RealTimeObjectActionDTO updatedPerson = updateMdm(person, foundPerson);
-        RuntimeMatchWS runtimeMatchWS = callRuntimeMatchService();
-        addSlot(runtimeMatchWS, person, updatedPerson);
+        addSlot(person, updatedPerson);
     }
 
     private RealTimeObjectActionDTO updateMdm(Person person, RealTimeObjectActionDTO foundPerson)

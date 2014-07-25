@@ -52,8 +52,7 @@ public class AddService extends IndexingService
         }
 
         RealTimeObjectActionDTO addedPerson = addPersonToMdm(person);
-        RuntimeMatchWS runtimeMatchWS = callRuntimeMatchService();
-        addSlot(runtimeMatchWS, person, addedPerson);
+        addSlot(person, addedPerson);
     }
 
     private RealTimeObjectActionDTO addPersonToMdm(Person person)
@@ -71,13 +70,17 @@ public class AddService extends IndexingService
         return returnedObject;
     }
 
-    void addSlot(RuntimeMatchWS runtimeMatchWS, Person person, RealTimeObjectActionDTO mdmPerson)
+    void addSlot(Person person, RealTimeObjectActionDTO mdmPerson) throws ConnectException
     {
+        RuntimeMatchWS runtimeMatchWS = callRuntimeMatchService();
+
+        //Handle cases where no address was passed in
         if(person.getAddresses() == null || person.getAddresses().isEmpty())
         {
             addSlot(runtimeMatchWS, person, mdmPerson, null);
         }
 
+        //If more than one address was passed in, add them all to the index
         for(Address personAddress : person.getAddresses())
         {
             addSlot(runtimeMatchWS, person, mdmPerson, personAddress);

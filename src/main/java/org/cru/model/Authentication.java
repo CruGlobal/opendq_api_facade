@@ -7,6 +7,9 @@ public class Authentication
 {
     private String relayGuid;
     private String employeeRelayGuid;
+    private String googleAppsUid;
+    private String facebookUid;
+    private String keyGuid;
 
     public String getRelayGuid()
     {
@@ -26,5 +29,35 @@ public class Authentication
     public void setEmployeeRelayGuid(String employeeRelayGuid)
     {
         this.employeeRelayGuid = employeeRelayGuid;
+    }
+
+    public String getGoogleAppsUid()
+    {
+        return googleAppsUid;
+    }
+
+    public void setGoogleAppsUid(String googleAppsUid)
+    {
+        this.googleAppsUid = googleAppsUid;
+    }
+
+    public String getFacebookUid()
+    {
+        return facebookUid;
+    }
+
+    public void setFacebookUid(String facebookUid)
+    {
+        this.facebookUid = facebookUid;
+    }
+
+    public String getKeyGuid()
+    {
+        return keyGuid;
+    }
+
+    public void setKeyGuid(String keyGuid)
+    {
+        this.keyGuid = keyGuid;
     }
 }

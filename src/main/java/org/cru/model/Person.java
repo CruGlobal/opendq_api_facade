@@ -30,8 +30,10 @@ public class Person
     private List<PhoneNumber> phoneNumbers;
     private String clientIntegrationId;
     private Authentication authentication;
-    private LinkedIdentities linkedIdentities;
+    @JsonProperty("linked_identities")
+    private List<LinkedIdentity> linkedIdentities;
     private DateTime clientUpdatedAt;
+    private Source source;
 
     //Name values
     private String firstName;
@@ -155,13 +157,12 @@ public class Person
         this.authentication = authentication;
     }
 
-    public LinkedIdentities getLinkedIdentities()
+    public List<LinkedIdentity> getLinkedIdentities()
     {
         return linkedIdentities;
     }
 
-    @JsonDeserialize(contentAs = LinkedIdentities.class)
-    public void setLinkedIdentities(LinkedIdentities linkedIdentities)
+    public void setLinkedIdentities(List<LinkedIdentity> linkedIdentities)
     {
         this.linkedIdentities = linkedIdentities;
     }
@@ -175,6 +176,17 @@ public class Person
     public void setClientUpdatedAt(DateTime clientUpdatedAt)
     {
         this.clientUpdatedAt = clientUpdatedAt;
+    }
+
+    public Source getSource()
+    {
+        return source;
+    }
+
+    @JsonDeserialize(contentAs = Source.class)
+    public void setSource(Source source)
+    {
+        this.source = source;
     }
 
     public String getFirstName()

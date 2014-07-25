@@ -57,7 +57,7 @@ public class DeleteResource
                 .build());
         }
 
-        return Response.ok().entity(buildResponseEntity(globalRegistryId)).build();
+        return Response.ok().entity(buildResponseEntity(person.getId())).build();
     }
 
     private List<OafResponse> buildResponseEntity(String id)

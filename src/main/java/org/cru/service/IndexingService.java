@@ -57,6 +57,7 @@ public class IndexingService
 
     Service getServiceImpl(String serviceName, Class serviceImplType)
     {
+        transformationFileLocation = openDQProperties.getProperty("transformationFileLocation");
         QName qName = new QName(
             openDQProperties.getProperty(serviceName + ".namespaceURI"),
             openDQProperties.getProperty(serviceName + ".serviceName"));

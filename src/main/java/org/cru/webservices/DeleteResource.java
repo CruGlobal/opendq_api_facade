@@ -1,5 +1,6 @@
 package org.cru.webservices;
 
+import com.google.common.collect.Lists;
 import org.cru.model.OafResponse;
 import org.cru.model.Person;
 import org.cru.model.SearchResponse;
@@ -16,6 +17,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.ConnectException;
+import java.util.List;
 
 import org.cru.service.MatchingService;
 import org.cru.util.Action;
@@ -55,12 +57,12 @@ public class DeleteResource
         return Response.ok().entity(buildResponseEntity(globalRegistryId)).build();
     }
 
-    private OafResponse buildResponseEntity(String id)
+    private List<OafResponse> buildResponseEntity(String id)
     {
         OafResponse deleteResponse = new OafResponse();
         deleteResponse.setConfidenceLevel(1.0D);
         deleteResponse.setMatchId(id);
         deleteResponse.setAction(Action.DELETE);
-        return deleteResponse;
+        return Lists.newArrayList(deleteResponse);
     }
 }

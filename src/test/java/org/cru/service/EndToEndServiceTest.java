@@ -115,7 +115,7 @@ public class EndToEndServiceTest
 
     private void checkPersonNotExists(Person testPerson) throws Exception
     {
-        OafResponse matchResponse = matchingService.findMatch(testPerson, "Match");
+        List<OafResponse> matchResponse = matchingService.findMatch(testPerson, "Match");
         assertNull(matchResponse);
     }
 
@@ -126,16 +126,16 @@ public class EndToEndServiceTest
 
     private void checkFindPersonWithMatchOrAdd(Person testPerson) throws Exception
     {
-        OafResponse matchOrAddResponse = matchOrAddService.matchOrAddPerson(testPerson);
+        List<OafResponse> matchOrAddResponse = matchOrAddService.matchOrAddPerson(testPerson);
         assertNotNull(matchOrAddResponse);
-        assertEquals(matchOrAddResponse.getMatchId(), testPerson.getId());
+        assertEquals(matchOrAddResponse.get(0).getMatchId(), testPerson.getId());
     }
 
     private void checkFindPersonWithMatch(Person testPerson) throws Exception
     {
-        OafResponse matchResponse = matchingService.findMatch(testPerson, "Match");
+        List<OafResponse> matchResponse = matchingService.findMatch(testPerson, "Match");
         assertNotNull(matchResponse);
-        assertEquals(matchResponse.getMatchId(), testPerson.getId());
+        assertEquals(matchResponse.get(0).getMatchId(), testPerson.getId());
     }
 
     private void checkUpdatePerson(Person testPerson, String partyId) throws Exception
@@ -147,7 +147,7 @@ public class EndToEndServiceTest
         emailAddresses.add(emailAddress);
         testPerson.setEmailAddresses(emailAddresses);
 
-        OafResponse updateResponse = matchOrUpdateService.matchOrUpdatePerson(testPerson);
+        List<OafResponse> updateResponse = matchOrUpdateService.matchOrUpdatePerson(testPerson);
         assertNull(updateResponse);  //will be null if updated, not null if it found a conflicting match
 
         //We should now find the updates

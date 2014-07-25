@@ -53,12 +53,12 @@ public class MatchingResource
         try
         {
             //We have a clean address, person's address is already updated
-            OafResponse matchResponse = matchingService.findMatch(person, "Match");
+            List<OafResponse> matchResponseList = matchingService.findMatch(person, "Match");
 
-            if(matchResponse != null)
+            if(matchResponseList != null && !matchResponseList.isEmpty())
             {
                 //Send the match back to the client
-                return Response.ok().entity(Lists.newArrayList(matchResponse)).build();
+                return Response.ok().entity(matchResponseList).build();
             }
             else
             {

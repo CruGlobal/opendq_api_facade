@@ -1,14 +1,12 @@
 package org.cru.service;
 
-import com.beust.jcommander.internal.Lists;
 import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import org.cru.data.TestPeople;
 import org.cru.model.Address;
-import org.cru.model.EmailAddress;
-import org.cru.model.LinkedIdentity;
 import org.cru.model.OafResponse;
 import org.cru.model.Person;
-import org.cru.model.PhoneNumber;
+import org.cru.model.SearchResponse;
+import org.cru.util.Action;
 import org.cru.util.DeletedIndexesFileIO;
 import org.cru.util.OafProperties;
 import org.cru.util.OpenDQProperties;
@@ -16,6 +14,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,12 +54,34 @@ public class MatchingServiceTest
         matchingService = new MatchingService(openDQProperties, deleteService);
     }
 
-    @Test(dataProvider = "successfulMatches")
-    public void testFindMatch(Person person, String matchId) throws Exception
+    @Test
+    public void testFindMatchWithNewWsdl() throws ConnectException
     {
-        OafResponse matchResponse = matchingService.findMatch(person, "Match");
-        assertNotNull(matchResponse);
-        assertEquals(matchResponse.getMatchId(), matchId);
+        Person testPerson = TestPeople.createPersonFromSoapUITestData();
+        List<OafResponse> matchResponseList = matchingService.findMatch(testPerson, "contactMatch");
+
+        assertNotNull(matchResponseList);
+        assertEquals(matchResponseList.size(), 1);
+        assertEquals(matchResponseList.get(0).getMatchId(), testPerson.getId());
+        assertEquals(matchResponseList.get(0).getAction(), Action.MATCH.toString());
+    }
+
+    @Test
+    public void testSearchForPerson() throws ConnectException
+    {
+        Person testPerson = TestPeople.createPersonFromSoapUITestData();
+        SearchResponse searchResponse = matchingService.searchForPerson(testPerson, "contactMatch");
+
+        assertNotNull(searchResponse);
+        assertEquals(searchResponse.getId(), testPerson.getId());
+        assertEquals(searchResponse.getResultValues().get("partyId"), testPerson.getMdmPartyId());
+        assertEquals(searchResponse.getResultValues().get("address1"), testPerson.getAddresses().get(0).getAddressLine1());
+
+        testPerson = TestPeople.generatePersonWithLotsOfData();
+        searchResponse = matchingService.searchForPerson(testPerson, "contactMatch");
+
+        assertNotNull(searchResponse);
+        assertEquals(searchResponse.getId(), testPerson.getId());
     }
 
     @Test
@@ -80,24 +101,14 @@ public class MatchingServiceTest
         deletedPerson.setAddresses(addresses);
         deletedPerson.setId("6");
 
-        OafResponse matchResponse = matchingService.findMatch(deletedPerson, "Match");
-        assertNull(matchResponse);
-    }
-
-    @DataProvider
-    private Object[][] getIdsToMatch()
-    {
-        return new Object[][] {
-            { "3ikfj32-8rt4-9493-394nfa2348da" },
-            { "2a332-45e-35fv-aw3a2" },
-            { "2a332-45e" }
-        };
+        List<OafResponse> matchResponseList = matchingService.findMatch(deletedPerson, "Match");
+        assertEquals(matchResponseList.size(), 0);
     }
 
     @Test
     public void testFindMatchInMdm() throws Exception
     {
-        RealTimeObjectActionDTO foundPerson = matchingService.findMatchInMdm("886");
+        RealTimeObjectActionDTO foundPerson = matchingService.findMatchInMdm("37539");
 
         assertNotNull(foundPerson);
         assertNotNull(foundPerson.getObjectEntity());
@@ -106,30 +117,23 @@ public class MatchingServiceTest
         assertNotNull(foundPerson.getObjectAttributeDatas());
 
         // Person with multiple communications and attribute data rows
-        foundPerson = matchingService.findMatchInMdm("885");
+        foundPerson = matchingService.findMatchInMdm("11239883");
         assertNotNull(foundPerson);
         assertNotNull(foundPerson.getObjectEntity());
         assertNotNull(foundPerson.getObjectAddresses());
         assertNotNull(foundPerson.getObjectCommunications());
         assertEquals(foundPerson.getObjectCommunications().getObjectCommunication().size(), 2);
         assertNotNull(foundPerson.getObjectAttributeDatas());
-        assertEquals(foundPerson.getObjectAttributeDatas().getObjectAttributeData().size(), 2);
+        assertEquals(foundPerson.getObjectAttributeDatas().getObjectAttributeData().size(), 7);
 
         // Person with multiple addresses
-        foundPerson = matchingService.findMatchInMdm("196");
+        foundPerson = matchingService.findMatchInMdm("37539");
         assertNotNull(foundPerson);
         assertNotNull(foundPerson.getObjectEntity());
         assertNotNull(foundPerson.getObjectAddresses());
-        assertEquals(foundPerson.getObjectAddresses().getObjectAddress().size(), 5);
+        assertEquals(foundPerson.getObjectAddresses().getObjectAddress().size(), 2);
         assertNotNull(foundPerson.getObjectCommunications());
         assertNotNull(foundPerson.getObjectAttributeDatas());
-    }
-
-    @Test
-    public void testFindDeletedInMdm() throws Exception
-    {
-        RealTimeObjectActionDTO deletedPerson = matchingService.findMatchInMdm("1");
-        assertEquals(deletedPerson.getObjectEntity().getAction(), "D");
     }
 
     private Person generatePersonWithDataExactMatchFromSoapUI()

@@ -42,12 +42,12 @@ public class MatchOrAddResource
         Person person = personDeserializer.deserializePerson(json);
         try
         {
-            OafResponse matchResponse = matchOrAddService.matchOrAddPerson(person);
+            List<OafResponse> matchResponseList = matchOrAddService.matchOrAddPerson(person);
 
-            if(matchResponse != null)
+            if(matchResponseList != null)
             {
                 //Send the match back to the client
-                return Response.ok().entity(Lists.newArrayList(matchResponse)).build();
+                return Response.ok().entity(matchResponseList).build();
             }
             else
             {

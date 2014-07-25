@@ -7,6 +7,7 @@ import org.cru.model.EmailAddress;
 import org.cru.model.LinkedIdentity;
 import org.cru.model.Person;
 import org.cru.model.PhoneNumber;
+import org.cru.model.Source;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +66,31 @@ public class TestPeople
         testPerson.setEmailAddresses(emailAddresses);
         testPerson.setPhoneNumbers(phoneNumbers);
         testPerson.setGender("F");
+
+        Source testSource = new Source();
+        testSource.setClientIntegrationId("1-6T4D4");
+        testSource.setSystemId("OAF");
+
+        testPerson.setSource(testSource);
+
+        return testPerson;
+    }
+
+    public static Person createPersonFromSoapUITestData()
+    {
+        Person testPerson = new Person();
+
+        testPerson.setFirstName("Susan");
+        testPerson.setLastName("Snowa");
+        testPerson.setMdmPartyId("100");
+        testPerson.setId("SUSAN"); //TODO: Replace with real global registry id when available
+
+        Address testAddress = new Address();
+        testAddress.setAddressLine1("2824 McManaway Dr");
+        testAddress.setCity("Midlothian");
+        testAddress.setState("VA");
+
+        testPerson.setAddresses(Lists.newArrayList(testAddress));
 
         return testPerson;
     }

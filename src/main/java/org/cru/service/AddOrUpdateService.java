@@ -6,6 +6,7 @@ import org.cru.qualifiers.Add;
 
 import javax.inject.Inject;
 import java.net.ConnectException;
+import java.util.List;
 
 /**
  * Handle logic for either updating or adding a {@link Person}.
@@ -31,21 +32,21 @@ public class AddOrUpdateService
         this.matchOrUpdateService = matchOrUpdateService;
     }
 
-    public OafResponse addOrUpdate(Person person) throws ConnectException
+    public List<OafResponse> addOrUpdate(Person person) throws ConnectException
     {
         String slotName = "AddOrUpdate";
 
-        OafResponse matchOrUpdateResponse = matchOrUpdateService.matchOrUpdatePerson(person);
+        List<OafResponse> matchOrUpdateResponseList = matchOrUpdateService.matchOrUpdatePerson(person);
 
         //No match found, so add the person
-        if(matchOrUpdateResponse == null)
+        if(matchOrUpdateResponseList == null || matchOrUpdateResponseList.isEmpty())
         {
             addService.addPerson(person, slotName);
             return null;
         }
         else
         {
-            return matchOrUpdateResponse;
+            return matchOrUpdateResponseList;
         }
     }
 }

@@ -43,7 +43,7 @@ public class AddService extends IndexingService
     public void addPerson(Person person, String slotName) throws ConnectException
     {
         this.slotName = slotName;
-        this.stepName = "RtIndex";
+        this.stepName = "RtMatchAddr";
 
         for(Address address : person.getAddresses())
         {
@@ -98,9 +98,15 @@ public class AddService extends IndexingService
         fieldNamesAndValues.put("FIELD1", person.getFirstName());
         fieldNamesAndValues.put("FIELD2", person.getLastName());
         fieldNamesAndValues.put("FIELD3", person.getAddresses().get(0).getAddressLine1());
-        fieldNamesAndValues.put("FIELD4", person.getAddresses().get(0).getCity());
-        fieldNamesAndValues.put("FIELD5", person.getId());
-        fieldNamesAndValues.put("FIELD6", mdmPerson.getObjectEntity().getPartyId());
+
+        if(person.getAddresses().get(0).getAddressLine2() == null) fieldNamesAndValues.put("FIELD4", "NULLDATA");
+        else fieldNamesAndValues.put("FIELD4", person.getAddresses().get(0).getAddressLine2());
+
+        fieldNamesAndValues.put("FIELD5", person.getAddresses().get(0).getCity());
+        fieldNamesAndValues.put("FIELD6", person.getAddresses().get(0).getState());
+        fieldNamesAndValues.put("FIELD7", person.getAddresses().get(0).getZipCode());
+        fieldNamesAndValues.put("FIELD8", person.getId());
+        fieldNamesAndValues.put("FIELD10", mdmPerson.getObjectEntity().getPartyId());
 
         return fieldNamesAndValues;
     }

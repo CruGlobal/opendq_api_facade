@@ -2,7 +2,7 @@ package org.cru.service;
 
 import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import org.cru.cdi.PostalsoftServiceWrapperProducer;
-import org.cru.model.Address;
+import org.cru.data.TestPeople;
 import org.cru.model.EmailAddress;
 import org.cru.model.OafResponse;
 import org.cru.model.Person;
@@ -81,7 +81,7 @@ public class EndToEndServiceTest
     @Test
     public void endToEndServiceTest() throws Exception
     {
-        Person testPerson = createTestPerson();
+        Person testPerson = TestPeople.generatePersonWithLotsOfData();
 
         //The person should not exist yet
         checkPersonNotExists(testPerson);
@@ -163,30 +163,5 @@ public class EndToEndServiceTest
         assertNotNull(deletedPerson);
         //The record in MDM should have an Action value of "D"
         assertEquals(deletedPerson.getObjectEntity().getAction(), "D");
-    }
-
-    private Person createTestPerson()
-    {
-        Person testPerson = new Person();
-
-        Address testAddress = new Address();
-        testAddress.setAddressLine1("E2E4");
-        testAddress.setAddressLine2("E2E5");
-        testAddress.setAddressLine3("E2E6");
-        testAddress.setCity("Dallas");
-        testAddress.setState("TX");
-        testAddress.setZipCode("38437");
-        testAddress.setCountry("USA");
-
-        testPerson.setTitle("Mr.");
-        testPerson.setFirstName("EE3");
-        testPerson.setLastName("EE4");
-
-        List<Address> addresses = new ArrayList<Address>();
-        addresses.add(testAddress);
-        testPerson.setAddresses(addresses);
-        testPerson.setId("afd65af4-hj546fg-xn51rg-5asdf4");
-
-        return testPerson;
     }
 }

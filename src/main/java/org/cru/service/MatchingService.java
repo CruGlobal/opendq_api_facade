@@ -71,7 +71,7 @@ public class MatchingService extends IndexingService
 
         for(SearchResponse response : searchResponseList)
         {
-            String partyId = (String)response.getResultValues().getPartyId();
+            String partyId = response.getResultValues().getPartyId();
             if(!matchHasBeenDeleted(partyId)) filteredResults.add(response);
         }
 
@@ -178,7 +178,7 @@ public class MatchingService extends IndexingService
         SearchResponse searchResponse = new SearchResponse();
         searchResponse.setScore(score);
         searchResponse.setResultValues(values);
-        searchResponse.setId((String)values.getStandardizedFirstName());
+        searchResponse.setId(values.getStandardizedFirstName());
 
         return searchResponse;
     }

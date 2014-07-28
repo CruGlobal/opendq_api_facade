@@ -66,7 +66,7 @@ public class MatchOrUpdateService
             return null;
         }
 
-        String partyId = (String) searchResponse.getResultValues().getPartyId();
+        String partyId = searchResponse.getResultValues().getPartyId();
         RealTimeObjectActionDTO foundMdmPerson = matchingService.findMatchInMdm(partyId);
 
         if(foundMdmPerson == null)

@@ -23,6 +23,7 @@ import java.util.List;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
+import static org.testng.Assert.fail;
 
 /**
  * Test Match, Add, and Delete services together.
@@ -97,7 +98,7 @@ public class EndToEndServiceTest
 
         //We should be able to find the index data by Global Registry ID now
         SearchResponse foundIndex = matchingService.searchForPerson(testPerson, "Match");
-        String partyId = (String) foundIndex.getResultValues().getPartyId();
+        String partyId = foundIndex.getResultValues().getPartyId();
 
         //Make an update to the person
         //TODO: For now, the update will not work properly because it will find the same row and think it is a conflict

@@ -15,7 +15,6 @@ import org.cru.util.OpenDQProperties;
 import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
 import java.net.ConnectException;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;

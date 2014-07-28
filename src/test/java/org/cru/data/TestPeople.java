@@ -131,6 +131,26 @@ public class TestPeople
         return testPerson;
     }
 
+    public static Person createTestPersonHasBeenDeleted()
+    {
+        Person deletedPerson = new Person();
+
+        Address address = new Address();
+        address.setAddressLine1("4 Quarter Ln");
+        address.setCity("Austin");
+        address.setState("TX");
+
+        deletedPerson.setFirstName("Pandemic");
+        deletedPerson.setLastName("Handy");
+
+        List<Address> addresses = new ArrayList<Address>();
+        addresses.add(address);
+        deletedPerson.setAddresses(addresses);
+        deletedPerson.setId("6");
+
+        return deletedPerson;
+    }
+
 
     public static RealTimeObjectActionDTO createMockMdmPerson()
     {

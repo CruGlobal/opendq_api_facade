@@ -2,7 +2,6 @@ package org.cru.service;
 
 import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import org.cru.data.TestPeople;
-import org.cru.model.Address;
 import org.cru.model.OafResponse;
 import org.cru.model.Person;
 import org.cru.model.SearchResponse;
@@ -15,7 +14,6 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.net.ConnectException;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.testng.Assert.assertEquals;
@@ -86,20 +84,7 @@ public class MatchingServiceTest
     @Test
     public void testMatchHasBeenDeleted() throws Exception
     {
-        Person deletedPerson = new Person();
-
-        Address address = new Address();
-        address.setAddressLine1("4 Quarter Ln");
-        address.setCity("Austin");
-        address.setState("TX");
-
-        deletedPerson.setFirstName("Pandemic");
-        deletedPerson.setLastName("Handy");
-
-        List<Address> addresses = new ArrayList<Address>();
-        addresses.add(address);
-        deletedPerson.setAddresses(addresses);
-        deletedPerson.setId("6");
+        Person deletedPerson = TestPeople.createTestPersonHasBeenDeleted();
 
         List<OafResponse> matchResponseList = matchingService.findMatch(deletedPerson, "Match");
         assertEquals(matchResponseList.size(), 0);

@@ -55,7 +55,7 @@ public class MatchingServiceTest
     public void testFindMatch() throws ConnectException
     {
         Person testPerson = TestPeople.createPersonFromSoapUITestData();
-        List<OafResponse> matchResponseList = matchingService.findMatch(testPerson, "contactMatch");
+        List<OafResponse> matchResponseList = matchingService.findMatches(testPerson, "contactMatch");
 
         assertNotNull(matchResponseList);
         assertEquals(matchResponseList.size(), 1);
@@ -86,7 +86,7 @@ public class MatchingServiceTest
     {
         Person deletedPerson = TestPeople.createTestPersonHasBeenDeleted();
 
-        List<OafResponse> matchResponseList = matchingService.findMatch(deletedPerson, "Match");
+        List<OafResponse> matchResponseList = matchingService.findMatches(deletedPerson, "Match");
         assertEquals(matchResponseList.size(), 0);
     }
 

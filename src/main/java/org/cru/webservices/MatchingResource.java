@@ -53,7 +53,7 @@ public class MatchingResource
         try
         {
             //We have a clean address, person's address is already updated
-            List<OafResponse> matchResponseList = matchingService.findMatch(person, "Match");
+            List<OafResponse> matchResponseList = matchingService.findMatches(person, "Match");
 
             if(matchResponseList != null && !matchResponseList.isEmpty())
             {

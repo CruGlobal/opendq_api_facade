@@ -10,7 +10,6 @@ import org.cru.util.Action;
 
 import javax.inject.Inject;
 import java.net.ConnectException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,7 +35,7 @@ public class MatchOrUpdateService
 
     public List<OafResponse> matchOrUpdatePerson(Person person) throws ConnectException
     {
-        List<OafResponse> matchResponseList = matchingService.findMatch(person, "Match");
+        List<OafResponse> matchResponseList = matchingService.findMatches(person, "Match");
 
         if(matchResponseList == null || matchResponseList.isEmpty())
         {

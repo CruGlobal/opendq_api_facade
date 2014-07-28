@@ -115,8 +115,14 @@ public class EndToEndServiceTest
 
     private void checkPersonNotExists(Person testPerson) throws Exception
     {
-        List<OafResponse> matchResponse = matchingService.findMatch(testPerson, "Match");
-        assertNull(matchResponse);
+        List<OafResponse> matchResponseList = matchingService.findMatches(testPerson, "Match");
+        if(matchResponseList != null && !matchResponseList.isEmpty())
+        {
+            for(OafResponse matchResponse : matchResponseList)
+            {
+                if(matchResponse.getConfidenceLevel() >= 1.0D) fail();
+            }
+        }
     }
 
     private void checkAddPersonWorked(Person testPerson) throws Exception
@@ -133,7 +139,7 @@ public class EndToEndServiceTest
 
     private void checkFindPersonWithMatch(Person testPerson) throws Exception
     {
-        List<OafResponse> matchResponse = matchingService.findMatch(testPerson, "Match");
+        List<OafResponse> matchResponse = matchingService.findMatches(testPerson, "Match");
         assertNotNull(matchResponse);
         assertEquals(matchResponse.get(0).getMatchId(), testPerson.getId());
     }

@@ -43,7 +43,7 @@ public class MatchingService extends IndexingService
         this.deleteService = deleteService;
     }
 
-    public List<OafResponse> findMatch(Person person, String slotName) throws ConnectException
+    public List<OafResponse> findMatches(Person person, String slotName) throws ConnectException
     {
         this.slotName = slotName;
         this.stepName = "RtMatchAddr";

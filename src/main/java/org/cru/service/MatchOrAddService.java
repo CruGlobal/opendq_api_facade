@@ -32,7 +32,7 @@ public class MatchOrAddService
     public List<OafResponse> matchOrAddPerson(Person person) throws ConnectException
     {
         String slotName = "MatchOrAdd";
-        List<OafResponse> matchResponseList = matchingService.findMatch(person, slotName);
+        List<OafResponse> matchResponseList = matchingService.findMatches(person, slotName);
 
         if(matchResponseList != null && !matchResponseList.isEmpty()) return matchResponseList;
 

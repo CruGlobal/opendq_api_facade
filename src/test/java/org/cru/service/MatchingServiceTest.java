@@ -61,6 +61,10 @@ public class MatchingServiceTest
         assertEquals(matchResponseList.size(), 1);
         assertEquals(matchResponseList.get(0).getMatchId(), testPerson.getId());
         assertEquals(matchResponseList.get(0).getAction(), Action.MATCH.toString());
+
+        testPerson = TestPeople.generatePersonWithLotsOfData();
+        matchResponseList = matchingService.findMatches(testPerson, "contactMatch");
+        assertEquals(matchResponseList.size(), 2); //Two different addresses
     }
 
     @Test

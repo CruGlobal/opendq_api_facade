@@ -10,6 +10,7 @@ import org.cru.model.OafResponse;
 import net.java.dev.jaxb.array.AnyTypeArray;
 import org.cru.model.Person;
 import org.cru.model.SearchResponse;
+import org.cru.model.collections.SearchResponseList;
 import org.cru.qualifiers.Delete;
 import org.cru.qualifiers.Match;
 import org.cru.util.Action;
@@ -47,7 +48,7 @@ public class MatchingService extends IndexingService
     {
         this.slotName = slotName;
         this.stepName = "RtMatchAddr";
-        List<SearchResponse> searchResponseList = searchSlot(person);
+        SearchResponseList searchResponseList = searchSlot(person);
 
         if(searchResponseList == null || searchResponseList.isEmpty()) return null;
 
@@ -58,26 +59,30 @@ public class MatchingService extends IndexingService
     {
         this.slotName = slotName;
         this.stepName = "RtMatchAddr";
-        List<SearchResponse> searchResponseList = searchSlot(person);
+        SearchResponseList searchResponseList = searchSlot(person);
 
         if(searchResponseList == null || searchResponseList.isEmpty()) return null;
 
         return findSinglePersonFromList(buildFilteredSearchResponseList(searchResponseList), person.getId());
     }
 
-    List<SearchResponse> buildFilteredSearchResponseList(List<SearchResponse> searchResponseList)
+    SearchResponseList buildFilteredSearchResponseList(SearchResponseList searchResponseList)
     {
-        List<SearchResponse> filteredResults = Lists.newArrayList();
+        SearchResponseList filteredResults = new SearchResponseList();
 
         for(SearchResponse response : searchResponseList)
         {
             String partyId = (String)response.getResultValues().get("partyId");
             if(!matchHasBeenDeleted(partyId)) filteredResults.add(response);
         }
+
+        filteredResults.removeDuplicateResults();
+        filteredResults.sortListByScore();
+
         return filteredResults;
     }
 
-    List<OafResponse> buildOafResponseList(List<SearchResponse> filteredSearchResponseList)
+    List<OafResponse> buildOafResponseList(SearchResponseList filteredSearchResponseList)
     {
         List<OafResponse> oafResponseList = Lists.newArrayList();
 
@@ -94,7 +99,7 @@ public class MatchingService extends IndexingService
         return oafResponseList;
     }
 
-    SearchResponse findSinglePersonFromList(List<SearchResponse> filteredSearchResponseList, String globalRegistryId)
+    SearchResponse findSinglePersonFromList(SearchResponseList filteredSearchResponseList, String globalRegistryId)
     {
         for(SearchResponse searchResponse : filteredSearchResponseList)
         {
@@ -110,9 +115,9 @@ public class MatchingService extends IndexingService
         return mdmService.findObject(partyId);
     }
 
-    List<SearchResponse> searchSlot(Person person) throws ConnectException
+    SearchResponseList searchSlot(Person person) throws ConnectException
     {
-        List<SearchResponse> searchResponseList = Lists.newArrayList();
+        SearchResponseList searchResponseList = new SearchResponseList();
 
         //Handle cases where no address was passed in
         if(person.getAddresses() == null || person.getAddresses().isEmpty())
@@ -129,7 +134,7 @@ public class MatchingService extends IndexingService
         return searchResponseList;
     }
 
-    private List<SearchResponse> searchSlot(List<String> searchValues) throws ConnectException
+    private SearchResponseList searchSlot(List<String> searchValues) throws ConnectException
     {
         RuntimeMatchWS runtimeMatchWS = callRuntimeMatchService();
         ServiceResult searchResponse = runtimeMatchWS.searchSlot(slotName, searchValues);
@@ -208,9 +213,9 @@ public class MatchingService extends IndexingService
         return valueMap;
     }
 
-    List<SearchResponse> buildSearchResponses(ServiceResult searchResult)
+    SearchResponseList buildSearchResponses(ServiceResult searchResult)
     {
-        List<SearchResponse> searchResponseList = Lists.newArrayList();
+        SearchResponseList searchResponseList = new SearchResponseList();
         List<AnyTypeArray> searchResultValues = searchResult.getRows();
 
         if(searchResultValues == null || searchResultValues.isEmpty())

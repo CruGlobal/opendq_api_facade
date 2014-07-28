@@ -52,7 +52,7 @@ public class MatchingServiceTest
     }
 
     @Test
-    public void testFindMatchWithNewWsdl() throws ConnectException
+    public void testFindMatch() throws ConnectException
     {
         Person testPerson = TestPeople.createPersonFromSoapUITestData();
         List<OafResponse> matchResponseList = matchingService.findMatch(testPerson, "contactMatch");

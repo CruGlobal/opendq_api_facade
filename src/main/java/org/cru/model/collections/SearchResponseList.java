@@ -1,7 +1,6 @@
 package org.cru.model.collections;
 
 import com.google.common.collect.Lists;
-import com.sun.istack.internal.NotNull;
 import org.cru.model.ResultData;
 import org.cru.model.SearchResponse;
 
@@ -128,22 +127,19 @@ public class SearchResponseList implements List<SearchResponse>
     }
 
     @Override
-    @NotNull
     public Iterator<SearchResponse> iterator()
     {
         return internalList.iterator();
     }
 
     @Override
-    @NotNull
     public Object[] toArray()
     {
         return internalList.toArray();
     }
 
     @Override
-    @NotNull
-    public <T> T[] toArray(@NotNull T[] a)
+    public <T> T[] toArray(T[] a)
     {
         return internalList.toArray(a);
     }
@@ -161,31 +157,31 @@ public class SearchResponseList implements List<SearchResponse>
     }
 
     @Override
-    public boolean containsAll(@NotNull Collection<?> c)
+    public boolean containsAll(Collection<?> c)
     {
         return internalList.containsAll(c);
     }
 
     @Override
-    public boolean addAll(@NotNull Collection<? extends SearchResponse> c)
+    public boolean addAll(Collection<? extends SearchResponse> c)
     {
         return internalList.addAll(c);
     }
 
     @Override
-    public boolean addAll(int index, @NotNull Collection<? extends SearchResponse> c)
+    public boolean addAll(int index, Collection<? extends SearchResponse> c)
     {
         return internalList.addAll(index, c);
     }
 
     @Override
-    public boolean removeAll(@NotNull Collection<?> c)
+    public boolean removeAll(Collection<?> c)
     {
         return internalList.removeAll(c);
     }
 
     @Override
-    public boolean retainAll(@NotNull Collection<?> c)
+    public boolean retainAll(Collection<?> c)
     {
         return internalList.retainAll(c);
     }
@@ -233,21 +229,18 @@ public class SearchResponseList implements List<SearchResponse>
     }
 
     @Override
-    @NotNull
     public ListIterator<SearchResponse> listIterator()
     {
         return internalList.listIterator();
     }
 
     @Override
-    @NotNull
     public ListIterator<SearchResponse> listIterator(int index)
     {
         return internalList.listIterator(index);
     }
 
     @Override
-    @NotNull
     public List<SearchResponse> subList(int fromIndex, int toIndex)
     {
         return internalList.subList(fromIndex, toIndex);

@@ -1,7 +1,5 @@
 package org.cru.model;
 
-import com.sun.istack.internal.NotNull;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -155,7 +153,7 @@ public class ResultData implements Map<String, Object>
     }
 
     @Override
-    public void putAll(@NotNull Map<? extends String, ?> m)
+    public void putAll(Map<? extends String, ?> m)
     {
         internalMap.putAll(m);
     }
@@ -167,21 +165,18 @@ public class ResultData implements Map<String, Object>
     }
 
     @Override
-    @NotNull
     public Set<String> keySet()
     {
         return internalMap.keySet();
     }
 
     @Override
-    @NotNull
     public Collection<Object> values()
     {
         return internalMap.values();
     }
 
     @Override
-    @NotNull
     public Set<Entry<String, Object>> entrySet()
     {
         return internalMap.entrySet();

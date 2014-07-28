@@ -2,6 +2,7 @@ package org.cru.model.collections;
 
 import com.google.common.collect.Lists;
 import com.sun.istack.internal.NotNull;
+import org.cru.model.ResultData;
 import org.cru.model.SearchResponse;
 
 import java.util.Collection;
@@ -10,7 +11,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Map;
 
 /**
  * Contains logic for filtering and sorting a {@link List} of {@link SearchResponse} objects
@@ -96,17 +96,17 @@ public class SearchResponseList implements List<SearchResponse>
 
     private boolean areResponsesEffectivelyEqual(SearchResponse searchResponse1, SearchResponse searchResponse2)
     {
-        Map<String, Object> resultValues1 = searchResponse1.getResultValues();
-        Map<String, Object> resultValues2 = searchResponse2.getResultValues();
+        ResultData resultValues1 = searchResponse1.getResultValues();
+        ResultData resultValues2 = searchResponse2.getResultValues();
         return
-            ((String)resultValues1.get("firstName")).equalsIgnoreCase((String)resultValues2.get("firstName")) &&
-            ((String)resultValues1.get("lastName")).equalsIgnoreCase((String)resultValues2.get("lastName")) &&
-            ((String)resultValues1.get("address1")).equalsIgnoreCase((String)resultValues2.get("address1")) &&
-            ((String)resultValues1.get("address2")).equalsIgnoreCase((String)resultValues2.get("address2")) &&
-            ((String)resultValues1.get("city")).equalsIgnoreCase((String)resultValues2.get("city")) &&
-            ((String)resultValues1.get("state")).equalsIgnoreCase((String)resultValues2.get("state")) &&
-            ((String)resultValues1.get("zip")).equalsIgnoreCase((String)resultValues2.get("zip")) &&
-            ((String)resultValues1.get("standardizedFirstName")).equalsIgnoreCase((String)resultValues2.get("standardizedFirstName"));
+            (resultValues1.getFirstName()).equalsIgnoreCase(resultValues2.getFirstName()) &&
+            (resultValues1.getLastName()).equalsIgnoreCase(resultValues2.getLastName()) &&
+            (resultValues1.getAddressLine1()).equalsIgnoreCase(resultValues2.getAddressLine1()) &&
+            (resultValues1.getAddressLine2()).equalsIgnoreCase(resultValues2.getAddressLine2()) &&
+            (resultValues1.getCity()).equalsIgnoreCase(resultValues2.getCity()) &&
+            (resultValues1.getState()).equalsIgnoreCase(resultValues2.getState()) &&
+            (resultValues1.getZip()).equalsIgnoreCase(resultValues2.getZip()) &&
+            (resultValues1.getStandardizedFirstName()).equalsIgnoreCase(resultValues2.getStandardizedFirstName());
     }
 
     @Override

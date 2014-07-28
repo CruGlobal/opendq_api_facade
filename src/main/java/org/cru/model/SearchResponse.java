@@ -1,7 +1,5 @@
 package org.cru.model;
 
-import java.util.Map;
-
 /**
  * Object to hold information that comes back from OpenDQ about the match found
  * in a more easily maintainable manner
@@ -12,7 +10,7 @@ public class SearchResponse
 {
     private double score;
     private String id;
-    private Map<String, Object> resultValues;
+    private ResultData resultValues;
 
     public double getScore()
     {
@@ -34,12 +32,12 @@ public class SearchResponse
         this.id = id;
     }
 
-    public Map<String, Object> getResultValues()
+    public ResultData getResultValues()
     {
         return resultValues;
     }
 
-    public void setResultValues(Map<String, Object> resultValues)
+    public void setResultValues(ResultData resultValues)
     {
         this.resultValues = resultValues;
     }

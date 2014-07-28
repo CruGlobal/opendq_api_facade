@@ -75,8 +75,8 @@ public class MatchingServiceTest
 
         assertNotNull(searchResponse);
         assertEquals(searchResponse.getId(), testPerson.getId());
-        assertEquals(searchResponse.getResultValues().get("partyId"), testPerson.getMdmPartyId());
-        assertEquals(searchResponse.getResultValues().get("address1"), testPerson.getAddresses().get(0).getAddressLine1());
+        assertEquals(searchResponse.getResultValues().getPartyId(), testPerson.getMdmPartyId());
+        assertEquals(searchResponse.getResultValues().getAddressLine1(), testPerson.getAddresses().get(0).getAddressLine1());
 
         testPerson = TestPeople.generatePersonWithLotsOfData();
         searchResponse = matchingService.searchForPerson(testPerson, "contactMatch");

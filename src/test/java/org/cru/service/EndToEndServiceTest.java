@@ -97,7 +97,7 @@ public class EndToEndServiceTest
 
         //We should be able to find the index data by Global Registry ID now
         SearchResponse foundIndex = matchingService.searchForPerson(testPerson, "Match");
-        String partyId = (String) foundIndex.getResultValues().get("partyId");
+        String partyId = (String) foundIndex.getResultValues().getPartyId();
 
         //Make an update to the person
         //TODO: For now, the update will not work properly because it will find the same row and think it is a conflict

@@ -3,9 +3,6 @@ package org.cru.model;
 import org.cru.model.collections.SearchResponseList;
 import org.testng.annotations.Test;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import static org.testng.Assert.assertEquals;
 
 /**
@@ -66,32 +63,32 @@ public class SearchResponseListTest
         SearchResponse firstMatch = new SearchResponse();
         firstMatch.setScore(1.0D);
 
-        Map<String, Object> firstMapValues = new HashMap<String, Object>();
-        firstMapValues.put("firstName", "Test");
-        firstMapValues.put("lastName", "Tester");
-        firstMapValues.put("address1", "1125 Way Blvd");
-        firstMapValues.put("address2", "NULLDATA");
-        firstMapValues.put("city", "Orlando");
-        firstMapValues.put("state", "FL");
-        firstMapValues.put("zip", "32832");
-        firstMapValues.put("standardizedFirstName", "TEST");
-        firstMapValues.put("partyId", "1");
+        ResultData firstMapValues = new ResultData();
+        firstMapValues.putFirstName("Test");
+        firstMapValues.putLastName("Tester");
+        firstMapValues.putAddressLine1("1125 Way Blvd");
+        firstMapValues.putAddressLine2("NULLDATA");
+        firstMapValues.putCity("Orlando");
+        firstMapValues.putState("FL");
+        firstMapValues.putZip("32832");
+        firstMapValues.putStandardizedFirstName("TEST");
+        firstMapValues.putPartyId("1");
 
         firstMatch.setResultValues(firstMapValues);
 
         SearchResponse secondMatch = new SearchResponse();
         secondMatch.setScore(1.0D);
 
-        Map<String, Object> secondMapValues = new HashMap<String, Object>();
-        secondMapValues.put("firstName", "Test");
-        secondMapValues.put("lastName", "Tester");
-        secondMapValues.put("address1", "1125 Way Blvd");
-        secondMapValues.put("address2", "NULLDATA");
-        secondMapValues.put("city", "Orlando");
-        secondMapValues.put("state", "FL");
-        secondMapValues.put("zip", "32832");
-        secondMapValues.put("standardizedFirstName", "TEST");
-        secondMapValues.put("partyId", "2");
+        ResultData secondMapValues = new ResultData();
+        secondMapValues.putFirstName("Test");
+        secondMapValues.putLastName("Tester");
+        secondMapValues.putAddressLine1("1125 Way Blvd");
+        secondMapValues.putAddressLine2("NULLDATA");
+        secondMapValues.putCity("Orlando");
+        secondMapValues.putState("FL");
+        secondMapValues.putZip("32832");
+        secondMapValues.putStandardizedFirstName("TEST");
+        secondMapValues.putPartyId("2");
 
         secondMatch.setResultValues(secondMapValues);
 

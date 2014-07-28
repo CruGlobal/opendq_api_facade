@@ -5,10 +5,11 @@ import com.infosolve.openmdm.webservices.provider.impl.DataManagementWSImpl;
 import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import com.infosolvetech.rtmatch.pdi4.RuntimeMatchWS;
 import com.infosolvetech.rtmatch.pdi4.ServiceResult;
+import net.java.dev.jaxb.array.AnyTypeArray;
 import org.cru.model.Address;
 import org.cru.model.OafResponse;
-import net.java.dev.jaxb.array.AnyTypeArray;
 import org.cru.model.Person;
+import org.cru.model.ResultData;
 import org.cru.model.SearchResponse;
 import org.cru.model.collections.SearchResponseList;
 import org.cru.qualifiers.Delete;
@@ -20,9 +21,7 @@ import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
 import java.net.ConnectException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Service to handle the complexity of matching {@link Person} fields
@@ -72,7 +71,7 @@ public class MatchingService extends IndexingService
 
         for(SearchResponse response : searchResponseList)
         {
-            String partyId = (String)response.getResultValues().get("partyId");
+            String partyId = (String)response.getResultValues().getPartyId();
             if(!matchHasBeenDeleted(partyId)) filteredResults.add(response);
         }
 
@@ -174,19 +173,19 @@ public class MatchingService extends IndexingService
         return deleteService.personIsDeleted(matchId);
     }
 
-    SearchResponse buildSearchResponse(Float score, Map<String, Object> values)
+    SearchResponse buildSearchResponse(Float score, ResultData values)
     {
         SearchResponse searchResponse = new SearchResponse();
         searchResponse.setScore(score);
         searchResponse.setResultValues(values);
-        searchResponse.setId((String)values.get("standardizedFirstName"));
+        searchResponse.setId((String)values.getStandardizedFirstName());
 
         return searchResponse;
     }
 
-    List<Map<String, Object>> buildListOfValueMaps(List<AnyTypeArray> searchResultValues)
+    List<ResultData> buildListOfValueMaps(List<AnyTypeArray> searchResultValues)
     {
-        List<Map<String, Object>> valueMapList = new ArrayList<Map<String, Object>>();
+        List<ResultData> valueMapList = Lists.newArrayList();
 
         for(AnyTypeArray valueSet : searchResultValues)
         {
@@ -195,20 +194,20 @@ public class MatchingService extends IndexingService
         return valueMapList;
     }
 
-    Map<String, Object> buildResultValues(List<Object> searchResultValues)
+    ResultData buildResultValues(List<Object> searchResultValues)
     {
-        Map<String, Object> valueMap = new HashMap<String, Object>();
+        ResultData valueMap = new ResultData();
 
-        valueMap.put("firstName", searchResultValues.get(0));
-        valueMap.put("lastName", searchResultValues.get(1));
-        valueMap.put("address1", searchResultValues.get(2));
-        valueMap.put("address2", searchResultValues.get(3));
-        valueMap.put("city", searchResultValues.get(4));
-        valueMap.put("state", searchResultValues.get(5));
-        valueMap.put("zip", searchResultValues.get(6));
-        valueMap.put("standardizedFirstName", searchResultValues.get(7));
+        valueMap.putFirstName(searchResultValues.get(0));
+        valueMap.putLastName(searchResultValues.get(1));
+        valueMap.putAddressLine1(searchResultValues.get(2));
+        valueMap.putAddressLine2(searchResultValues.get(3));
+        valueMap.putCity(searchResultValues.get(4));
+        valueMap.putState(searchResultValues.get(5));
+        valueMap.putZip(searchResultValues.get(6));
+        valueMap.putStandardizedFirstName(searchResultValues.get(7));
         // Value 8 is not mapped to anything yet
-        valueMap.put("partyId", searchResultValues.get(9));
+        valueMap.putPartyId(searchResultValues.get(9));
 
         return valueMap;
     }
@@ -223,7 +222,7 @@ public class MatchingService extends IndexingService
             return null;
         }
 
-        List<Map<String, Object>> valueMapList = buildListOfValueMaps(searchResultValues);
+        List<ResultData> valueMapList = buildListOfValueMaps(searchResultValues);
         List<Float> scoreList = searchResult.getScores();
 
         for(int i = 0; i < scoreList.size(); i++)

@@ -91,6 +91,7 @@ public class MatchingServiceTest
         Address address = new Address();
         address.setAddressLine1("4 Quarter Ln");
         address.setCity("Austin");
+        address.setState("TX");
 
         deletedPerson.setFirstName("Pandemic");
         deletedPerson.setLastName("Handy");

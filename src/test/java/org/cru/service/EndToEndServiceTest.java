@@ -82,7 +82,7 @@ public class EndToEndServiceTest
     @Test
     public void endToEndServiceTest() throws Exception
     {
-        Person testPerson = TestPeople.generatePersonWithLotsOfData();
+        Person testPerson = TestPeople.createPersonForEndToEndTest();
 
         //The person should not exist yet
         checkPersonNotExists(testPerson);
@@ -102,7 +102,7 @@ public class EndToEndServiceTest
 
         //Make an update to the person
         //TODO: For now, the update will not work properly because it will find the same row and think it is a conflict
-//        checkUpdatePerson(testPerson, partyId);
+        checkUpdatePerson(testPerson, partyId);
 
         //Now we delete the person from the index
         deleteService.deletePerson(testPerson.getId(), foundIndex);

@@ -118,6 +118,24 @@ public class TestPeople
         return testPerson;
     }
 
+    public static Person createPersonForEndToEndTest()
+    {
+        Person endToEndTestPerson = new Person();
+
+        endToEndTestPerson.setFirstName("E2E");
+        endToEndTestPerson.setLastName("E2ETest");
+        endToEndTestPerson.setId("ID_FOR_E2E_TEST");
+
+        Address testAddress = new Address();
+        testAddress.setAddressLine1("98248 Leeryo Ln");
+        testAddress.setCity("Walawala");
+        testAddress.setState("WA");
+
+        endToEndTestPerson.setAddresses(Lists.newArrayList(testAddress));
+
+        return endToEndTestPerson;
+    }
+
     public static Person createTestPersonGotMarried()
     {
         Person testPerson = generatePersonWithLotsOfData();

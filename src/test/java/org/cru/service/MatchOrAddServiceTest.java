@@ -59,11 +59,11 @@ public class MatchOrAddServiceTest
             when(addressNormalizationService.normalizeAddress(address)).thenReturn(false);
         }
 
-        List<OafResponse> matchOrAddResponse = matchOrAddService.matchOrAddPerson(testPerson);
-        assertNull(matchOrAddResponse); //it should add it first
+        List<OafResponse> matchOrAddResponseList = matchOrAddService.matchOrAddPerson(testPerson);
+        assertNull(matchOrAddResponseList); //it should add it first
 
-        matchOrAddResponse = matchOrAddService.matchOrAddPerson(testPerson);
-        assertNotNull(matchOrAddResponse);
-        assertEquals(matchOrAddResponse.get(0).getMatchId(), testPerson.getId());  //now it should find it
+        matchOrAddResponseList = matchOrAddService.matchOrAddPerson(testPerson);
+        assertNotNull(matchOrAddResponseList);
+        assertEquals(matchOrAddResponseList.get(0).getMatchId(), testPerson.getId());  //now it should find it
     }
 }

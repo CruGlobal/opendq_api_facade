@@ -133,16 +133,16 @@ public class EndToEndServiceTest
 
     private void checkFindPersonWithMatchOrAdd(Person testPerson) throws Exception
     {
-        List<OafResponse> matchOrAddResponse = matchOrAddService.matchOrAddPerson(testPerson);
-        assertNotNull(matchOrAddResponse);
-        assertEquals(matchOrAddResponse.get(0).getMatchId(), testPerson.getId());
+        List<OafResponse> matchOrAddResponseList = matchOrAddService.matchOrAddPerson(testPerson);
+        assertNotNull(matchOrAddResponseList);
+        assertEquals(matchOrAddResponseList.get(0).getMatchId(), testPerson.getId());
     }
 
     private void checkFindPersonWithMatch(Person testPerson) throws Exception
     {
-        List<OafResponse> matchResponse = matchingService.findMatches(testPerson, "Match");
-        assertNotNull(matchResponse);
-        assertEquals(matchResponse.get(0).getMatchId(), testPerson.getId());
+        List<OafResponse> matchResponseList = matchingService.findMatches(testPerson, "Match");
+        assertNotNull(matchResponseList);
+        assertEquals(matchResponseList.get(0).getMatchId(), testPerson.getId());
     }
 
     private void checkUpdatePerson(Person testPerson, String partyId) throws Exception
@@ -154,8 +154,8 @@ public class EndToEndServiceTest
         emailAddresses.add(emailAddress);
         testPerson.setEmailAddresses(emailAddresses);
 
-        List<OafResponse> updateResponse = matchOrUpdateService.matchOrUpdatePerson(testPerson);
-        assertNull(updateResponse);  //will be null if updated, not null if it found a conflicting match
+        List<OafResponse> updateResponseList = matchOrUpdateService.matchOrUpdatePerson(testPerson);
+        assertNull(updateResponseList);  //will be null if updated, not null if it found a conflicting match
 
         //We should now find the updates
         RealTimeObjectActionDTO foundPerson = matchingService.findMatchInMdm(partyId);

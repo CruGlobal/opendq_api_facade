@@ -11,7 +11,7 @@ import org.cru.service.DeleteService;
 import javax.inject.Inject;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
@@ -20,6 +20,7 @@ import java.net.ConnectException;
 import java.util.List;
 
 import org.cru.service.MatchingService;
+import org.cru.service.PersonDeserializer;
 import org.cru.util.Action;
 
 /**
@@ -34,17 +35,20 @@ public class DeleteResource
     private DeleteService deleteService;
     @Inject @Match
     private MatchingService matchingService;
+    @Inject
+    private PersonDeserializer personDeserializer;
 
     @SuppressWarnings("unused")  //used by Clients
-    @Path("/delete/{id}")
+    @Path("/delete")
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deletePerson(@PathParam("id") String globalRegistryId)
+    public Response deletePerson(String json)
     {
+        Person person = personDeserializer.deserializePerson(json);
         try
         {
-            SearchResponse foundIndex = matchingService.findMatchById(globalRegistryId, "MatchId");
-            deleteService.deletePerson(globalRegistryId, foundIndex);
+            SearchResponse foundIndex = matchingService.searchForPerson(person, "findPersonForDelete");
+            deleteService.deletePerson(foundIndex.getId(), foundIndex);
         }
         catch(ConnectException ce)
         {
@@ -54,7 +58,7 @@ public class DeleteResource
                 .build());
         }
 
-        return Response.ok().entity(buildResponseEntity(globalRegistryId)).build();
+        return Response.ok().entity(buildResponseEntity(person.getId())).build();
     }
 
     private List<OafResponse> buildResponseEntity(String id)

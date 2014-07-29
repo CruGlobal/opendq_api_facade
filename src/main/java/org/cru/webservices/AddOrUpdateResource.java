@@ -42,20 +42,21 @@ public class AddOrUpdateResource
 
         try
         {
-            OafResponse addOrUpdateResponse = addOrUpdateService.addOrUpdate(person);
+            List<OafResponse> addOrUpdateResponseList = addOrUpdateService.addOrUpdate(person);
 
-            if(addOrUpdateResponse == null)
+            if(addOrUpdateResponseList == null)
             {
                 return Response.ok().entity(buildResponseEntity(person.getId())).build();
             }
-            else if(addOrUpdateResponse.getAction().equals(Action.CONFLICT.toString()))
+            //A conflict will only have 1 in the list
+            else if(addOrUpdateResponseList.get(0).getAction().equals(Action.CONFLICT.toString()))
             {
-                addOrUpdateResponse.setAction(Action.UPDATE);
-                return Response.status(Response.Status.CONFLICT).entity(Lists.newArrayList(addOrUpdateResponse)).build();
+                addOrUpdateResponseList.get(0).setAction(Action.UPDATE);
+                return Response.status(Response.Status.CONFLICT).entity(addOrUpdateResponseList).build();
             }
             else
             {
-                return Response.ok().entity(Lists.newArrayList(addOrUpdateResponse)).build();
+                return Response.ok().entity(addOrUpdateResponseList).build();
             }
         }
         catch(ConnectException ce)

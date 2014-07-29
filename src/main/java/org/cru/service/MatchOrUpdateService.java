@@ -1,5 +1,6 @@
 package org.cru.service;
 
+import com.google.common.collect.Lists;
 import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import org.cru.model.OafResponse;
 import org.cru.model.Person;
@@ -9,6 +10,7 @@ import org.cru.util.Action;
 
 import javax.inject.Inject;
 import java.net.ConnectException;
+import java.util.List;
 
 /**
  * Handle the logic of either matching or updating the {@link Person} given
@@ -31,45 +33,56 @@ public class MatchOrUpdateService
         this.updateService = updateService;
     }
 
-    public OafResponse matchOrUpdatePerson(Person person) throws ConnectException
+    public List<OafResponse> matchOrUpdatePerson(Person person) throws ConnectException
     {
-        OafResponse matchResponse = matchingService.findMatch(person, "Match");
+        List<OafResponse> matchResponseList = matchingService.findMatches(person, "Match");
 
-        if(matchResponse == null || matchResponse.getMatchId().equalsIgnoreCase(person.getId()))
+        if(matchResponseList == null || matchResponseList.isEmpty())
         {
-            SearchResponse searchResponse = matchingService.findMatchById(person.getId(), "MatchId");
-
-            if(searchResponse == null)
-            {
-                return null;
-            }
-
-            String partyId = (String) searchResponse.getResultValues().get("partyId");
-            RealTimeObjectActionDTO foundMdmPerson = matchingService.findMatchInMdm(partyId);
-
-            if(foundMdmPerson == null)
-            {
-                return null;
-            }
-
-            updateService.updatePerson(person, foundMdmPerson, "MatchOrUpdate");
-
-            if(matchResponse == null)
-            {
-                matchResponse = new OafResponse();
-                matchResponse.setMatchId(person.getId());
-
-                //We didn't find the match based on the normal index search values, so let's indicate that in some way
-                matchResponse.setConfidenceLevel(0.0D);
-            }
-            matchResponse.setAction(Action.UPDATE);
-
-            return matchResponse;
+            return updatePersonIfPossible(person);
         }
-        else   // This means there is a match found for the updated information
+        else
         {
-            matchResponse.setAction(Action.CONFLICT);
-            return matchResponse;
+            for(OafResponse matchResponse : matchResponseList)
+            {
+                if(matchResponse.getMatchId().equalsIgnoreCase(person.getId()))
+                {
+                    updatePersonIfPossible(person);
+                }
+            }
+
+            // There are matches, but none of them have a matching Global Registry ID, so return the highest scoring conflict
+            matchResponseList.get(0).setAction(Action.CONFLICT);
+            return Lists.newArrayList(matchResponseList.get(0));
         }
+    }
+
+    private List<OafResponse> updatePersonIfPossible(Person person) throws ConnectException
+    {
+       SearchResponse searchResponse = matchingService.searchForPerson(person, "MatchId");
+
+        if(searchResponse == null)
+        {
+            return null;
+        }
+
+        String partyId = searchResponse.getResultValues().getPartyId();
+        RealTimeObjectActionDTO foundMdmPerson = matchingService.findMatchInMdm(partyId);
+
+        if(foundMdmPerson == null)
+        {
+            return null;
+        }
+
+        updateService.updatePerson(person, foundMdmPerson, "MatchOrUpdate");
+
+        OafResponse matchResponse = new OafResponse();
+        matchResponse.setMatchId(person.getId());
+
+        //We didn't find the match based on the normal index search values, so let's indicate that in some way
+        matchResponse.setConfidenceLevel(0.0D);
+        matchResponse.setAction(Action.UPDATE);
+
+        return Lists.newArrayList(matchResponse);
     }
 }

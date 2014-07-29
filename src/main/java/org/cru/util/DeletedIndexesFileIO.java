@@ -50,7 +50,7 @@ public class DeletedIndexesFileIO
                         while((line = reader.readLine()) != null)
                         {
                             String lineWithoutDelimiter = line.replace(";", "");
-                            if(id.equals(lineWithoutDelimiter))
+                            if(lineWithoutDelimiter.equals(id))
                             {
                                 return true;
                             }

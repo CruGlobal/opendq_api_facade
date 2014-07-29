@@ -42,7 +42,7 @@ public class DeleteService extends IndexingService
     void deleteFromMdm(SearchResponse foundIndex)
     {
         DataManagementWSImpl mdmService = configureMdmService();
-        String response = mdmService.deleteObject((String)foundIndex.getResultValues().get("partyId"));
+        String response = mdmService.deleteObject(foundIndex.getResultValues().getPartyId());
 
         if(response.contains("not found"))
         {

@@ -2,7 +2,7 @@ package org.cru.service;
 
 import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import org.cru.cdi.PostalsoftServiceWrapperProducer;
-import org.cru.model.Address;
+import org.cru.data.TestPeople;
 import org.cru.model.EmailAddress;
 import org.cru.model.OafResponse;
 import org.cru.model.Person;
@@ -23,6 +23,7 @@ import java.util.List;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
+import static org.testng.Assert.fail;
 
 /**
  * Test Match, Add, and Delete services together.
@@ -81,7 +82,7 @@ public class EndToEndServiceTest
     @Test
     public void endToEndServiceTest() throws Exception
     {
-        Person testPerson = createTestPerson();
+        Person testPerson = TestPeople.createPersonForEndToEndTest();
 
         //The person should not exist yet
         checkPersonNotExists(testPerson);
@@ -96,12 +97,12 @@ public class EndToEndServiceTest
         checkFindPersonWithMatch(testPerson);
 
         //We should be able to find the index data by Global Registry ID now
-        SearchResponse foundIndex = checkFindById(testPerson.getId());
-        String partyId = (String) foundIndex.getResultValues().get("partyId");
+        SearchResponse foundIndex = matchingService.searchForPerson(testPerson, "Match");
+        String partyId = foundIndex.getResultValues().getPartyId();
 
         //Make an update to the person
         //TODO: For now, the update will not work properly because it will find the same row and think it is a conflict
-//        checkUpdatePerson(testPerson, partyId);
+        checkUpdatePerson(testPerson, partyId);
 
         //Now we delete the person from the index
         deleteService.deletePerson(testPerson.getId(), foundIndex);
@@ -115,8 +116,14 @@ public class EndToEndServiceTest
 
     private void checkPersonNotExists(Person testPerson) throws Exception
     {
-        OafResponse matchResponse = matchingService.findMatch(testPerson, "Match");
-        assertNull(matchResponse);
+        List<OafResponse> matchResponseList = matchingService.findMatches(testPerson, "Match");
+        if(matchResponseList != null && !matchResponseList.isEmpty())
+        {
+            for(OafResponse matchResponse : matchResponseList)
+            {
+                if(matchResponse.getConfidenceLevel() >= 1.0D) fail();
+            }
+        }
     }
 
     private void checkAddPersonWorked(Person testPerson) throws Exception
@@ -126,25 +133,16 @@ public class EndToEndServiceTest
 
     private void checkFindPersonWithMatchOrAdd(Person testPerson) throws Exception
     {
-        OafResponse matchOrAddResponse = matchOrAddService.matchOrAddPerson(testPerson);
+        List<OafResponse> matchOrAddResponse = matchOrAddService.matchOrAddPerson(testPerson);
         assertNotNull(matchOrAddResponse);
-        assertEquals(matchOrAddResponse.getMatchId(), testPerson.getId());
+        assertEquals(matchOrAddResponse.get(0).getMatchId(), testPerson.getId());
     }
 
     private void checkFindPersonWithMatch(Person testPerson) throws Exception
     {
-        OafResponse matchResponse = matchingService.findMatch(testPerson, "Match");
+        List<OafResponse> matchResponse = matchingService.findMatches(testPerson, "Match");
         assertNotNull(matchResponse);
-        assertEquals(matchResponse.getMatchId(), testPerson.getId());
-    }
-
-    private SearchResponse checkFindById(String id) throws Exception
-    {
-        SearchResponse foundIndex = matchingService.findMatchById(id, "MatchId");
-        assertNotNull(foundIndex);
-        assertNotNull(foundIndex.getResultValues().get("partyId"));
-        assertEquals(foundIndex.getId(), id);
-        return foundIndex;
+        assertEquals(matchResponse.get(0).getMatchId(), testPerson.getId());
     }
 
     private void checkUpdatePerson(Person testPerson, String partyId) throws Exception
@@ -156,7 +154,7 @@ public class EndToEndServiceTest
         emailAddresses.add(emailAddress);
         testPerson.setEmailAddresses(emailAddresses);
 
-        OafResponse updateResponse = matchOrUpdateService.matchOrUpdatePerson(testPerson);
+        List<OafResponse> updateResponse = matchOrUpdateService.matchOrUpdatePerson(testPerson);
         assertNull(updateResponse);  //will be null if updated, not null if it found a conflicting match
 
         //We should now find the updates
@@ -172,30 +170,5 @@ public class EndToEndServiceTest
         assertNotNull(deletedPerson);
         //The record in MDM should have an Action value of "D"
         assertEquals(deletedPerson.getObjectEntity().getAction(), "D");
-    }
-
-    private Person createTestPerson()
-    {
-        Person testPerson = new Person();
-
-        Address testAddress = new Address();
-        testAddress.setAddressLine1("E2E4");
-        testAddress.setAddressLine2("E2E5");
-        testAddress.setAddressLine3("E2E6");
-        testAddress.setCity("Dallas");
-        testAddress.setState("TX");
-        testAddress.setZipCode("38437");
-        testAddress.setCountry("USA");
-
-        testPerson.setTitle("Mr.");
-        testPerson.setFirstName("EE3");
-        testPerson.setLastName("EE4");
-
-        List<Address> addresses = new ArrayList<Address>();
-        addresses.add(testAddress);
-        testPerson.setAddresses(addresses);
-        testPerson.setId("afd65af4-hj546fg-xn51rg-5asdf4");
-
-        return testPerson;
     }
 }

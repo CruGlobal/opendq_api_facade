@@ -16,6 +16,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.ConnectException;
+import java.util.List;
 
 /**
  * Endpoint for updating the index of a {@link Person}
@@ -40,22 +41,23 @@ public class UpdateResource
         Person person = personDeserializer.deserializePerson(json);
         try
         {
-            OafResponse matchOrUpdateResponse = matchOrUpdateService.matchOrUpdatePerson(person);
+            List<OafResponse> matchOrUpdateResponseList = matchOrUpdateService.matchOrUpdatePerson(person);
 
-            if(matchOrUpdateResponse == null)
+            if(matchOrUpdateResponseList == null || matchOrUpdateResponseList.isEmpty())
             {
                 throw new WebApplicationException(
                     Response.serverError()
                     .entity("Could not find Person with global registry id: " + person.getId())
                     .build());
             }
-            else if(matchOrUpdateResponse.getAction().equals(Action.CONFLICT.toString()))
+            //A conflict will only have 1 in the list
+            else if(matchOrUpdateResponseList.get(0).getAction().equals(Action.CONFLICT.toString()))
             {
-                matchOrUpdateResponse.setAction(Action.UPDATE);
-                return Response.status(Response.Status.CONFLICT).entity(Lists.newArrayList(matchOrUpdateResponse)).build();
+                matchOrUpdateResponseList.get(0).setAction(Action.UPDATE);
+                return Response.status(Response.Status.CONFLICT).entity(matchOrUpdateResponseList).build();
             }
 
-            return Response.ok().entity(Lists.newArrayList(matchOrUpdateResponse)).build();
+            return Response.ok().entity(matchOrUpdateResponseList).build();
         }
         catch(ConnectException ce)
         {

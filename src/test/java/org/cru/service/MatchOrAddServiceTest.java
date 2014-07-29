@@ -1,5 +1,6 @@
 package org.cru.service;
 
+import org.cru.data.TestPeople;
 import org.cru.model.Address;
 import org.cru.model.OafResponse;
 import org.cru.model.Person;
@@ -8,7 +9,6 @@ import org.cru.util.OafProperties;
 import org.cru.util.OpenDQProperties;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.mock;
@@ -52,37 +52,18 @@ public class MatchOrAddServiceTest
     public void testMatchOrAdd() throws Exception
     {
         setup();
-        Person testPerson = createTestPerson();
+        Person testPerson = TestPeople.generatePersonWithLotsOfData();
 
         for(Address address : testPerson.getAddresses())
         {
             when(addressNormalizationService.normalizeAddress(address)).thenReturn(false);
         }
 
-        OafResponse matchOrAddResponse = matchOrAddService.matchOrAddPerson(testPerson);
+        List<OafResponse> matchOrAddResponse = matchOrAddService.matchOrAddPerson(testPerson);
         assertNull(matchOrAddResponse); //it should add it first
 
         matchOrAddResponse = matchOrAddService.matchOrAddPerson(testPerson);
         assertNotNull(matchOrAddResponse);
-        assertEquals(matchOrAddResponse.getMatchId(), testPerson.getId());  //now it should find it
-    }
-
-    private Person createTestPerson()
-    {
-        Person testPerson = new Person();
-
-        Address address = new Address();
-        address.setAddressLine1("AddOrMatch Line 1");
-        address.setCity("Indianapolis");
-
-        testPerson.setFirstName("AddOrMatch");
-        testPerson.setLastName("AddOrMatchLastName");
-
-        List<Address> addresses = new ArrayList<Address>();
-        addresses.add(address);
-        testPerson.setAddresses(addresses);
-        testPerson.setId("5");
-
-        return testPerson;
+        assertEquals(matchOrAddResponse.get(0).getMatchId(), testPerson.getId());  //now it should find it
     }
 }

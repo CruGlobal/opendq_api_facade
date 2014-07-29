@@ -10,6 +10,7 @@ import org.cru.util.OpenDQProperties;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.xml.namespace.QName;
+import javax.xml.ws.Service;
 import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -46,27 +47,33 @@ public class IndexingService
 
     private RuntimeMatchWS configureRuntimeService()
     {
-        transformationFileLocation = openDQProperties.getProperty("transformationFileLocation");
-
-        RuntimeMatchWSService runtimeMatchWSService = new RuntimeMatchWSService();
-        return runtimeMatchWSService.getRuntimeMatchWSPort();
+        return ((RuntimeMatchWSService) getServiceImpl("runtime", RuntimeMatchWSService.class)).getRuntimeMatchWSPort();
     }
 
     DataManagementWSImpl configureMdmService()
     {
-        QName qName = new QName(openDQProperties.getProperty("mdm.namespaceURI"), openDQProperties.getProperty("mdm.serviceName"));
+        return ((DataManagementWSImplService) getServiceImpl("mdm", DataManagementWSImplService.class)).getDataManagementWSImplPort();
+    }
+
+    Service getServiceImpl(String serviceName, Class serviceImplType)
+    {
+        transformationFileLocation = openDQProperties.getProperty("transformationFileLocation");
+        QName qName = new QName(
+            openDQProperties.getProperty(serviceName + ".namespaceURI"),
+            openDQProperties.getProperty(serviceName + ".serviceName"));
         URL wsdlUrl;
 
         try
         {
-            wsdlUrl = new URL(openDQProperties.getProperty("mdm.wsdlUrl"));
+            wsdlUrl = new URL(openDQProperties.getProperty(serviceName + ".wsdlUrl"));
         }
         catch(MalformedURLException e)
         {
             throw new WebApplicationException(Response.serverError().entity(e.getMessage()).build());
         }
 
-        DataManagementWSImplService mdmService = new DataManagementWSImplService(wsdlUrl, qName);
-        return mdmService.getDataManagementWSImplPort();
+        if(serviceImplType.equals(DataManagementWSImplService.class)) return new DataManagementWSImplService(wsdlUrl, qName);
+        else if(serviceImplType.equals(RuntimeMatchWSService.class)) return new RuntimeMatchWSService(wsdlUrl, qName);
+        else throw new IllegalArgumentException(serviceImplType.getSimpleName() + " is not a valid service");
     }
 }

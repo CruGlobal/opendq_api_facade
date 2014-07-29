@@ -1,12 +1,17 @@
 package org.cru.service;
 
+import com.google.common.collect.Lists;
 import com.infosolve.openmdm.webservices.provider.impl.DataManagementWSImpl;
 import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import com.infosolvetech.rtmatch.pdi4.RuntimeMatchWS;
 import com.infosolvetech.rtmatch.pdi4.ServiceResult;
+import net.java.dev.jaxb.array.AnyTypeArray;
+import org.cru.model.Address;
 import org.cru.model.OafResponse;
 import org.cru.model.Person;
+import org.cru.model.ResultData;
 import org.cru.model.SearchResponse;
+import org.cru.model.collections.SearchResponseList;
 import org.cru.qualifiers.Delete;
 import org.cru.qualifiers.Match;
 import org.cru.util.Action;
@@ -16,9 +21,7 @@ import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
 import java.net.ConnectException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Service to handle the complexity of matching {@link Person} fields
@@ -40,47 +43,69 @@ public class MatchingService extends IndexingService
         this.deleteService = deleteService;
     }
 
-    public OafResponse findMatch(Person person, String slotName) throws ConnectException
+    public List<OafResponse> findMatches(Person person, String slotName) throws ConnectException
     {
         this.slotName = slotName;
-        this.stepName = "RtMatch";
-        SearchResponse searchResponse = searchSlot(callRuntimeMatchService(), createSearchValuesFromPerson(person));
+        this.stepName = "RtMatchAddr";
+        SearchResponseList searchResponseList = searchSlot(person);
 
-        if(searchResponse == null) return null;
+        if(searchResponseList == null || searchResponseList.isEmpty()) return null;
 
-        String matchId = searchResponse.getId();
-
-        if(matchHasBeenDeleted(matchId)) return null;
-
-        OafResponse matchResponse = new OafResponse();
-        matchResponse.setConfidenceLevel(searchResponse.getScore());
-        matchResponse.setMatchId(matchId);
-        matchResponse.setAction(Action.MATCH);
-        return matchResponse;
+        return buildOafResponseList(buildFilteredSearchResponseList(searchResponseList));
     }
 
-    public SearchResponse findMatchById(String rowId, String slotName) throws ConnectException
+    public SearchResponse searchForPerson(Person person, String slotName) throws ConnectException
     {
         this.slotName = slotName;
-        this.stepName = "RtMatchId";
+        this.stepName = "RtMatchAddr";
+        SearchResponseList searchResponseList = searchSlot(person);
 
-        //The way the index search works requires the values above the row id to be set as well
-        List<String> searchValues = new ArrayList<String>();
-        searchValues.add("");
-        searchValues.add("");
-        searchValues.add("");
-        searchValues.add("");
-        searchValues.add(rowId);
+        if(searchResponseList == null || searchResponseList.isEmpty()) return null;
 
-        SearchResponse searchResponse = searchSlot(callRuntimeMatchService(), searchValues);
+        return findSinglePersonFromList(buildFilteredSearchResponseList(searchResponseList), person.getId());
+    }
 
-        if(searchResponse == null) return null;
+    SearchResponseList buildFilteredSearchResponseList(SearchResponseList searchResponseList)
+    {
+        SearchResponseList filteredResults = new SearchResponseList();
 
-        String matchId = searchResponse.getId();
+        for(SearchResponse response : searchResponseList)
+        {
+            String partyId = response.getResultValues().getPartyId();
+            if(!matchHasBeenDeleted(partyId)) filteredResults.add(response);
+        }
 
-        if(matchHasBeenDeleted(matchId)) return null;
+        filteredResults.removeDuplicateResults();
+        filteredResults.sortListByScore();
 
-        return searchResponse;
+        return filteredResults;
+    }
+
+    List<OafResponse> buildOafResponseList(SearchResponseList filteredSearchResponseList)
+    {
+        List<OafResponse> oafResponseList = Lists.newArrayList();
+
+        for(SearchResponse searchResponse : filteredSearchResponseList)
+        {
+            OafResponse matchResponse = new OafResponse();
+            matchResponse.setConfidenceLevel(searchResponse.getScore());
+            matchResponse.setMatchId(searchResponse.getId());
+            matchResponse.setAction(Action.MATCH);
+
+            oafResponseList.add(matchResponse);
+        }
+
+        return oafResponseList;
+    }
+
+    SearchResponse findSinglePersonFromList(SearchResponseList filteredSearchResponseList, String globalRegistryId)
+    {
+        for(SearchResponse searchResponse : filteredSearchResponseList)
+        {
+            if(searchResponse.getId().equalsIgnoreCase(globalRegistryId)) return searchResponse;
+        }
+
+        return null;
     }
 
     public RealTimeObjectActionDTO findMatchInMdm(String partyId)
@@ -89,8 +114,28 @@ public class MatchingService extends IndexingService
         return mdmService.findObject(partyId);
     }
 
-    private SearchResponse searchSlot(RuntimeMatchWS runtimeMatchWS, List<String> searchValues)
+    SearchResponseList searchSlot(Person person) throws ConnectException
     {
+        SearchResponseList searchResponseList = new SearchResponseList();
+
+        //Handle cases where no address was passed in
+        if(person.getAddresses() == null || person.getAddresses().isEmpty())
+        {
+            searchResponseList.addAll(searchSlot(createSearchValuesFromPerson(person, null)));
+        }
+
+        //If given more than one address, we need to make sure we search on all of them
+        for(Address personAddress : person.getAddresses())
+        {
+            searchResponseList.addAll(searchSlot(createSearchValuesFromPerson(person, personAddress)));
+        }
+
+        return searchResponseList;
+    }
+
+    private SearchResponseList searchSlot(List<String> searchValues) throws ConnectException
+    {
+        RuntimeMatchWS runtimeMatchWS = callRuntimeMatchService();
         ServiceResult searchResponse = runtimeMatchWS.searchSlot(slotName, searchValues);
 
         if(searchResponse.isError())
@@ -98,19 +143,27 @@ public class MatchingService extends IndexingService
             throw new WebApplicationException(searchResponse.getMessage());
         }
 
-        return buildSearchResponse(searchResponse);
+        return buildSearchResponses(searchResponse);
     }
 
-    //TODO: Handle multiple addresses, emails, phones
-    private List<String> createSearchValuesFromPerson(Person person)
+    private List<String> createSearchValuesFromPerson(Person person, Address addressToSearchOn)
     {
         // Order must match the transformation file
         List<String> searchValues = new ArrayList<String>();
 
         searchValues.add(person.getFirstName());
         searchValues.add(person.getLastName());
-        searchValues.add(person.getAddresses().get(0).getAddressLine1());
-        searchValues.add(person.getAddresses().get(0).getCity());
+
+        if(addressToSearchOn != null)
+        {
+            searchValues.add(addressToSearchOn.getAddressLine1());
+
+            if(addressToSearchOn.getAddressLine2() == null) searchValues.add("NULLDATA");
+            else searchValues.add(addressToSearchOn.getAddressLine2());
+
+            searchValues.add(addressToSearchOn.getCity());
+            searchValues.add(addressToSearchOn.getState());
+        }
 
         return searchValues;
     }
@@ -120,34 +173,63 @@ public class MatchingService extends IndexingService
         return deleteService.personIsDeleted(matchId);
     }
 
-    SearchResponse buildSearchResponse(ServiceResult searchResult)
+    SearchResponse buildSearchResponse(Float score, ResultData values)
     {
         SearchResponse searchResponse = new SearchResponse();
-        List<Object> searchResultValues = searchResult.getValues();
+        searchResponse.setScore(score);
+        searchResponse.setResultValues(values);
+        searchResponse.setId(values.getStandardizedFirstName());
+
+        return searchResponse;
+    }
+
+    List<ResultData> buildListOfValueMaps(List<AnyTypeArray> searchResultValues)
+    {
+        List<ResultData> valueMapList = Lists.newArrayList();
+
+        for(AnyTypeArray valueSet : searchResultValues)
+        {
+            valueMapList.add(buildResultValues(valueSet.getItem()));
+        }
+        return valueMapList;
+    }
+
+    ResultData buildResultValues(List<Object> searchResultValues)
+    {
+        ResultData valueMap = new ResultData();
+
+        valueMap.putFirstName(searchResultValues.get(0));
+        valueMap.putLastName(searchResultValues.get(1));
+        valueMap.putAddressLine1(searchResultValues.get(2));
+        valueMap.putAddressLine2(searchResultValues.get(3));
+        valueMap.putCity(searchResultValues.get(4));
+        valueMap.putState(searchResultValues.get(5));
+        valueMap.putZip(searchResultValues.get(6));
+        valueMap.putStandardizedFirstName(searchResultValues.get(7));
+        // Value 8 is not mapped to anything yet
+        valueMap.putPartyId(searchResultValues.get(9));
+
+        return valueMap;
+    }
+
+    SearchResponseList buildSearchResponses(ServiceResult searchResult)
+    {
+        SearchResponseList searchResponseList = new SearchResponseList();
+        List<AnyTypeArray> searchResultValues = searchResult.getRows();
 
         if(searchResultValues == null || searchResultValues.isEmpty())
         {
             return null;
         }
 
-        searchResponse.setScore(searchResult.getScore());
-        searchResponse.setId((String) searchResultValues.get(4));
-        searchResponse.setResultValues(buildResultValues(searchResultValues));
+        List<ResultData> valueMapList = buildListOfValueMaps(searchResultValues);
+        List<Float> scoreList = searchResult.getScores();
 
-        return searchResponse;
-    }
+        for(int i = 0; i < scoreList.size(); i++)
+        {
+            searchResponseList.add(buildSearchResponse(scoreList.get(i), valueMapList.get(i)));
+        }
 
-    Map<String, Object> buildResultValues(List<Object> searchResultValues)
-    {
-        Map<String, Object> valueMap = new HashMap<String, Object>();
-
-        valueMap.put("firstName", searchResultValues.get(0));
-        valueMap.put("lastName", searchResultValues.get(1));
-        valueMap.put("address1", searchResultValues.get(2));
-        valueMap.put("city", searchResultValues.get(3));
-        //4 is the globalRegistryId, which goes into the id field, not the values map
-        valueMap.put("partyId", searchResultValues.get(5));
-
-        return valueMap;
+        return searchResponseList;
     }
 }

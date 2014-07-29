@@ -368,14 +368,24 @@ public class PersonToMdmConverter
     {
         List<ObjAttributeDataDTO> personAttributes = new ArrayList<ObjAttributeDataDTO>();
 
-        personAttributes.add(createSourceDetails(person, today));
-        personAttributes.add(createHouseholdData(person, today));
-        personAttributes.addAll(createAccountData(person, today));
-        personAttributes.add(createRelayDetails(person, today));
-        personAttributes.addAll(createIdentityData(person, today));
-        personAttributes.addAll(createAuthProviderData(person, today));
+        addIfNotNull(personAttributes, createSourceDetails(person, today));
+        addIfNotNull(personAttributes, createHouseholdData(person, today));
+        addIfNotEmpty(personAttributes, createAccountData(person, today));
+        addIfNotNull(personAttributes, createRelayDetails(person, today));
+        addIfNotEmpty(personAttributes, createIdentityData(person, today));
+        addIfNotEmpty(personAttributes, createAuthProviderData(person, today));
 
         return personAttributes;
+    }
+
+    private void addIfNotNull(List<ObjAttributeDataDTO> personAttributes, ObjAttributeDataDTO personAttribute)
+    {
+        if(personAttribute != null) personAttributes.add(personAttribute);
+    }
+    
+    private void addIfNotEmpty(List<ObjAttributeDataDTO> personAttributes, List<ObjAttributeDataDTO> personAttributeList)
+    {
+        if(personAttributeList != null && !personAttributeList.isEmpty()) personAttributes.addAll(personAttributeList);
     }
 
     private ObjAttributeDataDTO createPersonAttributeData(Person person, LocalDate today)

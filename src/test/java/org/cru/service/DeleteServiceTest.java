@@ -1,5 +1,6 @@
 package org.cru.service;
 
+import org.cru.model.ResultData;
 import org.cru.model.SearchResponse;
 import org.cru.util.DeletedIndexesFileIO;
 import org.cru.util.OafProperties;
@@ -10,8 +11,6 @@ import org.testng.annotations.Test;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.net.ConnectException;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -97,8 +96,8 @@ public class DeleteServiceTest
     {
         SearchResponse foundIndex = new SearchResponse();
         foundIndex.setId(globalRegistryId);
-        Map<String, Object> values = new HashMap<String, Object>();
-        values.put("partyId", "-50");
+        ResultData values = new ResultData();
+        values.putPartyId("-50");
         foundIndex.setResultValues(values);
         return foundIndex;
     }
@@ -107,8 +106,8 @@ public class DeleteServiceTest
     {
         SearchResponse foundIndex = new SearchResponse();
         foundIndex.setId(globalRegistryId);
-        Map<String, Object> values = new HashMap<String, Object>();
-        values.put("partyId", partyId);
+        ResultData values = new ResultData();
+        values.putPartyId(partyId);
         foundIndex.setResultValues(values);
         return foundIndex;
     }

@@ -1,5 +1,6 @@
 package org.cru.service;
 
+import com.google.common.collect.Lists;
 import com.infosolve.openmdm.webservices.provider.impl.DataManagementWSImpl;
 import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import com.infosolvetech.rtmatch.pdi4.RuntimeMatchWS;
@@ -14,7 +15,6 @@ import org.cru.util.OpenDQProperties;
 import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
 import java.net.ConnectException;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +43,7 @@ public class AddService extends IndexingService
     public void addPerson(Person person, String slotName) throws ConnectException
     {
         this.slotName = slotName;
-        this.stepName = "RtIndex";
+        this.stepName = "RtMatchAddr";
 
         for(Address address : person.getAddresses())
         {
@@ -51,8 +51,7 @@ public class AddService extends IndexingService
         }
 
         RealTimeObjectActionDTO addedPerson = addPersonToMdm(person);
-        RuntimeMatchWS runtimeMatchWS = callRuntimeMatchService();
-        addSlot(runtimeMatchWS, person, addedPerson);
+        addSlot(person, addedPerson);
     }
 
     private RealTimeObjectActionDTO addPersonToMdm(Person person)
@@ -70,17 +69,34 @@ public class AddService extends IndexingService
         return returnedObject;
     }
 
-    void addSlot(RuntimeMatchWS runtimeMatchWS, Person person, RealTimeObjectActionDTO mdmPerson)
+    void addSlot(Person person, RealTimeObjectActionDTO mdmPerson) throws ConnectException
     {
-        //while updateSlot sounds like an update, it is actually inserting an entry into the index
-        Map<String, String> fieldNamesAndValues = generateFieldNamesAndValues(person, mdmPerson);
+        RuntimeMatchWS runtimeMatchWS = callRuntimeMatchService();
 
-        List<String> fieldNames = new ArrayList<String>();
+        //Handle cases where no address was passed in
+        if(person.getAddresses() == null || person.getAddresses().isEmpty())
+        {
+            addSlot(runtimeMatchWS, person, mdmPerson, null);
+        }
+
+        //If more than one address was passed in, add them all to the index
+        for(Address personAddress : person.getAddresses())
+        {
+            addSlot(runtimeMatchWS, person, mdmPerson, personAddress);
+        }
+    }
+
+    private void addSlot(RuntimeMatchWS runtimeMatchWS, Person person, RealTimeObjectActionDTO mdmPerson, Address addressToUse)
+    {
+        Map<String, String> fieldNamesAndValues = generateFieldNamesAndValues(person, mdmPerson, addressToUse);
+
+        List<String> fieldNames = Lists.newArrayList();
         fieldNames.addAll(fieldNamesAndValues.keySet());
 
-        List<String> fieldValues = new ArrayList<String>();
+        List<String> fieldValues = Lists.newArrayList();
         fieldValues.addAll(fieldNamesAndValues.values());
 
+        //while updateSlot sounds like an update, it is actually inserting an entry into the index
         ServiceResult addResponse = runtimeMatchWS.updateSlot(slotName, fieldNames, fieldValues);
 
         if(addResponse.isError())
@@ -89,18 +105,29 @@ public class AddService extends IndexingService
         }
     }
 
-    //TODO: Handle multiple addresses, emails, phones
-    Map<String, String> generateFieldNamesAndValues(Person person, RealTimeObjectActionDTO mdmPerson)
+    Map<String, String> generateFieldNamesAndValues(Person person, RealTimeObjectActionDTO mdmPerson, Address addressToUse)
     {
         Map<String, String> fieldNamesAndValues = new LinkedHashMap<String, String>();
 
         //NOTE: Only 10 fields can be set
         fieldNamesAndValues.put("FIELD1", person.getFirstName());
         fieldNamesAndValues.put("FIELD2", person.getLastName());
-        fieldNamesAndValues.put("FIELD3", person.getAddresses().get(0).getAddressLine1());
-        fieldNamesAndValues.put("FIELD4", person.getAddresses().get(0).getCity());
-        fieldNamesAndValues.put("FIELD5", person.getId());
-        fieldNamesAndValues.put("FIELD6", mdmPerson.getObjectEntity().getPartyId());
+
+        if(addressToUse != null)
+        {
+            fieldNamesAndValues.put("FIELD3", addressToUse.getAddressLine1());
+
+            if(addressToUse.getAddressLine2() == null) fieldNamesAndValues.put("FIELD4", "NULLDATA");
+            else fieldNamesAndValues.put("FIELD4", addressToUse.getAddressLine2());
+
+            fieldNamesAndValues.put("FIELD5", addressToUse.getCity());
+            fieldNamesAndValues.put("FIELD6", addressToUse.getState());
+            fieldNamesAndValues.put("FIELD7", addressToUse.getZipCode());
+        }
+
+        fieldNamesAndValues.put("FIELD8", person.getId());
+        //FIELD10 is not currently in use
+        fieldNamesAndValues.put("FIELD10", mdmPerson.getObjectEntity().getPartyId());
 
         return fieldNamesAndValues;
     }

@@ -43,12 +43,12 @@ public class SearchResponse
     }
 
     @Override
-    public boolean equals(Object responseToCompare)
+    public boolean equals(Object objectToCompare)
     {
-        if(responseToCompare == this) return true;
-        if(!(responseToCompare instanceof SearchResponse)) return false;
+        if(objectToCompare == this) return true;
+        if(objectToCompare == null || !(objectToCompare instanceof SearchResponse)) return false;
 
-        ResultData resultValuesToCompare = ((SearchResponse)responseToCompare).getResultValues();
+        ResultData resultValuesToCompare = ((SearchResponse)objectToCompare).getResultValues();
 
         return this.resultValues.getFirstName().equalsIgnoreCase(resultValuesToCompare.getFirstName()) &&
             this.resultValues.getLastName().equalsIgnoreCase(resultValuesToCompare.getLastName()) &&

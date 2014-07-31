@@ -61,6 +61,15 @@ public class DeleteResource
         return Response.ok().entity(buildResponseEntity(person.getId())).build();
     }
 
+    @Path("/delete/{id}")
+    @DELETE
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deletePersonByGlobalRegistryId(String globalRegistryId)
+    {
+        deleteService.deletePerson(globalRegistryId, matchingService.findMatchInMdmByGlobalRegistryId(globalRegistryId));
+        return Response.ok().entity(buildResponseEntity(globalRegistryId)).build();
+    }
+
     private List<OafResponse> buildResponseEntity(String id)
     {
         OafResponse deleteResponse = new OafResponse();

@@ -1,6 +1,7 @@
 package org.cru.service;
 
 import com.infosolve.openmdm.webservices.provider.impl.DataManagementWSImpl;
+import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import org.cru.model.Person;
 import org.cru.model.SearchResponse;
 import org.cru.qualifiers.Delete;
@@ -39,10 +40,33 @@ public class DeleteService extends IndexingService
         }
     }
 
+    public void deletePerson(String id, RealTimeObjectActionDTO foundPerson)
+    {
+        if(!personIsDeleted(id))
+        {
+            deletedIndexesFileIO.writeToFile(id);
+            deleteFromMdm(foundPerson);
+        }
+    }
+
     void deleteFromMdm(SearchResponse foundIndex)
     {
         DataManagementWSImpl mdmService = configureMdmService();
         String response = mdmService.deleteObject(foundIndex.getResultValues().getPartyId());
+
+        if(response.contains("not found"))
+        {
+            throw new WebApplicationException(
+                Response.status(Response.Status.NOT_FOUND)
+                    .entity(response)
+                    .build());
+        }
+    }
+
+    void deleteFromMdm(RealTimeObjectActionDTO foundPerson)
+    {
+        DataManagementWSImpl mdmService = configureMdmService();
+        String response = mdmService.deleteObject(foundPerson.getObjectEntity().getPartyId());
 
         if(response.contains("not found"))
         {

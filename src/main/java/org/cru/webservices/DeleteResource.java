@@ -9,6 +9,7 @@ import org.cru.qualifiers.Match;
 import org.cru.service.DeleteService;
 
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -41,6 +42,7 @@ public class DeleteResource
     @SuppressWarnings("unused")  //used by Clients
     @Path("/delete")
     @DELETE
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response deletePerson(String json)
     {

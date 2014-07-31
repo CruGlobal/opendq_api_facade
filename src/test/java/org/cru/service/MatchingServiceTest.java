@@ -65,7 +65,7 @@ public class MatchingServiceTest
 
         testPerson = TestPeople.generatePersonWithLotsOfData();
         matchResponseList = matchingService.findMatches(testPerson, "contactMatch");
-        assertEquals(matchResponseList.size(), 2); //Two different addresses
+        assertEquals(matchResponseList.size(), 3); //Two different addresses and one different id
     }
 
     @Test

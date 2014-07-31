@@ -181,4 +181,26 @@ public class ResultData implements Map<String, Object>
     {
         return internalMap.entrySet();
     }
+
+    @Override
+    public boolean equals(Object objectToCompare)
+    {
+        if(objectToCompare == this) return true;
+        if(objectToCompare == null || !(objectToCompare instanceof ResultData)) return false;
+
+        return this.internalMap.equals(((ResultData) objectToCompare).internalMap);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int result = 0;
+        for(Entry<String, Object> entry : internalMap.entrySet())
+        {
+            //I want the objects to be effectively equal even if they have different party ids
+            if(entry.getKey().equals("partyId")) continue;
+            result = 31 * result + entry.getValue().hashCode();
+        }
+        return result;
+    }
 }

@@ -126,10 +126,20 @@ public class MatchingServiceTest
         assertNotNull(foundPerson.getObjectAttributeDatas());
     }
 
-    @Test
-    public void testFindMatchInMdmByGlobalRegistryId() throws Exception
+    @DataProvider
+    private Object[][] globalRegistryIdsInMdm()
     {
-        RealTimeObjectActionDTO foundPerson = matchingService.findMatchInMdmByGlobalRegistryId("0004a598-e0de-11e3-82af-12768b82bfd5");
+        return new Object[][] {
+            { "0004a598-e0de-11e3-82af-12768b82bfd5" },
+            { "64e97ae1-18f3-11e4-8c21-0800200c9a66" },
+            { "3ikfj32-8rt4-9493-394nfa2348da" }
+        };
+    }
+
+    @Test(dataProvider = "globalRegistryIdsInMdm")
+    public void testFindMatchInMdmByGlobalRegistryId(String globalRegistryId) throws Exception
+    {
+        RealTimeObjectActionDTO foundPerson = matchingService.findMatchInMdmByGlobalRegistryId(globalRegistryId);
 
         assertNotNull(foundPerson);
     }

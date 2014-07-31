@@ -106,7 +106,7 @@ public class TestPeople
         testPerson.setFirstName("Susan");
         testPerson.setLastName("Snowa");
         testPerson.setMdmPartyId("100");
-        testPerson.setId("SUSAN"); //TODO: Replace with real global registry id when available
+        testPerson.setId("Susan"); //TODO: Replace with real global registry id when available
 
         Address testAddress = new Address();
         testAddress.setAddressLine1("2824 McManaway Dr");

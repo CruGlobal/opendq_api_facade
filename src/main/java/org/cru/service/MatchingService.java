@@ -21,6 +21,7 @@ import org.cru.util.OpenDQProperties;
 
 import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
+import javax.xml.ws.soap.SOAPFaultException;
 import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
@@ -116,6 +117,12 @@ public class MatchingService extends IndexingService
         return mdmService.findObject(partyId);
     }
 
+    /**
+     * Search MDM database for a person using global registry id.
+     *
+     * @return null if no person is found, otherwise a {@link RealTimeObjectActionDTO} person
+     * @throws SOAPFaultException if more than one result is found
+     */
     public RealTimeObjectActionDTO findMatchInMdmByGlobalRegistryId(String globalRegistryId)
     {
         DataManagementWSImpl mdmService = configureMdmService();
@@ -127,7 +134,19 @@ public class MatchingService extends IndexingService
         uniqueIdName.setUniqueIdName(globalRegistryId);
         uniqueIdNameDTOs.add(uniqueIdName);
 
-        return mdmService.findObjectMulti(uniqueNameList);
+        try
+        {
+            return mdmService.findObjectMulti(uniqueNameList);
+        }
+        catch(SOAPFaultException e)
+        {
+            if(e.getMessage().contains("No Data found with these input set.")) return null;
+            if(e.getMessage().contains("query did not return a unique result"))
+            {
+                throw new WebApplicationException("More than one result returned for global registry id: " + globalRegistryId);
+            }
+            throw new WebApplicationException(e.getMessage());
+        }
     }
 
     SearchResponseList searchSlot(Person person) throws ConnectException

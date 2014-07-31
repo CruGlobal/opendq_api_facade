@@ -188,7 +188,22 @@ public class ResultData implements Map<String, Object>
         if(objectToCompare == this) return true;
         if(objectToCompare == null || !(objectToCompare instanceof ResultData)) return false;
 
-        return this.internalMap.equals(((ResultData) objectToCompare).internalMap);
+        ResultData resultDataToCompare = (ResultData) objectToCompare;
+        for(Entry<String, Object> entry : internalMap.entrySet())
+        {
+            String key = entry.getKey();
+            if(key.equals("partyId")) continue;
+            Object value = entry.getValue();
+            if(value instanceof String)
+            {
+                if(!(((String) value).equalsIgnoreCase((String)resultDataToCompare.get(key))))
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     @Override
@@ -199,7 +214,10 @@ public class ResultData implements Map<String, Object>
         {
             //I want the objects to be effectively equal even if they have different party ids
             if(entry.getKey().equals("partyId")) continue;
-            result = 31 * result + entry.getValue().hashCode();
+            Object value = entry.getValue();
+            //Ignore case
+            if(value instanceof String) result = 31 * result + ((String)value).toUpperCase().hashCode();
+            else result = 31 * result + value.hashCode();
         }
         return result;
     }

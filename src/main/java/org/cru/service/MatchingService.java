@@ -48,13 +48,17 @@ public class MatchingService extends IndexingService
 
     public List<OafResponse> findMatches(Person person, String slotName) throws ConnectException
     {
+        return buildOafResponseList(findMatchesAllData(person, slotName));
+    }
+
+    public SearchResponseList findMatchesAllData(Person person, String slotName) throws ConnectException
+    {
         this.slotName = slotName;
         this.stepName = "RtMatchAddr";
         SearchResponseList searchResponseList = searchSlot(person);
 
         if(searchResponseList == null || searchResponseList.isEmpty()) return null;
-
-        return buildOafResponseList(buildFilteredSearchResponseList(searchResponseList));
+        return filterDuplicatePartyIds(buildFilteredSearchResponseList(searchResponseList));
     }
 
     public SearchResponse searchForPerson(Person person, String slotName) throws ConnectException
@@ -84,7 +88,24 @@ public class MatchingService extends IndexingService
         return filteredResults;
     }
 
-    List<OafResponse> buildOafResponseList(SearchResponseList filteredSearchResponseList)
+    SearchResponseList filterDuplicatePartyIds(SearchResponseList searchResponseList)
+    {
+        SearchResponseList filteredSearchResponseList = new SearchResponseList();
+        List<String> usedPartyIds = Lists.newArrayList();
+
+        for(SearchResponse response : searchResponseList)
+        {
+            if(!usedPartyIds.contains(response.getResultValues().getPartyId()))
+            {
+                usedPartyIds.add(response.getResultValues().getPartyId());
+                filteredSearchResponseList.add(response);
+            }
+        }
+
+        return filteredSearchResponseList;
+    }
+
+    public List<OafResponse> buildOafResponseList(SearchResponseList filteredSearchResponseList)
     {
         List<OafResponse> oafResponseList = Lists.newArrayList();
 
@@ -101,6 +122,7 @@ public class MatchingService extends IndexingService
         return oafResponseList;
     }
 
+    //FIXME: This will not work until Global Registry Id is in the index
     SearchResponse findSinglePersonFromList(SearchResponseList filteredSearchResponseList, String globalRegistryId)
     {
         for(SearchResponse searchResponse : filteredSearchResponseList)

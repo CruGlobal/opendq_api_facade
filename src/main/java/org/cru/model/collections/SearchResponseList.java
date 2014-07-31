@@ -1,7 +1,6 @@
 package org.cru.model.collections;
 
 import com.google.common.collect.Lists;
-import org.cru.model.ResultData;
 import org.cru.model.SearchResponse;
 
 import java.util.Collection;
@@ -39,7 +38,7 @@ public class SearchResponseList implements List<SearchResponse>
         {
             if(i == internalList.size() - 1) //last in the list
             {
-                if(areResponsesEffectivelyEqual(internalList.get(i), internalList.get(i - 1)))
+                if(internalList.get(i).equals(internalList.get(i - 1)))
                 {
                     break;
                 }
@@ -47,7 +46,7 @@ public class SearchResponseList implements List<SearchResponse>
             }
             else
             {
-                if(areResponsesEffectivelyEqual(internalList.get(i), internalList.get(i + 1)))
+                if(internalList.get(i).equals(internalList.get(i + 1)))
                 {
                     newList.add(internalList.get(i));
                     i++;
@@ -91,21 +90,6 @@ public class SearchResponseList implements List<SearchResponse>
                 else return 0;
             }
         };
-    }
-
-    private boolean areResponsesEffectivelyEqual(SearchResponse searchResponse1, SearchResponse searchResponse2)
-    {
-        ResultData resultValues1 = searchResponse1.getResultValues();
-        ResultData resultValues2 = searchResponse2.getResultValues();
-        return
-            (resultValues1.getFirstName()).equalsIgnoreCase(resultValues2.getFirstName()) &&
-            (resultValues1.getLastName()).equalsIgnoreCase(resultValues2.getLastName()) &&
-            (resultValues1.getAddressLine1()).equalsIgnoreCase(resultValues2.getAddressLine1()) &&
-            (resultValues1.getAddressLine2()).equalsIgnoreCase(resultValues2.getAddressLine2()) &&
-            (resultValues1.getCity()).equalsIgnoreCase(resultValues2.getCity()) &&
-            (resultValues1.getState()).equalsIgnoreCase(resultValues2.getState()) &&
-            (resultValues1.getZip()).equalsIgnoreCase(resultValues2.getZip()) &&
-            (resultValues1.getStandardizedFirstName()).equalsIgnoreCase(resultValues2.getStandardizedFirstName());
     }
 
     @Override

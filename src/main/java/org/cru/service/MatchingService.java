@@ -137,13 +137,15 @@ public class MatchingService extends IndexingService
         //Handle cases where no address was passed in
         if(person.getAddresses() == null || person.getAddresses().isEmpty())
         {
-            searchResponseList.addAll(searchSlot(createSearchValuesFromPerson(person, null)));
+            SearchResponseList responses = searchSlot(createSearchValuesFromPerson(person, null));
+            if(responses != null) searchResponseList.addAll(responses);
         }
 
         //If given more than one address, we need to make sure we search on all of them
         for(Address personAddress : person.getAddresses())
         {
-            searchResponseList.addAll(searchSlot(createSearchValuesFromPerson(person, personAddress)));
+            SearchResponseList responses = searchSlot(createSearchValuesFromPerson(person, personAddress));
+            if(responses!= null) searchResponseList.addAll(responses);
         }
 
         return searchResponseList;

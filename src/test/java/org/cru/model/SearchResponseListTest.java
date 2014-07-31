@@ -4,6 +4,7 @@ import org.cru.model.collections.SearchResponseList;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Created by William.Randall on 7/28/2014.
@@ -32,21 +33,33 @@ public class SearchResponseListTest
         assertEquals(searchResponseList.size(), 1);
     }
 
+    @Test
+    public void testEquals()
+    {
+        SearchResponseList searchResponseList = createSearchResponseListWithDuplicates();
+        assertEquals(searchResponseList.get(0), searchResponseList.get(1));
+        assertEquals(searchResponseList.get(1), searchResponseList.get(2));
+    }
+
     private SearchResponseList createSearchResponseListForScoreSort()
     {
         SearchResponseList searchResponseList = new SearchResponseList();
 
         SearchResponse perfectMatch = new SearchResponse();
         perfectMatch.setScore(1.0D);
+        perfectMatch.setId("1");
 
         SearchResponse overMatch = new SearchResponse();
         overMatch.setScore(2.34D);
+        overMatch.setId("2");
 
         SearchResponse underMatch = new SearchResponse();
         underMatch.setScore(0.18D);
+        underMatch.setId("3");
 
         SearchResponse overMatch2 = new SearchResponse();
         overMatch2.setScore(1.75D);
+        overMatch2.setId("4");
 
         searchResponseList.add(overMatch2);
         searchResponseList.add(underMatch);
@@ -75,6 +88,7 @@ public class SearchResponseListTest
         firstMapValues.putPartyId("1");
 
         firstMatch.setResultValues(firstMapValues);
+        firstMatch.setId("1");
 
         SearchResponse secondMatch = new SearchResponse();
         secondMatch.setScore(1.0D);
@@ -91,9 +105,28 @@ public class SearchResponseListTest
         secondMapValues.putPartyId("2");
 
         secondMatch.setResultValues(secondMapValues);
+        secondMatch.setId("1");
+
+        SearchResponse thirdMatch = new SearchResponse();
+        thirdMatch.setScore(1.0D);
+
+        ResultData thirdMatchValues = new ResultData();
+        thirdMatchValues.putFirstName("Test");
+        thirdMatchValues.putLastName("Tester");
+        thirdMatchValues.putAddressLine1("1125 Way Blvd");
+        thirdMatchValues.putAddressLine2("NULLDATA");
+        thirdMatchValues.putCity("Orlando");
+        thirdMatchValues.putState("FL");
+        thirdMatchValues.putZip("32832");
+        thirdMatchValues.putStandardizedFirstName("TEST");
+        thirdMatchValues.putPartyId("3");
+
+        thirdMatch.setResultValues(thirdMatchValues);
+        thirdMatch.setId("1");
 
         searchResponseList.add(firstMatch);
         searchResponseList.add(secondMatch);
+        searchResponseList.add(thirdMatch);
 
         return searchResponseList;
     }

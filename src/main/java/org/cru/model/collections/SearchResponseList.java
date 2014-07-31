@@ -3,12 +3,15 @@ package org.cru.model.collections;
 import com.google.common.collect.Lists;
 import org.cru.model.SearchResponse;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Set;
 
 /**
  * Contains logic for filtering and sorting a {@link List} of {@link SearchResponse} objects
@@ -32,33 +35,8 @@ public class SearchResponseList implements List<SearchResponse>
     public void removeDuplicateResults()
     {
         if(internalList == null || internalList.isEmpty() || internalList.size() == 1) return;
-
-        SearchResponseList newList = new SearchResponseList();
-        for(int i = 0; i < internalList.size(); i++)
-        {
-            if(i == internalList.size() - 1) //last in the list
-            {
-                if(internalList.get(i).equals(internalList.get(i - 1)))
-                {
-                    break;
-                }
-                else newList.add(internalList.get(i));
-            }
-            else
-            {
-                if(internalList.get(i).equals(internalList.get(i + 1)))
-                {
-                    newList.add(internalList.get(i));
-                    i++;
-                }
-                else
-                {
-                    newList.add(internalList.get(i));
-                }
-            }
-        }
-
-        internalList = newList;
+        Set<SearchResponse> responsesWithoutDuplicates = new LinkedHashSet<SearchResponse>(internalList);
+        internalList = Lists.newArrayList(responsesWithoutDuplicates);
     }
 
     //TODO: May need to change it so that closer to 1.0 is closer to first for over

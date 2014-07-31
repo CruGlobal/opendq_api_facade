@@ -3,6 +3,8 @@ package org.cru.service;
 import com.google.common.collect.Lists;
 import com.infosolve.openmdm.webservices.provider.impl.DataManagementWSImpl;
 import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
+import com.infosolve.openmdm.webservices.provider.impl.UniqueIdNameDTO;
+import com.infosolve.openmdm.webservices.provider.impl.UniqueIdNameDTOList;
 import com.infosolvetech.rtmatch.pdi4.RuntimeMatchWS;
 import com.infosolvetech.rtmatch.pdi4.ServiceResult;
 import net.java.dev.jaxb.array.AnyTypeArray;
@@ -112,6 +114,20 @@ public class MatchingService extends IndexingService
     {
         DataManagementWSImpl mdmService = configureMdmService();
         return mdmService.findObject(partyId);
+    }
+
+    public RealTimeObjectActionDTO findMatchInMdmByGlobalRegistryId(String globalRegistryId)
+    {
+        DataManagementWSImpl mdmService = configureMdmService();
+        UniqueIdNameDTOList uniqueNameList = new UniqueIdNameDTOList();
+        List<UniqueIdNameDTO> uniqueIdNameDTOs = uniqueNameList.getUniqueIdNames();
+
+        UniqueIdNameDTO uniqueIdName = new UniqueIdNameDTO();
+        uniqueIdName.setUniqueId("GlobalRegistryId");
+        uniqueIdName.setUniqueIdName(globalRegistryId);
+        uniqueIdNameDTOs.add(uniqueIdName);
+
+        return mdmService.findObjectMulti(uniqueNameList);
     }
 
     SearchResponseList searchSlot(Person person) throws ConnectException

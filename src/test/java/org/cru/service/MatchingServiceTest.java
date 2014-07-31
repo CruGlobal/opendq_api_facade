@@ -125,4 +125,12 @@ public class MatchingServiceTest
         assertNotNull(foundPerson.getObjectCommunications());
         assertNotNull(foundPerson.getObjectAttributeDatas());
     }
+
+    @Test
+    public void testFindMatchInMdmByGlobalRegistryId() throws Exception
+    {
+        RealTimeObjectActionDTO foundPerson = matchingService.findMatchInMdmByGlobalRegistryId("0004a598-e0de-11e3-82af-12768b82bfd5");
+
+        assertNotNull(foundPerson);
+    }
 }

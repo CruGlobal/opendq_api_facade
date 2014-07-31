@@ -379,7 +379,7 @@ public class PersonToMdmConverter
         ObjAttributeDataDTO globalRegistryData = new ObjAttributeDataDTO();
         globalRegistryData.setMultDetTypeLev2("GLOBALREGISTRYID");
 
-        globalRegistryData.setField1(person.getId());
+        globalRegistryData.setField1("GlobalRegistryId");
         globalRegistryData.setField2(person.getId());
 
         PersonAttributeDataId idKey = new PersonAttributeDataId();

@@ -11,6 +11,7 @@ import org.cru.util.OpenDQProperties;
 import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import javax.xml.ws.soap.SOAPFaultException;
 import java.net.ConnectException;
 
 /**
@@ -54,28 +55,41 @@ public class DeleteService extends IndexingService
     void deleteFromMdm(SearchResponse foundIndex)
     {
         DataManagementWSImpl mdmService = configureMdmService();
-        String response = mdmService.deleteObject(foundIndex.getResultValues().getPartyId());
 
-        if(response.contains("not found"))
+        try
         {
-            throw new WebApplicationException(
-                Response.status(Response.Status.NOT_FOUND)
-                    .entity(response)
-                    .build());
+            mdmService.deleteObject(foundIndex.getResultValues().getPartyId());
+        }
+        catch(SOAPFaultException e)
+        {
+            if(e.getMessage().contains("not found"))
+            {
+                throw new WebApplicationException(
+                    Response.status(Response.Status.NOT_FOUND)
+                        .entity(e.getMessage())
+                        .build());
+            }
+            else throw new WebApplicationException(e.getMessage());
         }
     }
 
     void deleteFromMdm(RealTimeObjectActionDTO foundPerson)
     {
         DataManagementWSImpl mdmService = configureMdmService();
-        String response = mdmService.deleteObject(foundPerson.getObjectEntity().getPartyId());
-
-        if(response.contains("not found"))
+        try
         {
-            throw new WebApplicationException(
-                Response.status(Response.Status.NOT_FOUND)
-                    .entity(response)
-                    .build());
+            mdmService.deleteObject(foundPerson.getObjectEntity().getPartyId());
+        }
+        catch(SOAPFaultException e)
+        {
+            if(e.getMessage().contains("not found"))
+            {
+                throw new WebApplicationException(
+                    Response.status(Response.Status.NOT_FOUND)
+                        .entity(e.getMessage())
+                        .build());
+            }
+            else throw new WebApplicationException(e.getMessage());
         }
     }
 

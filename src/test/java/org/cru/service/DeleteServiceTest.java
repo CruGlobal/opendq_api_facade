@@ -4,6 +4,7 @@ import org.cru.model.ResultData;
 import org.cru.model.SearchResponse;
 import org.cru.util.DeletedIndexesFileIO;
 import org.cru.util.OafProperties;
+import org.cru.util.OpenDQProperties;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -57,8 +58,11 @@ public class DeleteServiceTest
         OafProperties oafProperties = new OafProperties();
         oafProperties.init();
 
+        OpenDQProperties openDQProperties = new OpenDQProperties();
+        openDQProperties.init();
+
         DeletedIndexesFileIO deletedIndexesFileIO = new DeletedIndexesFileIO(oafProperties);
-        deleteService = new DeleteService(deletedIndexesFileIO);
+        deleteService = new DeleteService(deletedIndexesFileIO, openDQProperties);
     }
 
     @Test(dataProvider = "notFoundPersons")

@@ -40,7 +40,7 @@ public class MatchOrUpdateServiceTest
         addressNormalizationService = mock(AddressNormalizationService.class);
 
         DeletedIndexesFileIO deletedIndexesFileIO = new DeletedIndexesFileIO(oafProperties);
-        DeleteService deleteService = new DeleteService(deletedIndexesFileIO);
+        DeleteService deleteService = new DeleteService(deletedIndexesFileIO, openDQProperties);
         UpdateService updateService = new UpdateService(openDQProperties, addressNormalizationService);
         MatchingService matchingService = new MatchingService(openDQProperties, deleteService);
         matchOrUpdateService = new MatchOrUpdateService(matchingService, updateService);

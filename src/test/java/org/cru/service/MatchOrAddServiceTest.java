@@ -39,7 +39,7 @@ public class MatchOrAddServiceTest
         oafProperties.init();
 
         DeletedIndexesFileIO deletedIndexesFileIO = new DeletedIndexesFileIO(oafProperties);
-        DeleteService deleteService = new DeleteService(deletedIndexesFileIO);
+        DeleteService deleteService = new DeleteService(deletedIndexesFileIO, openDQProperties);
 
         MatchingService matchingService = new MatchingService(openDQProperties, deleteService);
         addressNormalizationService = mock(AddressNormalizationService.class);

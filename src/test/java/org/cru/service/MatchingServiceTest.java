@@ -48,7 +48,7 @@ public class MatchingServiceTest
         oafProperties.init();
 
         DeletedIndexesFileIO deletedIndexesFileIO = new DeletedIndexesFileIO(oafProperties);
-        DeleteService deleteService = new DeleteService(deletedIndexesFileIO);
+        DeleteService deleteService = new DeleteService(deletedIndexesFileIO, openDQProperties);
         matchingService = new MatchingService(openDQProperties, deleteService);
     }
 
@@ -143,5 +143,6 @@ public class MatchingServiceTest
         RealTimeObjectActionDTO foundPerson = matchingService.findMatchInMdmByGlobalRegistryId(globalRegistryId);
 
         assertNotNull(foundPerson);
+        System.out.println("Party Id for " + globalRegistryId + ": " + foundPerson.getObjectEntity().getPartyId());
     }
 }

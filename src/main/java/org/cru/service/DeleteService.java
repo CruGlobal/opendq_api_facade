@@ -6,6 +6,7 @@ import org.cru.model.Person;
 import org.cru.model.SearchResponse;
 import org.cru.qualifiers.Delete;
 import org.cru.util.DeletedIndexesFileIO;
+import org.cru.util.OpenDQProperties;
 
 import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
@@ -26,9 +27,10 @@ public class DeleteService extends IndexingService
     public DeleteService() {}
 
     @Inject
-    public DeleteService(DeletedIndexesFileIO deletedIndexesFileIO)
+    public DeleteService(DeletedIndexesFileIO deletedIndexesFileIO, OpenDQProperties openDQProperties)
     {
         this.deletedIndexesFileIO = deletedIndexesFileIO;
+        this.openDQProperties = openDQProperties;
     }
 
     public void deletePerson(String id, SearchResponse foundIndex) throws ConnectException

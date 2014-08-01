@@ -125,8 +125,8 @@ public class AddService extends IndexingService
             fieldNamesAndValues.put("FIELD7", addressToUse.getZipCode());
         }
 
-        fieldNamesAndValues.put("FIELD8", person.getId());
-        //FIELD10 is not currently in use
+        fieldNamesAndValues.put("FIELD8", person.getFirstName());  //TODO: Determine exactly what should go here
+        //FIELD9 is not currently in use
         fieldNamesAndValues.put("FIELD10", mdmPerson.getObjectEntity().getPartyId());
 
         return fieldNamesAndValues;

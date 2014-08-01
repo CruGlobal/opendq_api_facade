@@ -9,6 +9,7 @@ import org.cru.qualifiers.Match;
 import org.cru.service.DeleteService;
 
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -39,26 +40,13 @@ public class DeleteResource
     private PersonDeserializer personDeserializer;
 
     @SuppressWarnings("unused")  //used by Clients
-    @Path("/delete")
+    @Path("/delete/{id}")
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deletePerson(String json)
+    public Response deletePersonByGlobalRegistryId(String globalRegistryId)
     {
-        Person person = personDeserializer.deserializePerson(json);
-        try
-        {
-            SearchResponse foundIndex = matchingService.searchForPerson(person, "findPersonForDelete");
-            deleteService.deletePerson(foundIndex.getId(), foundIndex);
-        }
-        catch(ConnectException ce)
-        {
-            throw new WebApplicationException(
-                Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                .entity(ce.getMessage())
-                .build());
-        }
-
-        return Response.ok().entity(buildResponseEntity(person.getId())).build();
+        deleteService.deletePerson(globalRegistryId, matchingService.findMatchInMdmByGlobalRegistryId(globalRegistryId));
+        return Response.ok().entity(buildResponseEntity(globalRegistryId)).build();
     }
 
     private List<OafResponse> buildResponseEntity(String id)

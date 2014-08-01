@@ -1,16 +1,19 @@
 package org.cru.service;
 
-import org.cru.model.ResultData;
+import com.infosolve.openmdm.webservices.provider.impl.ObjEntityDTO;
+import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import org.cru.model.SearchResponse;
 import org.cru.util.DeletedIndexesFileIO;
 import org.cru.util.OafProperties;
+import org.cru.util.OpenDQProperties;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-import java.net.ConnectException;
+import java.io.File;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -25,48 +28,55 @@ import static org.testng.AssertJUnit.fail;
 public class DeleteServiceTest
 {
     private DeleteService deleteService;
+    private OafProperties oafProperties;
 
-    @DataProvider(name = "notFoundPersons")
+    @DataProvider
     private Object[][] notFoundPersons()
     {
-        String notFoundId1 = "6";
-        String notFoundId2 = "7";
-        String notFoundId3 = "8";
-
         return new Object[][] {
-            { notFoundId1, createNotFoundSearchResponse(notFoundId1) },
-            { notFoundId2, createNotFoundSearchResponse(notFoundId2) },
-            { notFoundId3, createNotFoundSearchResponse(notFoundId3) }
+            { "6", createPerson("-50") },
+            { "7", createPerson("-45") },
+            { "8", createPerson("-99") }
         };
     }
 
-    @DataProvider(name = "foundPersons")
+    @DataProvider
     private Object[][] foundPersons()
     {
-        String foundGRId1 = "be20d878-dd9e-11e3-9615-12768b82bfd3";
-        String foundPartyId1 = "1075";
-
         return new Object[][] {
-            { foundGRId1, createFoundSearchResponse(foundGRId1, foundPartyId1) },
+            { "3ikfj32-8rt4-9493-394nfa2348da", createPerson("11541581") },
         };
     }
 
     @BeforeClass
     public void setup()
     {
-        OafProperties oafProperties = new OafProperties();
+        oafProperties = new OafProperties();
         oafProperties.init();
 
+        OpenDQProperties openDQProperties = new OpenDQProperties();
+        openDQProperties.init();
+
         DeletedIndexesFileIO deletedIndexesFileIO = new DeletedIndexesFileIO(oafProperties);
-        deleteService = new DeleteService(deletedIndexesFileIO);
+        deleteService = new DeleteService(deletedIndexesFileIO, openDQProperties);
+    }
+
+    @AfterMethod
+    public void tearDown() throws Exception
+    {
+        File deletedIndexesFile = new File(oafProperties.getProperty("deletedIndexFile"));
+        if(deletedIndexesFile.exists())
+        {
+            if(!deletedIndexesFile.delete()) throw new Exception("File was not successfully deleted!");
+        }
     }
 
     @Test(dataProvider = "notFoundPersons")
-    public void testDeletePersonNotFound(String id, SearchResponse foundIndex) throws Exception
+    public void testDeletePersonNotFound(String id, RealTimeObjectActionDTO person) throws Exception
     {
         try
         {
-            deleteService.deletePerson(id, foundIndex);
+            deleteService.deletePerson(id, person);
         }
         catch(WebApplicationException we)
         {
@@ -76,15 +86,11 @@ public class DeleteServiceTest
     }
 
     @Test(dataProvider = "foundPersons")
-    public void testDeletePersonFound(String id, SearchResponse foundIndex) throws Exception
+    public void testDeletePersonFound(String id, RealTimeObjectActionDTO foundPerson)
     {
         try
         {
-            deleteService.deletePerson(id, foundIndex);
-        }
-        catch(ConnectException ce)
-        {
-            fail();
+            deleteService.deletePerson(id, foundPerson);
         }
         catch(WebApplicationException we)
         {
@@ -92,23 +98,14 @@ public class DeleteServiceTest
         }
     }
 
-    private SearchResponse createNotFoundSearchResponse(String globalRegistryId)
+    private RealTimeObjectActionDTO createPerson(String partyId)
     {
-        SearchResponse foundIndex = new SearchResponse();
-        foundIndex.setId(globalRegistryId);
-        ResultData values = new ResultData();
-        values.putPartyId("-50");
-        foundIndex.setResultValues(values);
-        return foundIndex;
-    }
+        RealTimeObjectActionDTO foundPerson = new RealTimeObjectActionDTO();
 
-    private SearchResponse createFoundSearchResponse(String globalRegistryId, String partyId)
-    {
-        SearchResponse foundIndex = new SearchResponse();
-        foundIndex.setId(globalRegistryId);
-        ResultData values = new ResultData();
-        values.putPartyId(partyId);
-        foundIndex.setResultValues(values);
-        return foundIndex;
+        ObjEntityDTO objEntity = new ObjEntityDTO();
+        objEntity.setPartyId(partyId);
+
+        foundPerson.setObjectEntity(objEntity);
+        return foundPerson;
     }
 }

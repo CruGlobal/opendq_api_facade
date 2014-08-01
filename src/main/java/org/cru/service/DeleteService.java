@@ -1,15 +1,16 @@
 package org.cru.service;
 
 import com.infosolve.openmdm.webservices.provider.impl.DataManagementWSImpl;
+import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import org.cru.model.Person;
-import org.cru.model.SearchResponse;
 import org.cru.qualifiers.Delete;
 import org.cru.util.DeletedIndexesFileIO;
+import org.cru.util.OpenDQProperties;
 
 import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-import java.net.ConnectException;
+import javax.xml.ws.soap.SOAPFaultException;
 
 /**
  * Service to handle complexity of deleting a {@link Person} from the index
@@ -25,31 +26,38 @@ public class DeleteService extends IndexingService
     public DeleteService() {}
 
     @Inject
-    public DeleteService(DeletedIndexesFileIO deletedIndexesFileIO)
+    public DeleteService(DeletedIndexesFileIO deletedIndexesFileIO, OpenDQProperties openDQProperties)
     {
         this.deletedIndexesFileIO = deletedIndexesFileIO;
+        this.openDQProperties = openDQProperties;
     }
 
-    public void deletePerson(String id, SearchResponse foundIndex) throws ConnectException
+    public void deletePerson(String id, RealTimeObjectActionDTO foundPerson)
     {
         if(!personIsDeleted(id))
         {
             deletedIndexesFileIO.writeToFile(id);
-            deleteFromMdm(foundIndex);
+            deleteFromMdm(foundPerson);
         }
     }
 
-    void deleteFromMdm(SearchResponse foundIndex)
+    void deleteFromMdm(RealTimeObjectActionDTO foundPerson)
     {
         DataManagementWSImpl mdmService = configureMdmService();
-        String response = mdmService.deleteObject(foundIndex.getResultValues().getPartyId());
-
-        if(response.contains("not found"))
+        try
         {
-            throw new WebApplicationException(
-                Response.status(Response.Status.NOT_FOUND)
-                    .entity(response)
-                    .build());
+            mdmService.deleteObject(foundPerson.getObjectEntity().getPartyId());
+        }
+        catch(SOAPFaultException e)
+        {
+            if(e.getMessage().contains("not found"))
+            {
+                throw new WebApplicationException(
+                    Response.status(Response.Status.NOT_FOUND)
+                        .entity(e.getMessage())
+                        .build());
+            }
+            else throw new WebApplicationException(e.getMessage());
         }
     }
 

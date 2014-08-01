@@ -4,33 +4,32 @@ import org.cru.data.TestPeople;
 import org.cru.model.Address;
 import org.cru.model.OafResponse;
 import org.cru.model.Person;
+import org.cru.util.Action;
 import org.cru.util.DeletedIndexesFileIO;
 import org.cru.util.OafProperties;
 import org.cru.util.OpenDQProperties;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import java.net.ConnectException;
 import java.util.List;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
 
 /**
- * Test for {@link MatchOrAddService} which can currently only be run once successfully
- * before changing the data because once the {@link Person} is added to the index, it
- * will be found.
- *
- * Created by William.Randall on 6/10/14.
+ * Created by William.Randall on 7/31/2014.
  */
 @Test
-public class MatchOrAddServiceTest
+public class MatchOrUpdateServiceTest
 {
-    private MatchOrAddService matchOrAddService;
+    private MatchOrUpdateService matchOrUpdateService;
     private AddressNormalizationService addressNormalizationService;
 
-    private void setup()
+    @BeforeClass
+    public void setup() throws Exception
     {
         OpenDQProperties openDQProperties = new OpenDQProperties();
         openDQProperties.init();
@@ -38,32 +37,31 @@ public class MatchOrAddServiceTest
         OafProperties oafProperties = new OafProperties();
         oafProperties.init();
 
+        addressNormalizationService = mock(AddressNormalizationService.class);
+
         DeletedIndexesFileIO deletedIndexesFileIO = new DeletedIndexesFileIO(oafProperties);
         DeleteService deleteService = new DeleteService(deletedIndexesFileIO, openDQProperties);
-
+        UpdateService updateService = new UpdateService(openDQProperties, addressNormalizationService);
         MatchingService matchingService = new MatchingService(openDQProperties, deleteService);
-        addressNormalizationService = mock(AddressNormalizationService.class);
-        AddService addService = new AddService(openDQProperties, addressNormalizationService);
-        matchOrAddService = new MatchOrAddService(matchingService, addService);
+        matchOrUpdateService = new MatchOrUpdateService(matchingService, updateService);
     }
 
-    //NOTE: this will only work once, then the first part of the test will fail
     @Test
-    public void testMatchOrAdd() throws Exception
+    public void testMatchOrUpdatePerson() throws ConnectException
     {
-        setup();
-        Person testPerson = TestPeople.generatePersonWithLotsOfData();
+        Person testPerson = TestPeople.createPersonForUpdate();
 
         for(Address address : testPerson.getAddresses())
         {
             when(addressNormalizationService.normalizeAddress(address)).thenReturn(false);
         }
 
-        List<OafResponse> matchOrAddResponseList = matchOrAddService.matchOrAddPerson(testPerson);
-        assertNull(matchOrAddResponseList); //it should add it first
+        List<OafResponse> oafResponseList = matchOrUpdateService.matchOrUpdatePerson(testPerson);
 
-        matchOrAddResponseList = matchOrAddService.matchOrAddPerson(testPerson);
-        assertNotNull(matchOrAddResponseList);
-        assertEquals(matchOrAddResponseList.get(0).getMatchId(), testPerson.getId());  //now it should find it
+        assertNotNull(oafResponseList);
+        assertEquals(oafResponseList.size(), 1);
+        assertEquals(oafResponseList.get(0).getMatchId(), testPerson.getId());
+        assertEquals(oafResponseList.get(0).getConfidenceLevel(), 1.0D);
+        assertEquals(oafResponseList.get(0).getAction(), Action.UPDATE.toString());
     }
 }

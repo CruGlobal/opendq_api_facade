@@ -2,7 +2,10 @@ package org.cru.service;
 
 import com.google.common.collect.Lists;
 import com.infosolve.openmdm.webservices.provider.impl.DataManagementWSImpl;
+import com.infosolve.openmdm.webservices.provider.impl.ObjAttributeDataDTO;
 import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
+import com.infosolve.openmdm.webservices.provider.impl.UniqueIdNameDTO;
+import com.infosolve.openmdm.webservices.provider.impl.UniqueIdNameDTOList;
 import com.infosolvetech.rtmatch.pdi4.RuntimeMatchWS;
 import com.infosolvetech.rtmatch.pdi4.ServiceResult;
 import net.java.dev.jaxb.array.AnyTypeArray;
@@ -19,6 +22,7 @@ import org.cru.util.OpenDQProperties;
 
 import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
+import javax.xml.ws.soap.SOAPFaultException;
 import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,26 +47,19 @@ public class MatchingService extends IndexingService
         this.deleteService = deleteService;
     }
 
+    /**
+     * Returns a {@link List<OafResponse>} of all the non-duplicate people found
+     * in the index with different party IDs (using the given {@link Person} for matching)
+     */
     public List<OafResponse> findMatches(Person person, String slotName) throws ConnectException
     {
         this.slotName = slotName;
         this.stepName = "RtMatchAddr";
-        SearchResponseList searchResponseList = searchSlot(person);
 
+        SearchResponseList searchResponseList = searchSlot(person);
         if(searchResponseList == null || searchResponseList.isEmpty()) return null;
 
-        return buildOafResponseList(buildFilteredSearchResponseList(searchResponseList));
-    }
-
-    public SearchResponse searchForPerson(Person person, String slotName) throws ConnectException
-    {
-        this.slotName = slotName;
-        this.stepName = "RtMatchAddr";
-        SearchResponseList searchResponseList = searchSlot(person);
-
-        if(searchResponseList == null || searchResponseList.isEmpty()) return null;
-
-        return findSinglePersonFromList(buildFilteredSearchResponseList(searchResponseList), person.getId());
+        return buildOafResponseList(filterDuplicatePartyIds(buildFilteredSearchResponseList(searchResponseList)));
     }
 
     SearchResponseList buildFilteredSearchResponseList(SearchResponseList searchResponseList)
@@ -72,7 +69,7 @@ public class MatchingService extends IndexingService
         for(SearchResponse response : searchResponseList)
         {
             String partyId = response.getResultValues().getPartyId();
-            if(!matchHasBeenDeleted(partyId)) filteredResults.add(response);
+            if(!matchHasBeenDeleted(getGlobalRegistryIdFromMdm(partyId))) filteredResults.add(response);
         }
 
         filteredResults.removeDuplicateResults();
@@ -81,7 +78,24 @@ public class MatchingService extends IndexingService
         return filteredResults;
     }
 
-    List<OafResponse> buildOafResponseList(SearchResponseList filteredSearchResponseList)
+    SearchResponseList filterDuplicatePartyIds(SearchResponseList searchResponseList)
+    {
+        SearchResponseList filteredSearchResponseList = new SearchResponseList();
+        List<String> usedPartyIds = Lists.newArrayList();
+
+        for(SearchResponse response : searchResponseList)
+        {
+            if(!usedPartyIds.contains(response.getResultValues().getPartyId()))
+            {
+                usedPartyIds.add(response.getResultValues().getPartyId());
+                filteredSearchResponseList.add(response);
+            }
+        }
+
+        return filteredSearchResponseList;
+    }
+
+    public List<OafResponse> buildOafResponseList(SearchResponseList filteredSearchResponseList)
     {
         List<OafResponse> oafResponseList = Lists.newArrayList();
 
@@ -98,20 +112,42 @@ public class MatchingService extends IndexingService
         return oafResponseList;
     }
 
-    SearchResponse findSinglePersonFromList(SearchResponseList filteredSearchResponseList, String globalRegistryId)
-    {
-        for(SearchResponse searchResponse : filteredSearchResponseList)
-        {
-            if(searchResponse.getId().equalsIgnoreCase(globalRegistryId)) return searchResponse;
-        }
-
-        return null;
-    }
-
     public RealTimeObjectActionDTO findMatchInMdm(String partyId)
     {
         DataManagementWSImpl mdmService = configureMdmService();
         return mdmService.findObject(partyId);
+    }
+
+    /**
+     * Search MDM database for a person using global registry id.
+     *
+     * @return null if no person is found, otherwise a {@link RealTimeObjectActionDTO} person
+     * @throws SOAPFaultException if more than one result is found
+     */
+    public RealTimeObjectActionDTO findMatchInMdmByGlobalRegistryId(String globalRegistryId)
+    {
+        DataManagementWSImpl mdmService = configureMdmService();
+        UniqueIdNameDTOList uniqueNameList = new UniqueIdNameDTOList();
+        List<UniqueIdNameDTO> uniqueIdNameDTOs = uniqueNameList.getUniqueIdNames();
+
+        UniqueIdNameDTO uniqueIdName = new UniqueIdNameDTO();
+        uniqueIdName.setUniqueId("GlobalRegistryId");
+        uniqueIdName.setUniqueIdName(globalRegistryId);
+        uniqueIdNameDTOs.add(uniqueIdName);
+
+        try
+        {
+            return mdmService.findObjectMulti(uniqueNameList);
+        }
+        catch(SOAPFaultException e)
+        {
+            if(e.getMessage().contains("No Data found with these input set.")) return null;
+            if(e.getMessage().contains("query did not return a unique result"))
+            {
+                throw new WebApplicationException("More than one result returned for global registry id: " + globalRegistryId);
+            }
+            throw new WebApplicationException(e.getMessage());
+        }
     }
 
     SearchResponseList searchSlot(Person person) throws ConnectException
@@ -121,13 +157,15 @@ public class MatchingService extends IndexingService
         //Handle cases where no address was passed in
         if(person.getAddresses() == null || person.getAddresses().isEmpty())
         {
-            searchResponseList.addAll(searchSlot(createSearchValuesFromPerson(person, null)));
+            SearchResponseList responses = searchSlot(createSearchValuesFromPerson(person, null));
+            if(responses != null) searchResponseList.addAll(responses);
         }
 
         //If given more than one address, we need to make sure we search on all of them
         for(Address personAddress : person.getAddresses())
         {
-            searchResponseList.addAll(searchSlot(createSearchValuesFromPerson(person, personAddress)));
+            SearchResponseList responses = searchSlot(createSearchValuesFromPerson(person, personAddress));
+            if(responses!= null) searchResponseList.addAll(responses);
         }
 
         return searchResponseList;
@@ -178,9 +216,26 @@ public class MatchingService extends IndexingService
         SearchResponse searchResponse = new SearchResponse();
         searchResponse.setScore(score);
         searchResponse.setResultValues(values);
-        searchResponse.setId(values.getStandardizedFirstName());
+        searchResponse.setId(getGlobalRegistryIdFromMdm(values.getPartyId()));
 
         return searchResponse;
+    }
+
+    String getGlobalRegistryIdFromMdm(String partyId)
+    {
+        DataManagementWSImpl mdmService = configureMdmService();
+        RealTimeObjectActionDTO foundPerson = mdmService.findObject(partyId);
+        if(foundPerson == null) return null;
+
+        for(ObjAttributeDataDTO attributeData : foundPerson.getObjectAttributeDatas().getObjectAttributeData())
+        {
+            if(attributeData.getMultDetTypeLev1().equalsIgnoreCase("PERSONATTRIBUTES") &&
+                attributeData.getMultDetTypeLev2().equalsIgnoreCase("GLOBALREGISTRYID"))
+            {
+                return attributeData.getField2();
+            }
+        }
+        return null;
     }
 
     List<ResultData> buildListOfValueMaps(List<AnyTypeArray> searchResultValues)

@@ -105,8 +105,8 @@ public class TestPeople
 
         testPerson.setFirstName("Susan");
         testPerson.setLastName("Snowa");
-        testPerson.setMdmPartyId("100");
-        testPerson.setId("SUSAN"); //TODO: Replace with real global registry id when available
+        testPerson.setMdmPartyId("3995392");
+        testPerson.setId("Susan"); //TODO: Replace with real global registry id when available
 
         Address testAddress = new Address();
         testAddress.setAddressLine1("2824 McManaway Dr");
@@ -134,6 +134,140 @@ public class TestPeople
         endToEndTestPerson.setAddresses(Lists.newArrayList(testAddress));
 
         return endToEndTestPerson;
+    }
+
+    public static Person createPersonForUpdate()
+    {
+        String clientIntegrationId = "1-9G6F5";
+        Person testPerson = new Person();
+
+        Address testAddress = new Address();
+        testAddress.setId("311036e6-18dc-11e4-8c21-0800200c9a67");
+        testAddress.setAddressLine1("2442 Lakepoint Dr");
+        testAddress.setCity("Indianapolis");
+        testAddress.setState("IN");
+        testAddress.setZipCode("46235");
+        testAddress.setCountry("USA");
+
+        Address testAddress2 = new Address();
+        testAddress2.setId("311036e7-18dc-11e4-8c21-0800200c9a67");
+        testAddress2.setAddressLine1("9435 Evergreen Terr");
+        testAddress2.setCity("Greenfield");
+        testAddress2.setState("IN");
+        testAddress2.setZipCode("46140");
+        testAddress2.setCountry("USA");
+
+        List<Address> addresses = Lists.newArrayList();
+        addresses.add(testAddress);
+        addresses.add(testAddress2);
+
+        testPerson.setTitle("Ms.");
+        testPerson.setFirstName("3Update3");
+        testPerson.setLastName("3PersonUpdate3");
+
+        EmailAddress emailAddress = new EmailAddress();
+        emailAddress.setEmail("update.personupdate3@crutest.org");
+        emailAddress.setId("311036e8-18dc-11e4-8c21-0800200c9a67");
+        List<EmailAddress> emailAddresses = new ArrayList<EmailAddress>();
+        emailAddresses.add(emailAddress);
+
+        PhoneNumber phoneNumber = new PhoneNumber();
+        phoneNumber.setNumber("4563442532");
+        phoneNumber.setLocation("mobile");
+        phoneNumber.setId("311036e9-18dc-11e4-8c21-0800200c9a67");
+        List<PhoneNumber> phoneNumbers = new ArrayList<PhoneNumber>();
+        phoneNumbers.add(phoneNumber);
+
+        LinkedIdentity linkedIdentity = new LinkedIdentity();
+        linkedIdentity.setClientIntegrationId(clientIntegrationId);
+
+        Authentication authentication = new Authentication();
+        authentication.setRelayGuid("74e97ae0-18f3-11e4-8c21-0800200c9a67");
+
+        testPerson.setId("74e97ae1-18f3-11e4-8c21-0800200c9a67");
+        testPerson.setClientIntegrationId(clientIntegrationId);
+        testPerson.setLinkedIdentities(Lists.newArrayList(linkedIdentity));
+        testPerson.setAuthentication(authentication);
+
+        testPerson.setAddresses(addresses);
+        testPerson.setEmailAddresses(emailAddresses);
+        testPerson.setPhoneNumbers(phoneNumbers);
+        testPerson.setGender("F");
+
+        Source testSource = new Source();
+        testSource.setClientIntegrationId(clientIntegrationId);
+        testSource.setSystemId("OAF");
+
+        testPerson.setSource(testSource);
+
+        return testPerson;
+    }
+
+    public static Person createPersonForAdd()
+    {
+        String clientIntegrationId = "1-94BF7";
+        Person testPerson = new Person();
+
+        Address testAddress = new Address();
+        testAddress.setId("321036e6-18dc-11e4-8c21-0800200c9a77");
+        testAddress.setAddressLine1("2442 Hancock Dr");
+        testAddress.setCity("Indianapolis");
+        testAddress.setState("IN");
+        testAddress.setZipCode("46235");
+        testAddress.setCountry("USA");
+
+        Address testAddress2 = new Address();
+        testAddress2.setId("321036e7-18dc-11e4-8c21-0800200c9a77");
+        testAddress2.setAddressLine1("9435 Oceanview Terr");
+        testAddress2.setCity("Greenfield");
+        testAddress2.setState("IN");
+        testAddress2.setZipCode("46140");
+        testAddress2.setCountry("USA");
+
+        List<Address> addresses = Lists.newArrayList();
+        addresses.add(testAddress);
+        addresses.add(testAddress2);
+
+        testPerson.setTitle("Mr.");
+        testPerson.setFirstName("Add");
+        testPerson.setLastName("AddPerson");
+
+        EmailAddress emailAddress = new EmailAddress();
+        emailAddress.setEmail("add.addperson@crutest.org");
+        emailAddress.setId("321036e8-18dc-11e4-8c21-0800200c9a77");
+        List<EmailAddress> emailAddresses = new ArrayList<EmailAddress>();
+        emailAddresses.add(emailAddress);
+
+        PhoneNumber phoneNumber = new PhoneNumber();
+        phoneNumber.setNumber("6563442582");
+        phoneNumber.setLocation("home");
+        phoneNumber.setId("321036e9-18dc-11e4-8c21-0800200c9a77");
+        List<PhoneNumber> phoneNumbers = new ArrayList<PhoneNumber>();
+        phoneNumbers.add(phoneNumber);
+
+        LinkedIdentity linkedIdentity = new LinkedIdentity();
+        linkedIdentity.setClientIntegrationId(clientIntegrationId);
+
+        Authentication authentication = new Authentication();
+        authentication.setRelayGuid("75e97ae0-18f3-11e4-8c21-0800200c9a77");
+
+        testPerson.setId("75e97ae1-18f3-11e4-8c21-0800200c9a77");
+        testPerson.setClientIntegrationId(clientIntegrationId);
+        testPerson.setLinkedIdentities(Lists.newArrayList(linkedIdentity));
+        testPerson.setAuthentication(authentication);
+
+        testPerson.setAddresses(addresses);
+        testPerson.setEmailAddresses(emailAddresses);
+        testPerson.setPhoneNumbers(phoneNumbers);
+        testPerson.setGender("M");
+
+        Source testSource = new Source();
+        testSource.setClientIntegrationId(clientIntegrationId);
+        testSource.setSystemId("OAF");
+
+        testPerson.setSource(testSource);
+
+        return testPerson;
     }
 
     public static Person createTestPersonGotMarried()

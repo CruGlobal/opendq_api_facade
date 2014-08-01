@@ -374,6 +374,23 @@ public class PersonToMdmConverter
         return authProviderDataList;
     }
 
+    ObjAttributeDataDTO createGlobalRegistryData(Person person, LocalDate today)
+    {
+        ObjAttributeDataDTO globalRegistryData = new ObjAttributeDataDTO();
+        globalRegistryData.setMultDetTypeLev2("GLOBALREGISTRYID");
+
+        globalRegistryData.setField1("GlobalRegistryId");
+        globalRegistryData.setField2(person.getId());
+
+        PersonAttributeDataId idKey = new PersonAttributeDataId();
+        idKey.setAttributeDataType(globalRegistryData.getMultDetTypeLev2());
+        idKey.setSecondaryIdentifier(globalRegistryData.getField2());
+
+        setCommonAttributeData(globalRegistryData, person, today, idKey);
+
+        return globalRegistryData;
+    }
+
     private void addAuthProviderIfAvailable(
         List<ObjAttributeDataDTO> authProviderDataList,
         Person person,
@@ -412,6 +429,7 @@ public class PersonToMdmConverter
         addIfNotNull(personAttributes, createRelayDetails(person, today));
         addIfNotEmpty(personAttributes, createIdentityData(person, today));
         addIfNotEmpty(personAttributes, createAuthProviderData(person, today));
+        personAttributes.add(createGlobalRegistryData(person, today));
 
         return personAttributes;
     }

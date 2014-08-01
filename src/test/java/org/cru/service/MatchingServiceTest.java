@@ -1,11 +1,9 @@
 package org.cru.service;
 
-import com.beust.jcommander.internal.Lists;
 import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import org.cru.data.TestPeople;
 import org.cru.model.OafResponse;
 import org.cru.model.Person;
-import org.cru.model.SearchResponse;
 import org.cru.util.Action;
 import org.cru.util.DeletedIndexesFileIO;
 import org.cru.util.OafProperties;
@@ -48,42 +46,20 @@ public class MatchingServiceTest
         oafProperties.init();
 
         DeletedIndexesFileIO deletedIndexesFileIO = new DeletedIndexesFileIO(oafProperties);
-        DeleteService deleteService = new DeleteService(deletedIndexesFileIO);
+        DeleteService deleteService = new DeleteService(deletedIndexesFileIO, openDQProperties);
         matchingService = new MatchingService(openDQProperties, deleteService);
     }
 
     @Test
     public void testFindMatch() throws ConnectException
     {
-        Person testPerson = TestPeople.createPersonFromSoapUITestData();
+        Person testPerson = TestPeople.createPersonForUpdate();
         List<OafResponse> matchResponseList = matchingService.findMatches(testPerson, "contactMatch");
 
         assertNotNull(matchResponseList);
         assertEquals(matchResponseList.size(), 1);
         assertEquals(matchResponseList.get(0).getMatchId(), testPerson.getId());
         assertEquals(matchResponseList.get(0).getAction(), Action.MATCH.toString());
-
-        testPerson = TestPeople.generatePersonWithLotsOfData();
-        matchResponseList = matchingService.findMatches(testPerson, "contactMatch");
-        assertEquals(matchResponseList.size(), 2); //Two different addresses
-    }
-
-    @Test
-    public void testSearchForPerson() throws ConnectException
-    {
-        Person testPerson = TestPeople.createPersonFromSoapUITestData();
-        SearchResponse searchResponse = matchingService.searchForPerson(testPerson, "contactMatch");
-
-        assertNotNull(searchResponse);
-        assertEquals(searchResponse.getId(), testPerson.getId());
-        assertEquals(searchResponse.getResultValues().getPartyId(), testPerson.getMdmPartyId());
-        assertEquals(searchResponse.getResultValues().getAddressLine1(), testPerson.getAddresses().get(0).getAddressLine1());
-
-        testPerson = TestPeople.generatePersonWithLotsOfData();
-        searchResponse = matchingService.searchForPerson(testPerson, "contactMatch");
-
-        assertNotNull(searchResponse);
-        assertEquals(searchResponse.getId(), testPerson.getId());
     }
 
     @Test
@@ -124,5 +100,26 @@ public class MatchingServiceTest
         assertEquals(foundPerson.getObjectAddresses().getObjectAddress().size(), 2);
         assertNotNull(foundPerson.getObjectCommunications());
         assertNotNull(foundPerson.getObjectAttributeDatas());
+    }
+
+    @DataProvider
+    private Object[][] globalRegistryIdsInMdm()
+    {
+        return new Object[][] {
+            { "0004a598-e0de-11e3-82af-12768b82bfd5" },
+            { "0004A598-E0DE-11E3-82AF-12768B82BFD5" },
+            { "74e97ae1-18f3-11e4-8c21-0800200c9a67" },
+            { "74e97ae1-18f3-11e4-8c21-0800200c9a67".toUpperCase() },
+            { "3ikfj32-8rt4-9493-394nfa2348da" }
+        };
+    }
+
+    @Test(dataProvider = "globalRegistryIdsInMdm")
+    public void testFindMatchInMdmByGlobalRegistryId(String globalRegistryId) throws Exception
+    {
+        RealTimeObjectActionDTO foundPerson = matchingService.findMatchInMdmByGlobalRegistryId(globalRegistryId);
+
+        assertNotNull(foundPerson);
+        System.out.println("Party Id for " + globalRegistryId + ": " + foundPerson.getObjectEntity().getPartyId());
     }
 }

@@ -5,6 +5,7 @@ import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import org.cru.model.OafResponse;
 import org.cru.model.Person;
 import org.cru.model.SearchResponse;
+import org.cru.model.collections.SearchResponseList;
 import org.cru.qualifiers.Match;
 import org.cru.util.Action;
 
@@ -33,54 +34,29 @@ public class MatchOrUpdateService
         this.updateService = updateService;
     }
 
+    /**
+     * Attempt to update the person passed in.
+     * If no matches are found, do not update and return null.
+     * Otherwise, update the person and return an update response.
+     *
+     * @throws ConnectException if it fails to connect to the real time matching service
+     */
     public List<OafResponse> matchOrUpdatePerson(Person person) throws ConnectException
     {
-        List<OafResponse> matchResponseList = matchingService.findMatches(person, "Match");
+        //Find the person in the Mdm to get the correct party id
+        RealTimeObjectActionDTO foundPerson = matchingService.findMatchInMdmByGlobalRegistryId(person.getId());
 
-        if(matchResponseList == null || matchResponseList.isEmpty())
-        {
-            return updatePersonIfPossible(person);
-        }
-        else
-        {
-            for(OafResponse matchResponse : matchResponseList)
-            {
-                if(matchResponse.getMatchId().equalsIgnoreCase(person.getId()))
-                {
-                    updatePersonIfPossible(person);
-                }
-            }
+        if(foundPerson == null) return null;
 
-            // There are matches, but none of them have a matching Global Registry ID, so return the highest scoring conflict
-            matchResponseList.get(0).setAction(Action.CONFLICT);
-            return Lists.newArrayList(matchResponseList.get(0));
-        }
+        updateService.updatePerson(person, foundPerson, "MatchOrUpdate");
+        return buildResponseList(person);
     }
 
-    private List<OafResponse> updatePersonIfPossible(Person person) throws ConnectException
+    private List<OafResponse> buildResponseList(Person person)
     {
-       SearchResponse searchResponse = matchingService.searchForPerson(person, "MatchId");
-
-        if(searchResponse == null)
-        {
-            return null;
-        }
-
-        String partyId = searchResponse.getResultValues().getPartyId();
-        RealTimeObjectActionDTO foundMdmPerson = matchingService.findMatchInMdm(partyId);
-
-        if(foundMdmPerson == null)
-        {
-            return null;
-        }
-
-        updateService.updatePerson(person, foundMdmPerson, "MatchOrUpdate");
-
         OafResponse matchResponse = new OafResponse();
         matchResponse.setMatchId(person.getId());
-
-        //We didn't find the match based on the normal index search values, so let's indicate that in some way
-        matchResponse.setConfidenceLevel(0.0D);
+        matchResponse.setConfidenceLevel(1.0D);
         matchResponse.setAction(Action.UPDATE);
 
         return Lists.newArrayList(matchResponse);

@@ -32,6 +32,11 @@ public class AddOrUpdateService
         this.matchOrUpdateService = matchOrUpdateService;
     }
 
+    /**
+     * If the {@link Person} is found, update that person.  Otherwise add the person.
+     *
+     * @return null if the person was added, otherwise return an update or conflict response.
+     */
     public List<OafResponse> addOrUpdate(Person person) throws ConnectException
     {
         String slotName = "AddOrUpdate";

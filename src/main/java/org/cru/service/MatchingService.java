@@ -2,6 +2,7 @@ package org.cru.service;
 
 import com.google.common.collect.Lists;
 import com.infosolve.openmdm.webservices.provider.impl.DataManagementWSImpl;
+import com.infosolve.openmdm.webservices.provider.impl.ObjAttributeDataDTO;
 import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import com.infosolve.openmdm.webservices.provider.impl.UniqueIdNameDTO;
 import com.infosolve.openmdm.webservices.provider.impl.UniqueIdNameDTOList;
@@ -215,9 +216,26 @@ public class MatchingService extends IndexingService
         SearchResponse searchResponse = new SearchResponse();
         searchResponse.setScore(score);
         searchResponse.setResultValues(values);
-        searchResponse.setId(values.getStandardizedFirstName());
+        searchResponse.setId(getGlobalRegistryIdFromMdm(values.getPartyId()));
 
         return searchResponse;
+    }
+
+    String getGlobalRegistryIdFromMdm(String partyId)
+    {
+        DataManagementWSImpl mdmService = configureMdmService();
+        RealTimeObjectActionDTO foundPerson = mdmService.findObject(partyId);
+        if(foundPerson == null) return null;
+
+        for(ObjAttributeDataDTO attributeData : foundPerson.getObjectAttributeDatas().getObjectAttributeData())
+        {
+            if(attributeData.getMultDetTypeLev1().equalsIgnoreCase("PERSONATTRIBUTES") &&
+                attributeData.getMultDetTypeLev2().equalsIgnoreCase("GLOBALREGISTRYID"))
+            {
+                return attributeData.getField2();
+            }
+        }
+        return null;
     }
 
     List<ResultData> buildListOfValueMaps(List<AnyTypeArray> searchResultValues)

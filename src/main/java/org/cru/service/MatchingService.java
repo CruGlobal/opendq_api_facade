@@ -46,11 +46,18 @@ public class MatchingService extends IndexingService
         this.deleteService = deleteService;
     }
 
+    /**
+     * Returns a {@link List<OafResponse>} built from #findMatchesAllData
+     */
     public List<OafResponse> findMatches(Person person, String slotName) throws ConnectException
     {
         return buildOafResponseList(findMatchesAllData(person, slotName));
     }
 
+    /**
+     * Returns a {@link SearchResponseList} of all the non-duplicate people found
+     * in the index with different party IDs (using the given {@link Person} for matching)
+     */
     public SearchResponseList findMatchesAllData(Person person, String slotName) throws ConnectException
     {
         this.slotName = slotName;
@@ -61,6 +68,10 @@ public class MatchingService extends IndexingService
         return filterDuplicatePartyIds(buildFilteredSearchResponseList(searchResponseList));
     }
 
+    /**
+     * Returns a {@link SearchResponse} from the index representing a person with the same
+     * global registry ID as the {@link Person} passed in
+     */
     public SearchResponse searchForPerson(Person person, String slotName) throws ConnectException
     {
         this.slotName = slotName;

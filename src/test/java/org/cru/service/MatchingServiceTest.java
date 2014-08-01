@@ -132,7 +132,9 @@ public class MatchingServiceTest
     {
         return new Object[][] {
             { "0004a598-e0de-11e3-82af-12768b82bfd5" },
+            { "0004A598-E0DE-11E3-82AF-12768B82BFD5" },
             { "74e97ae1-18f3-11e4-8c21-0800200c9a67" },
+            { "74e97ae1-18f3-11e4-8c21-0800200c9a67".toUpperCase() },
             { "3ikfj32-8rt4-9493-394nfa2348da" }
         };
     }

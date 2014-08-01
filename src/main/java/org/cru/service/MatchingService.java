@@ -61,21 +61,6 @@ public class MatchingService extends IndexingService
         return buildOafResponseList(filterDuplicatePartyIds(buildFilteredSearchResponseList(searchResponseList)));
     }
 
-    /**
-     * Returns a {@link SearchResponse} from the index representing a person with the same
-     * global registry ID as the {@link Person} passed in
-     */
-    public SearchResponse searchForPerson(Person person, String slotName) throws ConnectException
-    {
-        this.slotName = slotName;
-        this.stepName = "RtMatchAddr";
-        SearchResponseList searchResponseList = searchSlot(person);
-
-        if(searchResponseList == null || searchResponseList.isEmpty()) return null;
-
-        return findSinglePersonFromList(buildFilteredSearchResponseList(searchResponseList), person.getId());
-    }
-
     SearchResponseList buildFilteredSearchResponseList(SearchResponseList searchResponseList)
     {
         SearchResponseList filteredResults = new SearchResponseList();
@@ -124,17 +109,6 @@ public class MatchingService extends IndexingService
         }
 
         return oafResponseList;
-    }
-
-    //FIXME: This will not work until Global Registry Id is in the index
-    SearchResponse findSinglePersonFromList(SearchResponseList filteredSearchResponseList, String globalRegistryId)
-    {
-        for(SearchResponse searchResponse : filteredSearchResponseList)
-        {
-            if(searchResponse.getId().equalsIgnoreCase(globalRegistryId)) return searchResponse;
-        }
-
-        return null;
     }
 
     public RealTimeObjectActionDTO findMatchInMdm(String partyId)

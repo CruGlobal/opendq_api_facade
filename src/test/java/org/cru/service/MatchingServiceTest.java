@@ -1,11 +1,9 @@
 package org.cru.service;
 
-import com.beust.jcommander.internal.Lists;
 import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import org.cru.data.TestPeople;
 import org.cru.model.OafResponse;
 import org.cru.model.Person;
-import org.cru.model.SearchResponse;
 import org.cru.util.Action;
 import org.cru.util.DeletedIndexesFileIO;
 import org.cru.util.OafProperties;
@@ -66,19 +64,6 @@ public class MatchingServiceTest
         testPerson = TestPeople.generatePersonWithLotsOfData();
         matchResponseList = matchingService.findMatches(testPerson, "contactMatch");
         assertEquals(matchResponseList.size(), 3); //Two different addresses and one different id
-    }
-
-    @Test
-    public void testSearchForPerson() throws ConnectException
-    {
-        Person testPerson = TestPeople.createPersonForUpdate();
-        SearchResponse searchResponse = matchingService.searchForPerson(testPerson, "contactMatch");
-
-        assertNotNull(searchResponse);
-        assertEquals(searchResponse.getId(), testPerson.getId());
-        assertEquals(searchResponse.getResultValues().getPartyId(), "11541585");
-        assertEquals(searchResponse.getResultValues().getAddressLine1().toLowerCase(),
-            testPerson.getAddresses().get(0).getAddressLine1().toLowerCase());
     }
 
     @Test

@@ -69,7 +69,7 @@ public class MatchingService extends IndexingService
         for(SearchResponse response : searchResponseList)
         {
             String partyId = response.getResultValues().getPartyId();
-            if(!matchHasBeenDeleted(partyId)) filteredResults.add(response);
+            if(!matchHasBeenDeleted(getGlobalRegistryIdFromMdm(partyId))) filteredResults.add(response);
         }
 
         filteredResults.removeDuplicateResults();

@@ -27,4 +27,27 @@ public class PersonAttributeDataId
     {
         this.secondaryIdentifier = secondaryIdentifier;
     }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if(this == o) return true;
+        if(o == null || getClass() != o.getClass()) return false;
+
+        PersonAttributeDataId that = (PersonAttributeDataId) o;
+
+        if(!attributeDataType.equals(that.attributeDataType)) return false;
+        if(secondaryIdentifier != null ? !secondaryIdentifier.equals(that.secondaryIdentifier) : that.secondaryIdentifier != null)
+            return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int result = attributeDataType.hashCode();
+        result = 31 * result + (secondaryIdentifier != null ? secondaryIdentifier.hashCode() : 0);
+        return result;
+    }
 }

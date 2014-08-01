@@ -43,8 +43,8 @@ public class DeleteServiceTest
     @DataProvider(name = "foundPersons")
     private Object[][] foundPersons()
     {
-        String foundGRId1 = "be20d878-dd9e-11e3-9615-12768b82bfd3";
-        String foundPartyId1 = "1075";
+        String foundGRId1 = "3ikfj32-8rt4-9493-394nfa2348da";
+        String foundPartyId1 = "11541581";
 
         return new Object[][] {
             { foundGRId1, createFoundSearchResponse(foundGRId1, foundPartyId1) },

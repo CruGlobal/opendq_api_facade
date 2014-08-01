@@ -37,66 +37,19 @@ public class MatchOrUpdateService
     /**
      * Attempt to update the person passed in.
      * If no matches are found, do not update and return null.
-     * If matches are found and none of the matches are the same person as the one passed in, return a conflict response.
      * Otherwise, update the person and return an update response.
      *
      * @throws ConnectException if it fails to connect to the real time matching service
      */
     public List<OafResponse> matchOrUpdatePerson(Person person) throws ConnectException
     {
-        //Find all possible matches in the index
-        SearchResponseList searchResponseList = matchingService.findMatchesAllData(person, "Match");
-        boolean updated = false;
-
-        //If there are no matches using the updated data, attempt to update
-        if(searchResponseList == null || searchResponseList.isEmpty())
-        {
-            return updatePersonIfPossible(person);
-        }
-        else //matches were found using the updated data
-        {
-            //Find the person in the Mdm to get the correct party id
-            RealTimeObjectActionDTO foundPerson = matchingService.findMatchInMdmByGlobalRegistryId(person.getId());
-            if(foundPerson == null) return null;
-
-            for(SearchResponse searchResponse : searchResponseList)
-            {
-                //If the match has the same Party Id as the Person found in MDM, update
-                if(searchResponse.getResultValues().getPartyId().equalsIgnoreCase(foundPerson.getObjectEntity().getPartyId()))
-                {
-                    updateService.updatePerson(person, foundPerson, "MatchOrUpdate");
-                    updated = true;
-                }
-            }
-            if(updated)
-            {
-                return buildResponseList(person);
-            }
-
-            // There are matches, but none of them have a matching Party ID, so return the highest scoring conflict
-            List<OafResponse> matchResponseList = matchingService.buildOafResponseList(searchResponseList);
-            matchResponseList.get(0).setAction(Action.CONFLICT);
-            return Lists.newArrayList(matchResponseList.get(0));
-        }
-    }
-
-    private List<OafResponse> updatePersonIfPossible(Person person) throws ConnectException
-    {
-        //Find the person in the MDM by global registry id
+        //Find the person in the Mdm to get the correct party id
         RealTimeObjectActionDTO foundPerson = matchingService.findMatchInMdmByGlobalRegistryId(person.getId());
 
-        //If nobody was found, we can't update, so just return null
         if(foundPerson == null) return null;
 
         updateService.updatePerson(person, foundPerson, "MatchOrUpdate");
-
-        OafResponse matchResponse = new OafResponse();
-        matchResponse.setMatchId(person.getId());
-        //We didn't find the match based on the normal index search values, so let's indicate that in some way
-        matchResponse.setConfidenceLevel(0.0D);
-        matchResponse.setAction(Action.UPDATE);
-
-        return Lists.newArrayList(matchResponse);
+        return buildResponseList(person);
     }
 
     private List<OafResponse> buildResponseList(Person person)

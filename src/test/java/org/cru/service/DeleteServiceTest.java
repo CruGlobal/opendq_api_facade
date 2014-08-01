@@ -5,12 +5,14 @@ import org.cru.model.SearchResponse;
 import org.cru.util.DeletedIndexesFileIO;
 import org.cru.util.OafProperties;
 import org.cru.util.OpenDQProperties;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import java.io.File;
 import java.net.ConnectException;
 
 import static org.testng.Assert.assertEquals;
@@ -26,6 +28,7 @@ import static org.testng.AssertJUnit.fail;
 public class DeleteServiceTest
 {
     private DeleteService deleteService;
+    private OafProperties oafProperties;
 
     @DataProvider(name = "notFoundPersons")
     private Object[][] notFoundPersons()
@@ -55,7 +58,7 @@ public class DeleteServiceTest
     @BeforeClass
     public void setup()
     {
-        OafProperties oafProperties = new OafProperties();
+        oafProperties = new OafProperties();
         oafProperties.init();
 
         OpenDQProperties openDQProperties = new OpenDQProperties();
@@ -63,6 +66,16 @@ public class DeleteServiceTest
 
         DeletedIndexesFileIO deletedIndexesFileIO = new DeletedIndexesFileIO(oafProperties);
         deleteService = new DeleteService(deletedIndexesFileIO, openDQProperties);
+    }
+
+    @AfterMethod
+    public void tearDown() throws Exception
+    {
+        File deletedIndexesFile = new File(oafProperties.getProperty("deletedIndexFile"));
+        if(deletedIndexesFile.exists())
+        {
+            if(!deletedIndexesFile.delete()) throw new Exception("File was not successfully deleted!");
+        }
     }
 
     @Test(dataProvider = "notFoundPersons")

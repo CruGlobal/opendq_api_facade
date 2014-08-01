@@ -71,20 +71,14 @@ public class MatchingServiceTest
     @Test
     public void testSearchForPerson() throws ConnectException
     {
-        Person testPerson = TestPeople.createPersonFromSoapUITestData();
+        Person testPerson = TestPeople.createPersonForUpdate();
         SearchResponse searchResponse = matchingService.searchForPerson(testPerson, "contactMatch");
 
         assertNotNull(searchResponse);
         assertEquals(searchResponse.getId(), testPerson.getId());
-        assertEquals(searchResponse.getResultValues().getPartyId(), testPerson.getMdmPartyId());
+        assertEquals(searchResponse.getResultValues().getPartyId(), "11541585");
         assertEquals(searchResponse.getResultValues().getAddressLine1().toLowerCase(),
             testPerson.getAddresses().get(0).getAddressLine1().toLowerCase());
-
-        testPerson = TestPeople.generatePersonWithLotsOfData();
-        searchResponse = matchingService.searchForPerson(testPerson, "contactMatch");
-
-        assertNotNull(searchResponse);
-        assertEquals(searchResponse.getId(), testPerson.getId());
     }
 
     @Test

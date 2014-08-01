@@ -91,5 +91,5 @@ curl -H "Content-Type: application/json" -d '{"person":{"id":"2ad345e","email_ad
 
 <h4>Delete</h4>
 <pre>
-curl -X DELETE http://localhost:8080/oaf/rest/delete/k3rfjs3-f8g9-hfi8-5521-12a6er5423
+curl -X DELETE -H "Content-Type: application/json" -d '{"person":{"id":"645asf4a643r-w3r54a","email_address":{"id":"645asf4a643r-w3r54a-email","email":"ab@ba.org"},"last_name":"Ab","first_name":"Ba","title":"Mrs.","gender":"Female","phone_number":{"id":"645asf4a643r-w3r54a-phone","number":"3333333333","location":"mobile"},"client_integration_id":"645asf4a643r-w3r54a-client","address":{"id":"645asf4a643r-w3r54a-addr","address_1":"33 Jones St","city":"Orlando","state":"FL","zip_code":"32828","country":"USA"},"authentication":{"relay_guid":"645asf4a643r-w3r54a-guid"},"account_number":"645asf4a643r-w3r54a-account","linked_identities":{"system_id":"OAF","client_integration_id":"645asf4a643r-w3r54a-client","employee_number":"645asf4a643r-w3r54a-employee"},"source":{"system_id":"OAF","client_integration_id":"645asf4a643r-w3r54a-client"},"client_updated_at":"2014-06-21 13:41:21"}}'  http://localhost:8080/oaf/rest/delete
 </pre>

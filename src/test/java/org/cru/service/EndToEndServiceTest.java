@@ -96,16 +96,17 @@ public class EndToEndServiceTest
         //The matching service by itself should also find the person
         checkFindPersonWithMatch(testPerson);
 
-        //We should be able to find the index data by Global Registry ID now
-        SearchResponse foundIndex = matchingService.searchForPerson(testPerson, "Match");
-        String partyId = foundIndex.getResultValues().getPartyId();
+        //We should be able to find the person by Global Registry ID now
+        RealTimeObjectActionDTO foundPerson = matchingService.findMatchInMdmByGlobalRegistryId(testPerson.getId());
+        assertNotNull(foundPerson);
+        String partyId = foundPerson.getObjectEntity().getPartyId();
 
         //Make an update to the person
         //TODO: For now, the update will not work properly because it will find the same row and think it is a conflict
         checkUpdatePerson(testPerson, partyId);
 
         //Now we delete the person from the index
-        deleteService.deletePerson(testPerson.getId(), foundIndex);
+        deleteService.deletePerson(testPerson.getId(), foundPerson);
 
         //The person should not be found anymore
         checkPersonNotExists(testPerson);

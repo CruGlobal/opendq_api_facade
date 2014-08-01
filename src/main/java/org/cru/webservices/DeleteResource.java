@@ -40,29 +40,6 @@ public class DeleteResource
     private PersonDeserializer personDeserializer;
 
     @SuppressWarnings("unused")  //used by Clients
-    @Path("/delete")
-    @DELETE
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response deletePerson(String json)
-    {
-        Person person = personDeserializer.deserializePerson(json);
-        try
-        {
-            SearchResponse foundIndex = matchingService.searchForPerson(person, "findPersonForDelete");
-            deleteService.deletePerson(foundIndex.getId(), foundIndex);
-        }
-        catch(ConnectException ce)
-        {
-            throw new WebApplicationException(
-                Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                .entity(ce.getMessage())
-                .build());
-        }
-
-        return Response.ok().entity(buildResponseEntity(person.getId())).build();
-    }
-
     @Path("/delete/{id}")
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)

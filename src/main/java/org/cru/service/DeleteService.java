@@ -3,7 +3,6 @@ package org.cru.service;
 import com.infosolve.openmdm.webservices.provider.impl.DataManagementWSImpl;
 import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import org.cru.model.Person;
-import org.cru.model.SearchResponse;
 import org.cru.qualifiers.Delete;
 import org.cru.util.DeletedIndexesFileIO;
 import org.cru.util.OpenDQProperties;
@@ -12,7 +11,6 @@ import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.xml.ws.soap.SOAPFaultException;
-import java.net.ConnectException;
 
 /**
  * Service to handle complexity of deleting a {@link Person} from the index
@@ -34,42 +32,12 @@ public class DeleteService extends IndexingService
         this.openDQProperties = openDQProperties;
     }
 
-    public void deletePerson(String id, SearchResponse foundIndex) throws ConnectException
-    {
-        if(!personIsDeleted(id))
-        {
-            deletedIndexesFileIO.writeToFile(id);
-            deleteFromMdm(foundIndex);
-        }
-    }
-
     public void deletePerson(String id, RealTimeObjectActionDTO foundPerson)
     {
         if(!personIsDeleted(id))
         {
             deletedIndexesFileIO.writeToFile(id);
             deleteFromMdm(foundPerson);
-        }
-    }
-
-    void deleteFromMdm(SearchResponse foundIndex)
-    {
-        DataManagementWSImpl mdmService = configureMdmService();
-
-        try
-        {
-            mdmService.deleteObject(foundIndex.getResultValues().getPartyId());
-        }
-        catch(SOAPFaultException e)
-        {
-            if(e.getMessage().contains("not found"))
-            {
-                throw new WebApplicationException(
-                    Response.status(Response.Status.NOT_FOUND)
-                        .entity(e.getMessage())
-                        .build());
-            }
-            else throw new WebApplicationException(e.getMessage());
         }
     }
 

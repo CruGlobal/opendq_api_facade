@@ -2,7 +2,6 @@ package org.cru.service;
 
 import com.infosolve.openmdm.webservices.provider.impl.ObjEntityDTO;
 import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
-import org.cru.model.ResultData;
 import org.cru.model.SearchResponse;
 import org.cru.util.DeletedIndexesFileIO;
 import org.cru.util.OafProperties;
@@ -15,7 +14,6 @@ import org.testng.annotations.Test;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.io.File;
-import java.net.ConnectException;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -32,36 +30,21 @@ public class DeleteServiceTest
     private DeleteService deleteService;
     private OafProperties oafProperties;
 
-    @DataProvider(name = "notFoundPersons")
+    @DataProvider
     private Object[][] notFoundPersons()
     {
-        String notFoundId1 = "6";
-        String notFoundId2 = "7";
-        String notFoundId3 = "8";
-
         return new Object[][] {
-            { notFoundId1, createNotFoundSearchResponse(notFoundId1) },
-            { notFoundId2, createNotFoundSearchResponse(notFoundId2) },
-            { notFoundId3, createNotFoundSearchResponse(notFoundId3) }
-        };
-    }
-
-    @DataProvider(name = "foundPersons")
-    private Object[][] foundPersons()
-    {
-        String foundGRId1 = "3ikfj32-8rt4-9493-394nfa2348da";
-        String foundPartyId1 = "11541581";
-
-        return new Object[][] {
-            { foundGRId1, createFoundSearchResponse(foundGRId1, foundPartyId1) },
+            { "6", createPerson("-50") },
+            { "7", createPerson("-45") },
+            { "8", createPerson("-99") }
         };
     }
 
     @DataProvider
-    private Object[][] foundPersonsMdm()
+    private Object[][] foundPersons()
     {
         return new Object[][] {
-            { "3ikfj32-8rt4-9493-394nfa2348da", createFoundPerson("11541581") },
+            { "3ikfj32-8rt4-9493-394nfa2348da", createPerson("11541581") },
         };
     }
 
@@ -89,11 +72,11 @@ public class DeleteServiceTest
     }
 
     @Test(dataProvider = "notFoundPersons")
-    public void testDeletePersonNotFound(String id, SearchResponse foundIndex) throws Exception
+    public void testDeletePersonNotFound(String id, RealTimeObjectActionDTO person) throws Exception
     {
         try
         {
-            deleteService.deletePerson(id, foundIndex);
+            deleteService.deletePerson(id, person);
         }
         catch(WebApplicationException we)
         {
@@ -103,24 +86,7 @@ public class DeleteServiceTest
     }
 
     @Test(dataProvider = "foundPersons")
-    public void testDeletePersonFound(String id, SearchResponse foundIndex) throws Exception
-    {
-        try
-        {
-            deleteService.deletePerson(id, foundIndex);
-        }
-        catch(ConnectException ce)
-        {
-            fail();
-        }
-        catch(WebApplicationException we)
-        {
-            fail();
-        }
-    }
-
-    @Test(dataProvider = "foundPersonsMdm")
-    public void testDeletePersonMdm(String id, RealTimeObjectActionDTO foundPerson)
+    public void testDeletePersonFound(String id, RealTimeObjectActionDTO foundPerson)
     {
         try
         {
@@ -132,27 +98,7 @@ public class DeleteServiceTest
         }
     }
 
-    private SearchResponse createNotFoundSearchResponse(String globalRegistryId)
-    {
-        SearchResponse foundIndex = new SearchResponse();
-        foundIndex.setId(globalRegistryId);
-        ResultData values = new ResultData();
-        values.putPartyId("-50");
-        foundIndex.setResultValues(values);
-        return foundIndex;
-    }
-
-    private SearchResponse createFoundSearchResponse(String globalRegistryId, String partyId)
-    {
-        SearchResponse foundIndex = new SearchResponse();
-        foundIndex.setId(globalRegistryId);
-        ResultData values = new ResultData();
-        values.putPartyId(partyId);
-        foundIndex.setResultValues(values);
-        return foundIndex;
-    }
-
-    private RealTimeObjectActionDTO createFoundPerson(String partyId)
+    private RealTimeObjectActionDTO createPerson(String partyId)
     {
         RealTimeObjectActionDTO foundPerson = new RealTimeObjectActionDTO();
 

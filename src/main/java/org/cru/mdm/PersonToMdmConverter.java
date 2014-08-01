@@ -15,6 +15,7 @@ import org.cru.model.Authentication;
 import org.cru.model.EmailAddress;
 import org.cru.model.LinkedIdentity;
 import org.cru.model.Person;
+import org.cru.model.PersonAttributeDataId;
 import org.cru.model.PhoneNumber;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -208,9 +209,8 @@ public class PersonToMdmConverter
         return objAttributeDataDTOList;
     }
 
-    void setCommonAttributeData(ObjAttributeDataDTO attributeData, Person person, LocalDate today, String key)
+    void setCommonAttributeData(ObjAttributeDataDTO attributeData, Person person, LocalDate today, PersonAttributeDataId key)
     {
-        //TODO: Account for multiple rows of the same type
         Map mdmPersonAttributeIdMap = person.getMdmPersonAttributesIdMap();
         if(mdmPersonAttributeIdMap == null || mdmPersonAttributeIdMap.isEmpty() || mdmPersonAttributeIdMap.get(key) == null)
         {
@@ -232,10 +232,15 @@ public class PersonToMdmConverter
     {
         ObjAttributeDataDTO sourceDetails = new ObjAttributeDataDTO();
         sourceDetails.setMultDetTypeLev2("SOURCEDETAILS");
-        setCommonAttributeData(sourceDetails, person, today, sourceDetails.getMultDetTypeLev2());
 
         sourceDetails.setField1(person.getSource().getSystemId());
         sourceDetails.setField2(person.getSource().getSystemId());
+
+        PersonAttributeDataId idKey = new PersonAttributeDataId();
+        idKey.setAttributeDataType(sourceDetails.getMultDetTypeLev2());
+        idKey.setSecondaryIdentifier(sourceDetails.getField2());
+
+        setCommonAttributeData(sourceDetails, person, today, idKey);
 
         return sourceDetails;
     }
@@ -244,11 +249,16 @@ public class PersonToMdmConverter
     {
         ObjAttributeDataDTO householdData = new ObjAttributeDataDTO();
         householdData.setMultDetTypeLev2("HOUSEHOLD");
-        setCommonAttributeData(householdData, person, today, householdData.getMultDetTypeLev2());
 
         householdData.setField1(person.getId()); //TODO: Object ID
         householdData.setField2(person.getFirstName());
         householdData.setField3(person.getLastName());
+
+        PersonAttributeDataId idKey = new PersonAttributeDataId();
+        idKey.setAttributeDataType(householdData.getMultDetTypeLev2());
+        idKey.setSecondaryIdentifier(householdData.getField2());
+
+        setCommonAttributeData(householdData, person, today, idKey);
 
         return householdData;
     }
@@ -264,7 +274,6 @@ public class PersonToMdmConverter
         {
             ObjAttributeDataDTO accountData = new ObjAttributeDataDTO();
             accountData.setMultDetTypeLev2("ACCOUNTDATA");
-            setCommonAttributeData(accountData, person, today, accountData.getMultDetTypeLev2());
 
             accountData.setField1(identity.getSystemId());
             accountData.setField2(person.getAccountNumber());  //TODO: Is this correct?
@@ -279,6 +288,12 @@ public class PersonToMdmConverter
                 accountData.setField4(person.getClientUpdatedAt().toString(dateFormatter));
             }
 
+            PersonAttributeDataId idKey = new PersonAttributeDataId();
+            idKey.setAttributeDataType(accountData.getMultDetTypeLev2());
+            idKey.setSecondaryIdentifier(accountData.getField2());
+
+            setCommonAttributeData(accountData, person, today, idKey);
+
             accountDataList.add(accountData);
         }
 
@@ -289,13 +304,18 @@ public class PersonToMdmConverter
     {
         ObjAttributeDataDTO relayDetails = new ObjAttributeDataDTO();
         relayDetails.setMultDetTypeLev2("RELAYDETAILS");
-        setCommonAttributeData(relayDetails, person, today, relayDetails.getMultDetTypeLev2());
 
         if(person.getAuthentication() != null)
         {
             relayDetails.setField1(person.getSource().getSystemId());
             relayDetails.setField2(person.getAuthentication().getEmployeeRelayGuid());
             relayDetails.setField3(person.getAuthentication().getRelayGuid());
+
+            PersonAttributeDataId idKey = new PersonAttributeDataId();
+            idKey.setAttributeDataType(relayDetails.getMultDetTypeLev2());
+            idKey.setSecondaryIdentifier(relayDetails.getField2());
+
+            setCommonAttributeData(relayDetails, person, today, idKey);
 
             return relayDetails;
         }
@@ -313,7 +333,6 @@ public class PersonToMdmConverter
         {
             ObjAttributeDataDTO identityData = new ObjAttributeDataDTO();
             identityData.setMultDetTypeLev2("IDENTITIES");
-            setCommonAttributeData(identityData, person, today, identityData.getMultDetTypeLev2());
 
             identityData.setField1(identity.getSystemId()); //TODO: Name
             identityData.setField2(identity.getClientIntegrationId());
@@ -327,6 +346,12 @@ public class PersonToMdmConverter
             {
                 identityData.setField4(person.getClientUpdatedAt().toString(dateFormatter));
             }
+
+            PersonAttributeDataId idKey = new PersonAttributeDataId();
+            idKey.setAttributeDataType(identityData.getMultDetTypeLev2());
+            idKey.setSecondaryIdentifier(identityData.getField2());
+
+            setCommonAttributeData(identityData, person, today, idKey);
 
             identityDataList.add(identityData);
         }
@@ -360,11 +385,16 @@ public class PersonToMdmConverter
 
         ObjAttributeDataDTO authProviderData = new ObjAttributeDataDTO();
         authProviderData.setMultDetTypeLev2("AUTHPROVIDER");
-        setCommonAttributeData(authProviderData, person, today, authProviderData.getMultDetTypeLev2());
 
         authProviderData.setField1(name);
         authProviderData.setField2(id);
         authProviderData.setField3(new DateTime().toString(dateFormatter));
+
+        PersonAttributeDataId idKey = new PersonAttributeDataId();
+        idKey.setAttributeDataType(authProviderData.getMultDetTypeLev2());
+        idKey.setSecondaryIdentifier(authProviderData.getField2());
+
+        setCommonAttributeData(authProviderData, person, today, idKey);
 
         authProviderDataList.add(authProviderData);
     }

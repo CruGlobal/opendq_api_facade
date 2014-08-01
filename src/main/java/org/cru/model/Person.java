@@ -18,7 +18,7 @@ public class Person
 {
     private String mdmPartyId;
     private String mdmPersonId;
-    private Map<String, String> mdmPersonAttributesIdMap;
+    private Map<PersonAttributeDataId, String> mdmPersonAttributesIdMap;
 
     private String id;  // Global Registry ID
     @JsonProperty("email_address")
@@ -66,12 +66,12 @@ public class Person
         this.mdmPersonId = mdmPersonId;
     }
 
-    public Map<String, String> getMdmPersonAttributesIdMap()
+    public Map<PersonAttributeDataId, String> getMdmPersonAttributesIdMap()
     {
         return mdmPersonAttributesIdMap;
     }
 
-    public void setMdmPersonAttributesIdMap(Map<String, String> mdmPersonAttributesIdMap)
+    public void setMdmPersonAttributesIdMap(Map<PersonAttributeDataId, String> mdmPersonAttributesIdMap)
     {
         this.mdmPersonAttributesIdMap = mdmPersonAttributesIdMap;
     }

@@ -12,6 +12,7 @@ import org.cru.mdm.PersonToMdmConverter;
 import org.cru.model.Address;
 import org.cru.model.EmailAddress;
 import org.cru.model.Person;
+import org.cru.model.PersonAttributeDataId;
 import org.cru.model.PhoneNumber;
 import org.cru.util.OpenDQProperties;
 
@@ -164,17 +165,20 @@ public class UpdateService extends AddService
         }
     }
 
-    //TODO: Account for multiple rows of the same type
-    private Map<String, String> createPersonAttributesIdMap(RealTimeObjectActionDTO foundObject)
+    private Map<PersonAttributeDataId, String> createPersonAttributesIdMap(RealTimeObjectActionDTO foundObject)
     {
         List<ObjAttributeDataDTO> attributeData = foundObject.getObjectAttributeDatas().getObjectAttributeData();
-        Map<String, String> mdmPersonAttributesIdMap = new HashMap<String, String>();
+        Map<PersonAttributeDataId, String> mdmPersonAttributesIdMap = new HashMap<PersonAttributeDataId, String>();
 
         for(ObjAttributeDataDTO attributes : attributeData)
         {
             if("PERSONATTRIBUTES".equals(attributes.getMultDetTypeLev1()))
             {
-                mdmPersonAttributesIdMap.put(attributes.getMultDetTypeLev2(), attributes.getObjAdId());
+                PersonAttributeDataId idKey = new PersonAttributeDataId();
+                idKey.setAttributeDataType(attributes.getMultDetTypeLev2());
+                //Each type of attribute has at least 2 fields, and Field 2 is a good identifier for each type
+                idKey.setSecondaryIdentifier(attributes.getField2());
+                mdmPersonAttributesIdMap.put(idKey, attributes.getObjAdId());
             }
         }
 

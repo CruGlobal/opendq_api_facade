@@ -47,25 +47,18 @@ public class MatchingService extends IndexingService
     }
 
     /**
-     * Returns a {@link List<OafResponse>} built from #findMatchesAllData
+     * Returns a {@link List<OafResponse>} of all the non-duplicate people found
+     * in the index with different party IDs (using the given {@link Person} for matching)
      */
     public List<OafResponse> findMatches(Person person, String slotName) throws ConnectException
     {
-        return buildOafResponseList(findMatchesAllData(person, slotName));
-    }
-
-    /**
-     * Returns a {@link SearchResponseList} of all the non-duplicate people found
-     * in the index with different party IDs (using the given {@link Person} for matching)
-     */
-    public SearchResponseList findMatchesAllData(Person person, String slotName) throws ConnectException
-    {
         this.slotName = slotName;
         this.stepName = "RtMatchAddr";
-        SearchResponseList searchResponseList = searchSlot(person);
 
+        SearchResponseList searchResponseList = searchSlot(person);
         if(searchResponseList == null || searchResponseList.isEmpty()) return null;
-        return filterDuplicatePartyIds(buildFilteredSearchResponseList(searchResponseList));
+
+        return buildOafResponseList(filterDuplicatePartyIds(buildFilteredSearchResponseList(searchResponseList)));
     }
 
     /**

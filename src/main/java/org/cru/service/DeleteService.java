@@ -10,7 +10,6 @@ import org.cru.util.OpenDQProperties;
 import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-import javax.xml.ws.soap.SOAPFaultException;
 
 /**
  * Service to handle complexity of deleting a {@link Person} from the index
@@ -48,16 +47,16 @@ public class DeleteService extends IndexingService
         {
             mdmService.deleteObject(foundPerson.getObjectEntity().getPartyId());
         }
-        catch(SOAPFaultException e)
+        catch(Throwable t)
         {
-            if(e.getMessage().contains("not found"))
+            if(t.getMessage().contains("not found"))
             {
                 throw new WebApplicationException(
                     Response.status(Response.Status.NOT_FOUND)
-                        .entity(e.getMessage())
+                        .entity(t.getMessage())
                         .build());
             }
-            else throw new WebApplicationException(e.getMessage());
+            else throw new WebApplicationException(t.getMessage());
         }
     }
 

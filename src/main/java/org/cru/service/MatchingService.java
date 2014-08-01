@@ -115,7 +115,14 @@ public class MatchingService extends IndexingService
     public RealTimeObjectActionDTO findMatchInMdm(String partyId)
     {
         DataManagementWSImpl mdmService = configureMdmService();
-        return mdmService.findObject(partyId);
+        try
+        {
+            return mdmService.findObject(partyId);
+        }
+        catch(Throwable t)
+        {
+            throw new WebApplicationException("Failed to find match in MDM: " + t.getMessage());
+        }
     }
 
     /**
@@ -139,14 +146,14 @@ public class MatchingService extends IndexingService
         {
             return mdmService.findObjectMulti(uniqueNameList);
         }
-        catch(SOAPFaultException e)
+        catch(Throwable t)
         {
-            if(e.getMessage().contains("No Data found with these input set.")) return null;
-            if(e.getMessage().contains("query did not return a unique result"))
+            if(t.getMessage().contains("No Data found with these input set.")) return null;
+            if(t.getMessage().contains("query did not return a unique result"))
             {
                 throw new WebApplicationException("More than one result returned for global registry id: " + globalRegistryId);
             }
-            throw new WebApplicationException(e.getMessage());
+            throw new WebApplicationException(t.getMessage());
         }
     }
 
@@ -224,7 +231,17 @@ public class MatchingService extends IndexingService
     String getGlobalRegistryIdFromMdm(String partyId)
     {
         DataManagementWSImpl mdmService = configureMdmService();
-        RealTimeObjectActionDTO foundPerson = mdmService.findObject(partyId);
+
+        RealTimeObjectActionDTO foundPerson = null;
+        try
+        {
+            foundPerson = mdmService.findObject(partyId);
+        }
+        catch(Throwable t)
+        {
+            throw new WebApplicationException("Failed to find global registry id using party id: " + partyId);
+        }
+
         if(foundPerson == null) return null;
 
         for(ObjAttributeDataDTO attributeData : foundPerson.getObjectAttributeDatas().getObjectAttributeData())

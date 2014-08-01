@@ -58,9 +58,18 @@ public class AddService extends IndexingService
     {
         DataManagementWSImpl mdmService = configureMdmService();
         PersonToMdmConverter personToMdmConverter = new PersonToMdmConverter(ACTION);
-        RealTimeObjectActionDTO returnedObject =
-            mdmService.addObject(personToMdmConverter.createRealTimeObjectFromPerson(person));
 
+        RealTimeObjectActionDTO returnedObject;
+        try
+        {
+            returnedObject = mdmService.addObject(personToMdmConverter.createRealTimeObjectFromPerson(person));
+        }
+        catch(Throwable t)
+        {
+            throw new WebApplicationException("Failed to add person to mdm: " + t.getMessage());
+        }
+
+        //If we come back with the same party ID that we sent in for adding (0), then the add did not happen
         if(MdmConstants.JUNK_ID.equals(returnedObject.getObjectEntity().getPartyId()))
         {
             throw new WebApplicationException("Failed to add person to mdm.");

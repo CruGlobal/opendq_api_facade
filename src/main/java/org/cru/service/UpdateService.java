@@ -68,8 +68,15 @@ public class UpdateService extends AddService
 
         PersonToMdmConverter personToMdmConverter = new PersonToMdmConverter(ACTION);
 
-        RealTimeObjectActionDTO returnedObject =
-            mdmService.updateObject(personToMdmConverter.createRealTimeObjectFromPerson(person));
+        RealTimeObjectActionDTO returnedObject;
+        try
+        {
+            returnedObject = mdmService.updateObject(personToMdmConverter.createRealTimeObjectFromPerson(person));
+        }
+        catch(Throwable t)
+        {
+            throw new WebApplicationException("Failed to update person: " + t.getMessage());
+        }
 
         if(returnedObject == null)
         {

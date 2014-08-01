@@ -53,17 +53,13 @@ public class MatchingServiceTest
     @Test
     public void testFindMatch() throws ConnectException
     {
-        Person testPerson = TestPeople.createPersonFromSoapUITestData();
+        Person testPerson = TestPeople.createPersonForUpdate();
         List<OafResponse> matchResponseList = matchingService.findMatches(testPerson, "contactMatch");
 
         assertNotNull(matchResponseList);
         assertEquals(matchResponseList.size(), 1);
         assertEquals(matchResponseList.get(0).getMatchId(), testPerson.getId());
         assertEquals(matchResponseList.get(0).getAction(), Action.MATCH.toString());
-
-        testPerson = TestPeople.generatePersonWithLotsOfData();
-        matchResponseList = matchingService.findMatches(testPerson, "contactMatch");
-        assertEquals(matchResponseList.size(), 3); //Two different addresses and one different id
     }
 
     @Test

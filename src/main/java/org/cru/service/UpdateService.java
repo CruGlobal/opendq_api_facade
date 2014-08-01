@@ -62,7 +62,7 @@ public class UpdateService extends AddService
         setAddressIds(foundPerson, person);
         setCommunicationIds(foundPerson, person);
         person.setMdmPartyId(foundPerson.getObjectEntity().getPartyId());
-        person.setMdmPersonAttributesId(obtainPersonAttributesId(foundPerson));
+        person.setMdmPersonAttributesIdMap(createPersonAttributesIdMap(foundPerson));
         person.setMdmPersonId(obtainPersonId(foundPerson));
 
         PersonToMdmConverter personToMdmConverter = new PersonToMdmConverter(ACTION);
@@ -164,22 +164,24 @@ public class UpdateService extends AddService
         }
     }
 
-    //There should only be 1 row with PERSON and 1 row with PERSONATTRIBUTES per Person
-    private String obtainPersonAttributesId(RealTimeObjectActionDTO foundObject)
+    //TODO: Account for multiple rows of the same type
+    private Map<String, String> createPersonAttributesIdMap(RealTimeObjectActionDTO foundObject)
     {
         List<ObjAttributeDataDTO> attributeData = foundObject.getObjectAttributeDatas().getObjectAttributeData();
+        Map<String, String> mdmPersonAttributesIdMap = new HashMap<String, String>();
 
         for(ObjAttributeDataDTO attributes : attributeData)
         {
             if("PERSONATTRIBUTES".equals(attributes.getMultDetTypeLev1()))
             {
-                return attributes.getObjAdId();
+                mdmPersonAttributesIdMap.put(attributes.getMultDetTypeLev2(), attributes.getObjAdId());
             }
         }
 
-        return null;
+        return mdmPersonAttributesIdMap;
     }
 
+    //There should only be 1 row with PERSON
     private String obtainPersonId(RealTimeObjectActionDTO foundObject)
     {
         List<ObjAttributeDataDTO> attributeData = foundObject.getObjectAttributeDatas().getObjectAttributeData();

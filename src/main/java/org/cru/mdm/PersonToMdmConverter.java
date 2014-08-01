@@ -23,6 +23,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Utility class to help with conversion from {@link Person} to Mdm entities
@@ -207,9 +208,16 @@ public class PersonToMdmConverter
         return objAttributeDataDTOList;
     }
 
-    void setCommonAttributeData(ObjAttributeDataDTO attributeData, Person person, LocalDate today)
+    void setCommonAttributeData(ObjAttributeDataDTO attributeData, Person person, LocalDate today, String key)
     {
-        attributeData.setObjAdId(person.getMdmPersonAttributesId());
+        //TODO: Account for multiple rows of the same type
+        Map mdmPersonAttributeIdMap = person.getMdmPersonAttributesIdMap();
+        if(mdmPersonAttributeIdMap == null || mdmPersonAttributeIdMap.isEmpty() || mdmPersonAttributeIdMap.get(key) == null)
+        {
+            attributeData.setObjAdId(MdmConstants.JUNK_ID);
+        }
+        else attributeData.setObjAdId((String)mdmPersonAttributeIdMap.get(key));
+
         attributeData.setFromDate(today.toString(opendqDatePattern));  // This is overwritten on insert
         attributeData.setTypId(MdmConstants.TYP_ID);
         attributeData.setDateCreated(today.toString(opendqDatePattern));
@@ -223,8 +231,8 @@ public class PersonToMdmConverter
     ObjAttributeDataDTO createSourceDetails(Person person, LocalDate today)
     {
         ObjAttributeDataDTO sourceDetails = new ObjAttributeDataDTO();
-        setCommonAttributeData(sourceDetails, person, today);
         sourceDetails.setMultDetTypeLev2("SOURCEDETAILS");
+        setCommonAttributeData(sourceDetails, person, today, sourceDetails.getMultDetTypeLev2());
 
         sourceDetails.setField1(person.getSource().getSystemId());
         sourceDetails.setField2(person.getSource().getSystemId());
@@ -235,8 +243,8 @@ public class PersonToMdmConverter
     ObjAttributeDataDTO createHouseholdData(Person person, LocalDate today)
     {
         ObjAttributeDataDTO householdData = new ObjAttributeDataDTO();
-        setCommonAttributeData(householdData, person, today);
         householdData.setMultDetTypeLev2("HOUSEHOLD");
+        setCommonAttributeData(householdData, person, today, householdData.getMultDetTypeLev2());
 
         householdData.setField1(person.getId()); //TODO: Object ID
         householdData.setField2(person.getFirstName());
@@ -255,8 +263,8 @@ public class PersonToMdmConverter
         for(LinkedIdentity identity : identitiesList)
         {
             ObjAttributeDataDTO accountData = new ObjAttributeDataDTO();
-            setCommonAttributeData(accountData, person, today);
             accountData.setMultDetTypeLev2("ACCOUNTDATA");
+            setCommonAttributeData(accountData, person, today, accountData.getMultDetTypeLev2());
 
             accountData.setField1(identity.getSystemId());
             accountData.setField2(person.getAccountNumber());  //TODO: Is this correct?
@@ -280,8 +288,8 @@ public class PersonToMdmConverter
     ObjAttributeDataDTO createRelayDetails(Person person, LocalDate today)
     {
         ObjAttributeDataDTO relayDetails = new ObjAttributeDataDTO();
-        setCommonAttributeData(relayDetails, person, today);
         relayDetails.setMultDetTypeLev2("RELAYDETAILS");
+        setCommonAttributeData(relayDetails, person, today, relayDetails.getMultDetTypeLev2());
 
         if(person.getAuthentication() != null)
         {
@@ -304,8 +312,8 @@ public class PersonToMdmConverter
         for(LinkedIdentity identity : identitiesList)
         {
             ObjAttributeDataDTO identityData = new ObjAttributeDataDTO();
-            setCommonAttributeData(identityData, person, today);
             identityData.setMultDetTypeLev2("IDENTITIES");
+            setCommonAttributeData(identityData, person, today, identityData.getMultDetTypeLev2());
 
             identityData.setField1(identity.getSystemId()); //TODO: Name
             identityData.setField2(identity.getClientIntegrationId());
@@ -351,8 +359,8 @@ public class PersonToMdmConverter
         if(Strings.isNullOrEmpty(id)) return;
 
         ObjAttributeDataDTO authProviderData = new ObjAttributeDataDTO();
-        setCommonAttributeData(authProviderData, person, today);
         authProviderData.setMultDetTypeLev2("AUTHPROVIDER");
+        setCommonAttributeData(authProviderData, person, today, authProviderData.getMultDetTypeLev2());
 
         authProviderData.setField1(name);
         authProviderData.setField2(id);

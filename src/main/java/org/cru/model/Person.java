@@ -7,6 +7,7 @@ import org.cru.mdm.MdmConstants;
 import org.joda.time.DateTime;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * This object holds information that is contained within the index about a person
@@ -17,7 +18,7 @@ public class Person
 {
     private String mdmPartyId;
     private String mdmPersonId;
-    private String mdmPersonAttributesId;
+    private Map<String, String> mdmPersonAttributesIdMap;
 
     private String id;  // Global Registry ID
     @JsonProperty("email_address")
@@ -65,15 +66,14 @@ public class Person
         this.mdmPersonId = mdmPersonId;
     }
 
-    public String getMdmPersonAttributesId()
+    public Map<String, String> getMdmPersonAttributesIdMap()
     {
-        if(mdmPersonAttributesId == null) return MdmConstants.JUNK_ID;
-        return mdmPersonAttributesId;
+        return mdmPersonAttributesIdMap;
     }
 
-    public void setMdmPersonAttributesId(String mdmPersonAttributesId)
+    public void setMdmPersonAttributesIdMap(Map<String, String> mdmPersonAttributesIdMap)
     {
-        this.mdmPersonAttributesId = mdmPersonAttributesId;
+        this.mdmPersonAttributesIdMap = mdmPersonAttributesIdMap;
     }
 
     public String getId()

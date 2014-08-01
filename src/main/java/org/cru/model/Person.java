@@ -1,5 +1,6 @@
 package org.cru.model;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.cru.deserialization.DateTimeDeserializer;
@@ -16,8 +17,11 @@ import java.util.Map;
  */
 public class Person
 {
+    @JsonIgnore
     private String mdmPartyId;
+    @JsonIgnore
     private String mdmPersonId;
+    @JsonIgnore
     private Map<PersonAttributeDataId, String> mdmPersonAttributesIdMap;
 
     private String id;  // Global Registry ID

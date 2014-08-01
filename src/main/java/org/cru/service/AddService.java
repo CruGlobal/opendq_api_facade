@@ -126,7 +126,7 @@ public class AddService extends IndexingService
         }
 
         fieldNamesAndValues.put("FIELD8", person.getId());
-        //FIELD10 is not currently in use
+        //FIELD9 is not currently in use
         fieldNamesAndValues.put("FIELD10", mdmPerson.getObjectEntity().getPartyId());
 
         return fieldNamesAndValues;

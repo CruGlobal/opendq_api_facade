@@ -1,5 +1,7 @@
 package org.cru.service;
 
+import com.infosolve.openmdm.webservices.provider.impl.ObjEntityDTO;
+import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import org.cru.model.ResultData;
 import org.cru.model.SearchResponse;
 import org.cru.util.DeletedIndexesFileIO;
@@ -52,6 +54,14 @@ public class DeleteServiceTest
 
         return new Object[][] {
             { foundGRId1, createFoundSearchResponse(foundGRId1, foundPartyId1) },
+        };
+    }
+
+    @DataProvider
+    private Object[][] foundPersonsMdm()
+    {
+        return new Object[][] {
+            { "3ikfj32-8rt4-9493-394nfa2348da", createFoundPerson("11541581") },
         };
     }
 
@@ -109,6 +119,19 @@ public class DeleteServiceTest
         }
     }
 
+    @Test(dataProvider = "foundPersonsMdm")
+    public void testDeletePersonMdm(String id, RealTimeObjectActionDTO foundPerson)
+    {
+        try
+        {
+            deleteService.deletePerson(id, foundPerson);
+        }
+        catch(WebApplicationException we)
+        {
+            fail();
+        }
+    }
+
     private SearchResponse createNotFoundSearchResponse(String globalRegistryId)
     {
         SearchResponse foundIndex = new SearchResponse();
@@ -127,5 +150,16 @@ public class DeleteServiceTest
         values.putPartyId(partyId);
         foundIndex.setResultValues(values);
         return foundIndex;
+    }
+
+    private RealTimeObjectActionDTO createFoundPerson(String partyId)
+    {
+        RealTimeObjectActionDTO foundPerson = new RealTimeObjectActionDTO();
+
+        ObjEntityDTO objEntity = new ObjEntityDTO();
+        objEntity.setPartyId(partyId);
+
+        foundPerson.setObjectEntity(objEntity);
+        return foundPerson;
     }
 }

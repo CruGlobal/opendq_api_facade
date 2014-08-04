@@ -74,6 +74,7 @@ public class MatchingService extends IndexingService
 
         filteredResults.removeDuplicateResults();
         filteredResults.sortListByScore();
+        filteredResults.filterLowConfidenceMatches();
 
         return filteredResults;
     }
@@ -218,12 +219,13 @@ public class MatchingService extends IndexingService
         return deleteService.personIsDeleted(matchId);
     }
 
-    SearchResponse buildSearchResponse(Float score, ResultData values)
+    SearchResponse buildSearchResponse(Float score, ResultData values, String type)
     {
         SearchResponse searchResponse = new SearchResponse();
         searchResponse.setScore(score);
         searchResponse.setResultValues(values);
         searchResponse.setId(getGlobalRegistryIdFromMdm(values.getPartyId()));
+        searchResponse.setType(type);
 
         return searchResponse;
     }
@@ -232,7 +234,7 @@ public class MatchingService extends IndexingService
     {
         DataManagementWSImpl mdmService = configureMdmService();
 
-        RealTimeObjectActionDTO foundPerson = null;
+        RealTimeObjectActionDTO foundPerson;
         try
         {
             foundPerson = mdmService.findObject(partyId);
@@ -299,7 +301,7 @@ public class MatchingService extends IndexingService
 
         for(int i = 0; i < scoreList.size(); i++)
         {
-            searchResponseList.add(buildSearchResponse(scoreList.get(i), valueMapList.get(i)));
+            searchResponseList.add(buildSearchResponse(scoreList.get(i), valueMapList.get(i), searchResult.getType()));
         }
 
         return searchResponseList;

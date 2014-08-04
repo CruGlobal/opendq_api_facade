@@ -3,7 +3,6 @@ package org.cru.model.collections;
 import com.google.common.collect.Lists;
 import org.cru.model.SearchResponse;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -39,6 +38,34 @@ public class SearchResponseList implements List<SearchResponse>
         internalList = Lists.newArrayList(responsesWithoutDuplicates);
     }
 
+    public void filterLowConfidenceMatches()
+    {
+        if(internalList == null || internalList.isEmpty()) return;
+        String type = internalList.get(0).getType(); //All rows will have the same type
+
+        if(type == null) filterLowConfidenceForFuzzyMatch();
+        else if("B".equalsIgnoreCase(type)) filterLowConfidenceForBroadMatch();
+    }
+
+    private void filterLowConfidenceForFuzzyMatch()
+    {
+        List<SearchResponse> filteredList = Lists.newArrayList();
+        for(SearchResponse response : internalList)
+        {
+            if(response.getScore() > 0.8D) filteredList.add(response);
+        }
+        internalList = filteredList;
+    }
+
+    private void filterLowConfidenceForBroadMatch()
+    {
+        List<SearchResponse> filteredList = Lists.newArrayList();
+        for(SearchResponse response : internalList)
+        {
+            if(response.getScore() > 12.0D) filteredList.add(response);
+        }
+        internalList = filteredList;
+    }
     /**
      * Sorts SearchResponses by score in descending order
      */

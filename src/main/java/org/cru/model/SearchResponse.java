@@ -11,6 +11,7 @@ public class SearchResponse
     private double score;
     private String id;
     private ResultData resultValues;
+    private String type;
 
     public double getScore()
     {
@@ -40,6 +41,17 @@ public class SearchResponse
     public void setResultValues(ResultData resultValues)
     {
         this.resultValues = resultValues;
+    }
+
+    public String getType()
+    {
+
+        return type;
+    }
+
+    public void setType(String type)
+    {
+        this.type = type;
     }
 
     @Override

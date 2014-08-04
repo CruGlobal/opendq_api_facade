@@ -39,12 +39,8 @@ public class SearchResponseList implements List<SearchResponse>
         internalList = Lists.newArrayList(responsesWithoutDuplicates);
     }
 
-    //TODO: May need to change it so that closer to 1.0 is closer to first for over
     /**
-     * Sorts SearchResponses in the following way:
-     *   - 1.0 score(s) will be first
-     *   - anything above 1.0 comes next in descending order (e.g. 2.34, 2.14, 1.75, etc)
-     *   - anything below 1.0 comes afterward in descending order (e.g. 0.84, 0.55, 0.18, etc)
+     * Sorts SearchResponses by score in descending order
      */
     private static Comparator<SearchResponse> scoreComparator()
     {
@@ -52,20 +48,9 @@ public class SearchResponseList implements List<SearchResponse>
         {
             public int compare(SearchResponse searchResponse1, SearchResponse searchResponse2)
             {
-                if(searchResponse1.getScore() == 1.0D)
-                {
-                    if(searchResponse2.getScore() == 1.0D) return 0;
-                    return -1;
-                }
-                if(searchResponse1.getScore() > searchResponse2.getScore())
-                {
-                    return -1;
-                }
-                else if(searchResponse1.getScore() < searchResponse2.getScore())
-                {
-                    return 1;
-                }
-                else return 0;
+                if(searchResponse1.getScore() == searchResponse2.getScore()) return 0;
+                if(searchResponse1.getScore() > searchResponse2.getScore()) return -1;
+                return 1;
             }
         };
     }

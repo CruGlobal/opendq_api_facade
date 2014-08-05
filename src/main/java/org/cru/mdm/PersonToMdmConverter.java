@@ -407,20 +407,23 @@ public class PersonToMdmConverter
     {
         if(idList == null || idList.isEmpty()) return;
 
-        ObjAttributeDataDTO authProviderData = new ObjAttributeDataDTO();
-        authProviderData.setMultDetTypeLev2("AUTHPROVIDER");
+        for(String id : idList)
+        {
+            ObjAttributeDataDTO authProviderData = new ObjAttributeDataDTO();
+            authProviderData.setMultDetTypeLev2("AUTHPROVIDER");
 
-        authProviderData.setField1(name);
-        authProviderData.setField2(idList.get(0));
-        authProviderData.setField3(new DateTime().toString(dateFormatter));
+            authProviderData.setField1(name);
+            authProviderData.setField2(id);
+            authProviderData.setField3(new DateTime().toString(dateFormatter));
 
-        PersonAttributeDataId idKey = new PersonAttributeDataId();
-        idKey.setAttributeDataType(authProviderData.getMultDetTypeLev2());
-        idKey.setSecondaryIdentifier(authProviderData.getField2());
+            PersonAttributeDataId idKey = new PersonAttributeDataId();
+            idKey.setAttributeDataType(authProviderData.getMultDetTypeLev2());
+            idKey.setSecondaryIdentifier(authProviderData.getField2());
 
-        setCommonAttributeData(authProviderData, person, today, idKey);
+            setCommonAttributeData(authProviderData, person, today, idKey);
 
-        authProviderDataList.add(authProviderData);
+            authProviderDataList.add(authProviderData);
+        }
     }
 
     /**

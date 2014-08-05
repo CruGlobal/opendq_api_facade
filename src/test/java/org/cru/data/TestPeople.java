@@ -79,6 +79,8 @@ public class TestPeople
 
         Authentication authentication = new Authentication();
         authentication.setRelayGuidList(Lists.newArrayList("Re1ay-6u1d"));
+        authentication.getRelayGuidList().add("R2ojrj-IFj2-3443-aj345-a3425");
+        authentication.setKeyGuidList(Lists.newArrayList("Tke2-y4h5-Aldk4-aj34j2-82814"));
 
         testPerson.setId("3ikfj32-8rt4-9493-394nfa2348da");
         testPerson.setClientIntegrationId("1-6T4D4");

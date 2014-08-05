@@ -1,63 +1,72 @@
 package org.cru.model;
 
+import org.codehaus.jackson.annotate.JsonProperty;
+
+import java.util.List;
+
 /**
  * Created by William.Randall on 6/27/14.
  */
 public class Authentication
 {
-    private String relayGuid;
-    private String employeeRelayGuid;
-    private String googleAppsUid;
-    private String facebookUid;
-    private String keyGuid;
+    @JsonProperty("relay_guid")
+    private List<String> relayGuidList;
+    @JsonProperty("employee_relay_guid")
+    private List<String> employeeRelayGuidList;
+    @JsonProperty("google_apps_uid")
+    private List<String> googleAppsUidList;
+    @JsonProperty("facebook_uid")
+    private List<String> facebookUidList;
+    @JsonProperty("key_guid")
+    private List<String> keyGuidList;
 
-    public String getRelayGuid()
+    public List<String> getRelayGuidList()
     {
-        return relayGuid;
+        return relayGuidList;
     }
 
-    public void setRelayGuid(String relayGuid)
+    public void setRelayGuidList(List<String> relayGuidList)
     {
-        this.relayGuid = relayGuid;
+        this.relayGuidList = relayGuidList;
     }
 
-    public String getEmployeeRelayGuid()
+    public List<String> getEmployeeRelayGuidList()
     {
-        return employeeRelayGuid;
+        return employeeRelayGuidList;
     }
 
-    public void setEmployeeRelayGuid(String employeeRelayGuid)
+    public void setEmployeeRelayGuidList(List<String> employeeRelayGuidList)
     {
-        this.employeeRelayGuid = employeeRelayGuid;
+        this.employeeRelayGuidList = employeeRelayGuidList;
     }
 
-    public String getGoogleAppsUid()
+    public List<String> getGoogleAppsUidList()
     {
-        return googleAppsUid;
+        return googleAppsUidList;
     }
 
-    public void setGoogleAppsUid(String googleAppsUid)
+    public void setGoogleAppsUidList(List<String> googleAppsUidList)
     {
-        this.googleAppsUid = googleAppsUid;
+        this.googleAppsUidList = googleAppsUidList;
     }
 
-    public String getFacebookUid()
+    public List<String> getFacebookUidList()
     {
-        return facebookUid;
+        return facebookUidList;
     }
 
-    public void setFacebookUid(String facebookUid)
+    public void setFacebookUidList(List<String> facebookUidList)
     {
-        this.facebookUid = facebookUid;
+        this.facebookUidList = facebookUidList;
     }
 
-    public String getKeyGuid()
+    public List<String> getKeyGuidList()
     {
-        return keyGuid;
+        return keyGuidList;
     }
 
-    public void setKeyGuid(String keyGuid)
+    public void setKeyGuidList(List<String> keyGuidList)
     {
-        this.keyGuid = keyGuid;
+        this.keyGuidList = keyGuidList;
     }
 }

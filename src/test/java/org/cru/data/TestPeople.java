@@ -78,7 +78,7 @@ public class TestPeople
         linkedIdentity.setClientIntegrationId("1-6T4D4");
 
         Authentication authentication = new Authentication();
-        authentication.setRelayGuid("Re1ay-6u1d");
+        authentication.setRelayGuidList(Lists.newArrayList("Re1ay-6u1d"));
 
         testPerson.setId("3ikfj32-8rt4-9493-394nfa2348da");
         testPerson.setClientIntegrationId("1-6T4D4");
@@ -182,7 +182,7 @@ public class TestPeople
         linkedIdentity.setClientIntegrationId(clientIntegrationId);
 
         Authentication authentication = new Authentication();
-        authentication.setRelayGuid("74e97ae0-18f3-11e4-8c21-0800200c9a67");
+        authentication.setRelayGuidList(Lists.newArrayList("74e97ae0-18f3-11e4-8c21-0800200c9a67"));
 
         testPerson.setId("74e97ae1-18f3-11e4-8c21-0800200c9a67");
         testPerson.setClientIntegrationId(clientIntegrationId);
@@ -249,7 +249,7 @@ public class TestPeople
         linkedIdentity.setClientIntegrationId(clientIntegrationId);
 
         Authentication authentication = new Authentication();
-        authentication.setRelayGuid("75e97ae0-18f3-11e4-8c21-0800200c9a77");
+        authentication.setRelayGuidList(Lists.newArrayList("75e97ae0-18f3-11e4-8c21-0800200c9a77"));
 
         testPerson.setId("75e97ae1-18f3-11e4-8c21-0800200c9a77");
         testPerson.setClientIntegrationId(clientIntegrationId);

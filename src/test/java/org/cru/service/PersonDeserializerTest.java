@@ -60,8 +60,10 @@ public class PersonDeserializerTest
         assertEquals(deserializedPerson.getAddresses().get(0).getCountry(), "USA");
 
         assertNotNull(deserializedPerson.getAuthentication());
-        assertEquals(deserializedPerson.getAuthentication().getRelayGuid(), "f435f4-5f5e-8934-fjda-jk2354oia");
-        assertEquals(deserializedPerson.getAuthentication().getFacebookUid(), "500015648");
+        assertNotNull(deserializedPerson.getAuthentication().getRelayGuidList());
+        assertEquals(deserializedPerson.getAuthentication().getRelayGuidList().get(0), "f435f4-5f5e-8934-fjda-jk2354oia");
+        assertNotNull(deserializedPerson.getAuthentication().getFacebookUidList());
+        assertEquals(deserializedPerson.getAuthentication().getFacebookUidList().get(0), "500015648");
 
         assertEquals(deserializedPerson.getAccountNumber(), "123456789");
 
@@ -108,7 +110,8 @@ public class PersonDeserializerTest
             "        }," +
             "        \"authentication\": {" +
             "            \"relay_guid\": \"f435f4-5f5e-8934-fjda-jk2354oia\"," +
-            "            \"facebook_uid\": 500015648" +
+            "            \"facebook_uid\": 500015648," +
+            "            \"google_apps_uid\": [\"f46cf4-5d3e-8934-fjda-j43354fsa3\"]" +
             "        }," +
             "        \"account_number\": \"123456789\"," +
             "        \"linked_identities\": {" +

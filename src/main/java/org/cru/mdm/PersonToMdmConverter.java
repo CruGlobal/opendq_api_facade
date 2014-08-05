@@ -304,12 +304,19 @@ public class PersonToMdmConverter
     {
         ObjAttributeDataDTO relayDetails = new ObjAttributeDataDTO();
         relayDetails.setMultDetTypeLev2("RELAYDETAILS");
+        Authentication authentication = person.getAuthentication();
 
-        if(person.getAuthentication() != null)
+        if(authentication != null)
         {
             relayDetails.setField1(person.getSource().getSystemId());
-            relayDetails.setField2(person.getAuthentication().getEmployeeRelayGuid());
-            relayDetails.setField3(person.getAuthentication().getRelayGuid());
+            if(authentication.getEmployeeRelayGuidList() != null && !authentication.getEmployeeRelayGuidList().isEmpty())
+            {
+                relayDetails.setField2(authentication.getEmployeeRelayGuidList().get(0));
+            }
+            if(authentication.getRelayGuidList() != null && !authentication.getRelayGuidList().isEmpty())
+            {
+                relayDetails.setField3(authentication.getRelayGuidList().get(0));
+            }
 
             PersonAttributeDataId idKey = new PersonAttributeDataId();
             idKey.setAttributeDataType(relayDetails.getMultDetTypeLev2());
@@ -365,11 +372,11 @@ public class PersonToMdmConverter
         if(personAuthentication == null) return null;
 
         List<ObjAttributeDataDTO> authProviderDataList = Lists.newArrayList();
-        addAuthProviderIfAvailable(authProviderDataList, person, "Facebook", personAuthentication.getFacebookUid(), today);
-        addAuthProviderIfAvailable(authProviderDataList, person, "Google Apps", personAuthentication.getGoogleAppsUid(), today);
-        addAuthProviderIfAvailable(authProviderDataList, person, "Relay", personAuthentication.getRelayGuid(), today);
-        addAuthProviderIfAvailable(authProviderDataList, person, "Relay (Employee)", personAuthentication.getEmployeeRelayGuid(), today);
-        addAuthProviderIfAvailable(authProviderDataList, person, "The Key", personAuthentication.getKeyGuid(), today);
+        addAuthProviderIfAvailable(authProviderDataList, person, "Facebook", personAuthentication.getFacebookUidList(), today);
+        addAuthProviderIfAvailable(authProviderDataList, person, "Google Apps", personAuthentication.getGoogleAppsUidList(), today);
+        addAuthProviderIfAvailable(authProviderDataList, person, "Relay", personAuthentication.getRelayGuidList(), today);
+        addAuthProviderIfAvailable(authProviderDataList, person, "Relay (Employee)", personAuthentication.getEmployeeRelayGuidList(), today);
+        addAuthProviderIfAvailable(authProviderDataList, person, "The Key", personAuthentication.getKeyGuidList(), today);
 
         return authProviderDataList;
     }
@@ -395,16 +402,16 @@ public class PersonToMdmConverter
         List<ObjAttributeDataDTO> authProviderDataList,
         Person person,
         String name,
-        String id,
+        List<String> idList,
         LocalDate today)
     {
-        if(Strings.isNullOrEmpty(id)) return;
+        if(idList == null || idList.isEmpty()) return;
 
         ObjAttributeDataDTO authProviderData = new ObjAttributeDataDTO();
         authProviderData.setMultDetTypeLev2("AUTHPROVIDER");
 
         authProviderData.setField1(name);
-        authProviderData.setField2(id);
+        authProviderData.setField2(idList.get(0));
         authProviderData.setField3(new DateTime().toString(dateFormatter));
 
         PersonAttributeDataId idKey = new PersonAttributeDataId();
@@ -456,10 +463,17 @@ public class PersonToMdmConverter
         attributeData.setField5(person.getSuffix());
         attributeData.setField6(person.getGender());
 
-        if(person.getAuthentication() != null)
+        Authentication authentication = person.getAuthentication();
+        if(authentication != null)
         {
-            attributeData.setField7(person.getAuthentication().getRelayGuid());
-            attributeData.setField9(person.getAuthentication().getEmployeeRelayGuid());
+            if(authentication.getRelayGuidList() != null && !authentication.getRelayGuidList().isEmpty())
+            {
+                attributeData.setField7(authentication.getRelayGuidList().get(0));
+            }
+            if(authentication.getEmployeeRelayGuidList() != null && !authentication.getEmployeeRelayGuidList().isEmpty())
+            {
+                attributeData.setField9(authentication.getEmployeeRelayGuidList().get(0));
+            }
         }
 
         List<LinkedIdentity> identitiesList = person.getLinkedIdentities();

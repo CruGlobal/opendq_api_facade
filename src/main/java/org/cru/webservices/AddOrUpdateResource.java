@@ -1,6 +1,7 @@
 package org.cru.webservices;
 
 import com.google.common.collect.Lists;
+import org.apache.log4j.Logger;
 import org.cru.model.OafResponse;
 import org.cru.model.Person;
 import org.cru.service.AddOrUpdateService;
@@ -31,6 +32,8 @@ public class AddOrUpdateResource
     @Inject
     private PersonDeserializer personDeserializer;
 
+    private static Logger log = Logger.getLogger(AddOrUpdateResource.class);
+
     @SuppressWarnings("unused")  //used by Clients
     @Path("/add-or-update")
     @POST
@@ -52,6 +55,7 @@ public class AddOrUpdateResource
             else if(addOrUpdateResponseList.get(0).getAction().equals(Action.CONFLICT.toString()))
             {
                 addOrUpdateResponseList.get(0).setAction(Action.UPDATE);
+                log.debug("Conflict occurred while updating person with GR ID: " + person.getId());
                 return Response.status(Response.Status.CONFLICT).entity(addOrUpdateResponseList).build();
             }
             else
@@ -61,6 +65,7 @@ public class AddOrUpdateResource
         }
         catch(ConnectException ce)
         {
+            log.error("Connection problem while trying to add or update", ce);
             return Response.serverError().entity(ce.getMessage()).build();
         }
     }

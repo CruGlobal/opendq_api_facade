@@ -1,6 +1,7 @@
 package org.cru.postalsoft;
 
 import com.google.common.base.Throwables;
+import org.apache.log4j.Logger;
 import org.ccci.postalsoft.ObjectFactory;
 import org.ccci.postalsoft.PostalAddress;
 import org.ccci.postalsoft.PostalsoftService;
@@ -8,7 +9,6 @@ import org.ccci.webservices.services.postalsoft.CorrectionResult;
 import org.cru.model.Address;
 import org.cru.util.PostalsoftServiceProperties;
 
-import javax.inject.Inject;
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
@@ -21,6 +21,7 @@ public class PostalsoftServiceWrapper
 {
     final PostalsoftService postalsoftService;
     final String namespaceURI;
+    private static Logger log = Logger.getLogger(PostalsoftServiceWrapper.class);
 
     private PostalsoftServiceProperties postalsoftServiceProperties;
 
@@ -49,9 +50,9 @@ public class PostalsoftServiceWrapper
             String postalsoftPassword = postalsoftServiceProperties.getProperty("postalsoftLoginPassword");
             CorrectionResult correctionResult = postalsoftService.correctAddress(postalsoftUsername, postalsoftPassword, pa);
 
-			/* if we successfully found a match and cleansed the address, update the person's address
-			 * with the result back from PostalSoft
-			 */
+            /* if we successfully found a match and cleansed the address, update the person's address
+             * with the result back from PostalSoft
+             */
             if("SUCCESS".equals(correctionResult.getResultStatus().getValue()))
             {
                 PostalAddress correctedAddressValue = correctionResult.getAddress().getValue();
@@ -76,6 +77,7 @@ public class PostalsoftServiceWrapper
         catch (Throwable e)
         {
             address.setNormalized(false);
+            log.error("Problem occurred while cleansing address", e);
             Throwables.propagate(e);
         }
 

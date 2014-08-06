@@ -1,5 +1,6 @@
 package org.cru.service;
 
+import org.apache.log4j.Logger;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -19,6 +20,8 @@ import java.io.IOException;
  */
 public class PersonDeserializer
 {
+    private static Logger log = Logger.getLogger(PersonDeserializer.class);
+
     public Person deserializePerson(String json)
     {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -34,24 +37,31 @@ public class PersonDeserializer
         }
         catch(JsonParseException jpe)
         {
+            log.error("Failed to parse JSON: " + json, jpe);
             throw new WebApplicationException(
                 Response.serverError().entity(jpe.getMessage()).build()
             );
         }
         catch(JsonMappingException jme)
         {
+            log.error("Failed to map JSON: " + json, jme);
             throw new WebApplicationException(
                 Response.serverError().entity(jme.getMessage()).build()
             );
         }
         catch(IOException ioe)
         {
+            log.error("Failed to read JSON", ioe);
             throw new WebApplicationException(
                 Response.serverError().entity(ioe.getMessage()).build()
             );
         }
 
-        if(person == null) throw new WebApplicationException("Failed to create Person object.");
+        if(person == null)
+        {
+            log.error("Failed to create Person object from JSON: " + json);
+            throw new WebApplicationException("Failed to create Person object.");
+        }
 
         return person;
     }

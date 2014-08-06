@@ -4,8 +4,6 @@ import com.google.common.collect.Lists;
 import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import org.cru.model.OafResponse;
 import org.cru.model.Person;
-import org.cru.model.SearchResponse;
-import org.cru.model.collections.SearchResponseList;
 import org.cru.qualifiers.Match;
 import org.cru.util.Action;
 

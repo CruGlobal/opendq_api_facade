@@ -5,6 +5,7 @@ import com.infosolve.openmdm.webservices.provider.impl.DataManagementWSImplServi
 import com.infosolvetech.rtmatch.pdi4.RuntimeMatchWS;
 import com.infosolvetech.rtmatch.pdi4.RuntimeMatchWSService;
 import com.infosolvetech.rtmatch.pdi4.ServiceResult;
+import org.apache.log4j.Logger;
 import org.cru.util.OpenDQProperties;
 
 import javax.ws.rs.WebApplicationException;
@@ -27,6 +28,7 @@ public class IndexingService
     String slotName;
     String transformationFileLocation;
     String stepName;
+    private static Logger log = Logger.getLogger(IndexingService.class);
 
     RuntimeMatchWS callRuntimeMatchService() throws ConnectException
     {
@@ -41,6 +43,7 @@ public class IndexingService
 
         if(configurationResponse.isError())
         {
+            log.error("Failed to configure index: " + configurationResponse.getMessage());
             throw new WebApplicationException(configurationResponse.getMessage());
         }
     }
@@ -69,11 +72,14 @@ public class IndexingService
         }
         catch(MalformedURLException e)
         {
+            log.error("Bad WSDL URL", e);
             throw new WebApplicationException(Response.serverError().entity(e.getMessage()).build());
         }
 
         if(serviceImplType.equals(DataManagementWSImplService.class)) return new DataManagementWSImplService(wsdlUrl, qName);
         else if(serviceImplType.equals(RuntimeMatchWSService.class)) return new RuntimeMatchWSService(wsdlUrl, qName);
-        else throw new IllegalArgumentException(serviceImplType.getSimpleName() + " is not a valid service");
+
+        log.error("Invalid Service: " + serviceImplType.getSimpleName());
+        throw new IllegalArgumentException(serviceImplType.getSimpleName() + " is not a valid service");
     }
 }

@@ -3,6 +3,7 @@ package org.cru.util;
 import com.google.common.base.Strings;
 import org.apache.log4j.Logger;
 
+import javax.ws.rs.WebApplicationException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -40,6 +41,7 @@ public class PostalsoftServiceProperties
         catch(IOException ioe)
         {
             log.error("Problem loading PostalsoftService.properties", ioe);
+            throw new WebApplicationException(ioe);
         }
     }
 

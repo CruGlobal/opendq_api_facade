@@ -9,6 +9,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
+import javax.ws.rs.WebApplicationException;
 import javax.xml.namespace.QName;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -62,6 +63,7 @@ public class PostalsoftServiceWrapperProducer
         catch(MalformedURLException me)
         {
             log.error("Problem creating URL from properties file", me);
+            throw new WebApplicationException(me);
         }
     }
 }

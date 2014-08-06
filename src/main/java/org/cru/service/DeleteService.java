@@ -2,6 +2,7 @@ package org.cru.service;
 
 import com.infosolve.openmdm.webservices.provider.impl.DataManagementWSImpl;
 import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
+import org.apache.log4j.Logger;
 import org.cru.model.Person;
 import org.cru.qualifiers.Delete;
 import org.cru.util.DeletedIndexesFileIO;
@@ -20,6 +21,7 @@ import javax.ws.rs.core.Response;
 public class DeleteService extends IndexingService
 {
     private DeletedIndexesFileIO deletedIndexesFileIO;
+    private static Logger log = Logger.getLogger(DeleteService.class);
 
     @SuppressWarnings("unused")  //used by CDI
     public DeleteService() {}
@@ -43,20 +45,24 @@ public class DeleteService extends IndexingService
     void deleteFromMdm(RealTimeObjectActionDTO foundPerson)
     {
         DataManagementWSImpl mdmService = configureMdmService();
+        String partyId = foundPerson.getObjectEntity().getPartyId();
         try
         {
-            mdmService.deleteObject(foundPerson.getObjectEntity().getPartyId());
+            mdmService.deleteObject(partyId);
         }
         catch(Throwable t)
         {
             if(t.getMessage().contains("not found"))
             {
+                log.debug("Person with party Id: " + partyId +
+                    "was not found, so we cannot delete it", t);
                 throw new WebApplicationException(
                     Response.status(Response.Status.NOT_FOUND)
                         .entity(t.getMessage())
                         .build());
             }
-            else throw new WebApplicationException(t.getMessage());
+            log.error("Failed to delete from MDM with party Id: " + partyId, t);
+            throw new WebApplicationException(t.getMessage());
         }
     }
 

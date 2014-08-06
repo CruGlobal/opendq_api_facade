@@ -2,6 +2,7 @@ package org.cru.webservices;
 
 import com.google.common.collect.Lists;
 import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
+import org.apache.log4j.Logger;
 import org.cru.model.OafResponse;
 import org.cru.model.Person;
 import org.cru.qualifiers.Add;
@@ -37,6 +38,8 @@ public class AddResource
     @Inject
     private PersonDeserializer personDeserializer;
 
+    private static Logger log = Logger.getLogger(AddResource.class);
+
     @SuppressWarnings("unused")  //used by Clients
     @POST
     @Path("/add")
@@ -50,10 +53,15 @@ public class AddResource
         {
             RealTimeObjectActionDTO foundPerson = matchingService.findMatchInMdmByGlobalRegistryId(person.getId());
             if(foundPerson == null) addService.addPerson(person, "Add");
-            else return Response.ok().entity("Person with GR ID " + person.getId() + " already in the system!").build();
+            else
+            {
+                log.debug("Person with GR ID: " + person.getId() + " already in the system!");
+                return Response.ok().entity("Person with GR ID " + person.getId() + " already in the system!").build();
+            }
         }
         catch(ConnectException ce)
         {
+            log.error("Connection problem while trying to add", ce);
             throw new WebApplicationException(
                 Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(ce.getMessage())

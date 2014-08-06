@@ -1,6 +1,7 @@
 package org.cru.webservices;
 
 import com.google.common.collect.Lists;
+import org.apache.log4j.Logger;
 import org.cru.model.Address;
 import org.cru.model.OafResponse;
 import org.cru.model.Person;
@@ -36,6 +37,8 @@ public class MatchingResource
     @Inject
     private PersonDeserializer personDeserializer;
 
+    private static Logger log = Logger.getLogger(MatchingResource.class);
+
     @SuppressWarnings("unused")  //used by Clients
     @POST
     @Path("/match")
@@ -62,11 +65,13 @@ public class MatchingResource
             }
             else
             {
+                log.info("No match found for person: " + person.getFirstName() + " " + person.getLastName());
                 return Response.status(Response.Status.NOT_FOUND).entity(buildResponseEntity()).build();
             }
         }
         catch(ConnectException ce)
         {
+            log.error("Connection problem while trying to match", ce);
             throw new WebApplicationException(
                 Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                 .entity(ce.getMessage())

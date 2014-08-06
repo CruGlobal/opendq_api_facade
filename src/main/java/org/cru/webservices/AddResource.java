@@ -1,10 +1,13 @@
 package org.cru.webservices;
 
 import com.google.common.collect.Lists;
+import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import org.cru.model.OafResponse;
 import org.cru.model.Person;
 import org.cru.qualifiers.Add;
+import org.cru.qualifiers.Match;
 import org.cru.service.AddService;
+import org.cru.service.MatchingService;
 import org.cru.service.PersonDeserializer;
 import org.cru.util.Action;
 
@@ -29,6 +32,8 @@ public class AddResource
 {
     @Inject @Add
     private AddService addService;
+    @Inject @Match
+    private MatchingService matchingService;
     @Inject
     private PersonDeserializer personDeserializer;
 
@@ -41,10 +46,11 @@ public class AddResource
     {
         Person person = personDeserializer.deserializePerson(json);
 
-        //TODO: Do we want to check for a match here before adding?
         try
         {
-            addService.addPerson(person, "Add");
+            RealTimeObjectActionDTO foundPerson = matchingService.findMatchInMdmByGlobalRegistryId(person.getId());
+            if(foundPerson == null) addService.addPerson(person, "Add");
+            else return Response.ok().entity("Person with GR ID " + person.getId() + " already in the system!").build();
         }
         catch(ConnectException ce)
         {

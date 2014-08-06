@@ -9,6 +9,7 @@ import com.infosolve.openmdm.webservices.provider.impl.UniqueIdNameDTOList;
 import com.infosolvetech.rtmatch.pdi4.RuntimeMatchWS;
 import com.infosolvetech.rtmatch.pdi4.ServiceResult;
 import net.java.dev.jaxb.array.AnyTypeArray;
+import org.apache.log4j.Logger;
 import org.cru.model.Address;
 import org.cru.model.OafResponse;
 import org.cru.model.Person;
@@ -36,6 +37,7 @@ import java.util.List;
 public class MatchingService extends IndexingService
 {
     private DeleteService deleteService;
+    private static Logger log = Logger.getLogger(MatchingService.class);
 
     @SuppressWarnings("unused")  //used by CDI
     public MatchingService() {}
@@ -122,6 +124,7 @@ public class MatchingService extends IndexingService
         }
         catch(Throwable t)
         {
+            log.error("Failed to find match in MDM", t);
             throw new WebApplicationException("Failed to find match in MDM: " + t.getMessage());
         }
     }
@@ -149,11 +152,17 @@ public class MatchingService extends IndexingService
         }
         catch(Throwable t)
         {
-            if(t.getMessage().contains("No Data found with these input set.")) return null;
+            if(t.getMessage().contains("No Data found with these input set."))
+            {
+                log.info("No data found for GR ID: " + globalRegistryId);
+                return null;
+            }
             if(t.getMessage().contains("query did not return a unique result"))
             {
+                log.error("More than one instance of GR ID: " + globalRegistryId + " in MDM");
                 throw new WebApplicationException("More than one result returned for global registry id: " + globalRegistryId);
             }
+            log.error("Error searching MDM with GR ID: " + globalRegistryId, t);
             throw new WebApplicationException(t.getMessage());
         }
     }
@@ -186,6 +195,7 @@ public class MatchingService extends IndexingService
 
         if(searchResponse.isError())
         {
+            log.error("Error searching index: " + searchResponse.getMessage());
             throw new WebApplicationException(searchResponse.getMessage());
         }
 
@@ -241,6 +251,7 @@ public class MatchingService extends IndexingService
         }
         catch(Throwable t)
         {
+            log.debug("Could not find a person with party id: " + partyId + "in MDM", t);
             throw new WebApplicationException("Failed to find global registry id using party id: " + partyId);
         }
 

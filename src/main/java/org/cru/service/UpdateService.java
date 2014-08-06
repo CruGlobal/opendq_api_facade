@@ -7,6 +7,7 @@ import com.infosolve.openmdm.webservices.provider.impl.ObjAddressDTO;
 import com.infosolve.openmdm.webservices.provider.impl.ObjAttributeDataDTO;
 import com.infosolve.openmdm.webservices.provider.impl.ObjCommunicationDTO;
 import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
+import org.apache.log4j.Logger;
 import org.cru.mdm.MdmCodes;
 import org.cru.mdm.PersonToMdmConverter;
 import org.cru.model.Address;
@@ -32,6 +33,7 @@ import java.util.Map;
 public class UpdateService extends AddService
 {
     private static final String ACTION = "U";
+    private static Logger log = Logger.getLogger(UpdateService.class);
 
     @SuppressWarnings("unused")  //Used by CDI
     public UpdateService() {}
@@ -75,11 +77,13 @@ public class UpdateService extends AddService
         }
         catch(Throwable t)
         {
+            log.error("Failed to update person with GR ID: " + person.getId(), t);
             throw new WebApplicationException("Failed to update person: " + t.getMessage());
         }
 
         if(returnedObject == null)
         {
+            log.error("Failed to update MDM - returned object was null");
             throw new WebApplicationException(Response.serverError().entity("Failed to update MDM").build());
         }
 

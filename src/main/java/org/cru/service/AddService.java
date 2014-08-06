@@ -5,6 +5,7 @@ import com.infosolve.openmdm.webservices.provider.impl.DataManagementWSImpl;
 import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import com.infosolvetech.rtmatch.pdi4.RuntimeMatchWS;
 import com.infosolvetech.rtmatch.pdi4.ServiceResult;
+import org.apache.log4j.Logger;
 import org.cru.mdm.MdmConstants;
 import org.cru.mdm.PersonToMdmConverter;
 import org.cru.model.Address;
@@ -29,6 +30,7 @@ public class AddService extends IndexingService
 {
     AddressNormalizationService addressNormalizationService;
     private static final String ACTION = "A";  // A = Add
+    private static Logger log = Logger.getLogger(AddService.class);
 
     @SuppressWarnings("unused")  //used by CDI
     public AddService() {}
@@ -66,12 +68,14 @@ public class AddService extends IndexingService
         }
         catch(Throwable t)
         {
+            log.error("Failed to add person to MDM", t);
             throw new WebApplicationException("Failed to add person to mdm: " + t.getMessage());
         }
 
         //If we come back with the same party ID that we sent in for adding (0), then the add did not happen
         if(MdmConstants.JUNK_ID.equals(returnedObject.getObjectEntity().getPartyId()))
         {
+            log.error("Failed to add person to MDM - Returned with Junk ID");
             throw new WebApplicationException("Failed to add person to mdm.");
         }
 
@@ -110,6 +114,7 @@ public class AddService extends IndexingService
 
         if(addResponse.isError())
         {
+            log.error("Failed to add index: " + addResponse.getMessage());
             throw new WebApplicationException(addResponse.getMessage());
         }
     }

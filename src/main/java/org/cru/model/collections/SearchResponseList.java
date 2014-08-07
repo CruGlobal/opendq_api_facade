@@ -68,6 +68,7 @@ public class SearchResponseList implements List<SearchResponse>
         }
         internalList = filteredList;
     }
+    
     /**
      * Sorts SearchResponses by score in descending order
      */

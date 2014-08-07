@@ -1,6 +1,7 @@
 package org.cru.model;
 
 import org.cru.model.collections.SearchResponseList;
+import org.cru.model.map.ResultData;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;

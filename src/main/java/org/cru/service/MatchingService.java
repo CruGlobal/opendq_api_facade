@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 import org.cru.model.Address;
 import org.cru.model.OafResponse;
 import org.cru.model.Person;
-import org.cru.model.ResultData;
+import org.cru.model.map.ResultData;
 import org.cru.model.SearchResponse;
 import org.cru.model.collections.SearchResponseList;
 import org.cru.qualifiers.Delete;

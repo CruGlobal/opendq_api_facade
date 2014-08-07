@@ -1,5 +1,7 @@
 package org.cru.model;
 
+import org.cru.model.map.ResultData;
+
 /**
  * Object to hold information that comes back from OpenDQ about the match found
  * in a more easily maintainable manner

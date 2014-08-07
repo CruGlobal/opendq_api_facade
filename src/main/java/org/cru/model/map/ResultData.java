@@ -1,4 +1,4 @@
-package org.cru.model;
+package org.cru.model.map;
 
 import java.util.Collection;
 import java.util.HashMap;

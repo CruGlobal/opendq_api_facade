@@ -20,6 +20,8 @@ import java.util.Set;
 public class SearchResponseList implements List<SearchResponse>
 {
     private List<SearchResponse> internalList;
+    private static final double FUZZY_LOWER_THRESHOLD = 0.8D;
+    private static final double BROAD_LOWER_THRESHOLD = 12.0D;
 
     public SearchResponseList()
     {
@@ -52,7 +54,7 @@ public class SearchResponseList implements List<SearchResponse>
         List<SearchResponse> filteredList = Lists.newArrayList();
         for(SearchResponse response : internalList)
         {
-            if(response.getScore() > 0.8D) filteredList.add(response);
+            if(response.getScore() > FUZZY_LOWER_THRESHOLD) filteredList.add(response);
         }
         internalList = filteredList;
     }
@@ -62,7 +64,7 @@ public class SearchResponseList implements List<SearchResponse>
         List<SearchResponse> filteredList = Lists.newArrayList();
         for(SearchResponse response : internalList)
         {
-            if(response.getScore() > 12.0D) filteredList.add(response);
+            if(response.getScore() > BROAD_LOWER_THRESHOLD) filteredList.add(response);
         }
         internalList = filteredList;
     }

@@ -58,7 +58,7 @@ public class MatchingService extends IndexingService
         this.slotName = slotName;
         this.stepName = "RtMatchAddr";
 
-        SearchResponseList searchResponseList = searchSlot(person);
+        SearchResponseList searchResponseList = findPersonInIndex(person);
         if(searchResponseList == null || searchResponseList.isEmpty()) return null;
 
         return buildOafResponseList(filterDuplicatePartyIds(buildFilteredSearchResponseList(searchResponseList)));
@@ -117,7 +117,7 @@ public class MatchingService extends IndexingService
 
     public RealTimeObjectActionDTO findMatchInMdm(String partyId)
     {
-        DataManagementWSImpl mdmService = configureMdmService();
+        DataManagementWSImpl mdmService = getMdmServiceImplementation();
         try
         {
             return mdmService.findObject(partyId);
@@ -137,7 +137,7 @@ public class MatchingService extends IndexingService
      */
     public RealTimeObjectActionDTO findMatchInMdmByGlobalRegistryId(String globalRegistryId)
     {
-        DataManagementWSImpl mdmService = configureMdmService();
+        DataManagementWSImpl mdmService = getMdmServiceImplementation();
         UniqueIdNameDTOList uniqueNameList = new UniqueIdNameDTOList();
         List<UniqueIdNameDTO> uniqueIdNameDTOs = uniqueNameList.getUniqueIdNames();
 
@@ -167,30 +167,30 @@ public class MatchingService extends IndexingService
         }
     }
 
-    SearchResponseList searchSlot(Person person) throws ConnectException
+    SearchResponseList findPersonInIndex(Person person) throws ConnectException
     {
         SearchResponseList searchResponseList = new SearchResponseList();
 
         //Handle cases where no address was passed in
         if(person.getAddresses() == null || person.getAddresses().isEmpty())
         {
-            SearchResponseList responses = searchSlot(createSearchValuesFromPerson(person, null));
+            SearchResponseList responses = queryIndex(createSearchValuesFromPerson(person, null));
             if(responses != null) searchResponseList.addAll(responses);
         }
 
         //If given more than one address, we need to make sure we search on all of them
         for(Address personAddress : person.getAddresses())
         {
-            SearchResponseList responses = searchSlot(createSearchValuesFromPerson(person, personAddress));
+            SearchResponseList responses = queryIndex(createSearchValuesFromPerson(person, personAddress));
             if(responses!= null) searchResponseList.addAll(responses);
         }
 
         return searchResponseList;
     }
 
-    private SearchResponseList searchSlot(List<String> searchValues) throws ConnectException
+    private SearchResponseList queryIndex(List<String> searchValues) throws ConnectException
     {
-        RuntimeMatchWS runtimeMatchWS = callRuntimeMatchService();
+        RuntimeMatchWS runtimeMatchWS = configureAndRetrieveRuntimeMatchService();
         ServiceResult searchResponse = runtimeMatchWS.searchSlot(slotName, searchValues);
 
         if(searchResponse.isError())
@@ -242,7 +242,7 @@ public class MatchingService extends IndexingService
 
     String getGlobalRegistryIdFromMdm(String partyId)
     {
-        DataManagementWSImpl mdmService = configureMdmService();
+        DataManagementWSImpl mdmService = getMdmServiceImplementation();
 
         RealTimeObjectActionDTO foundPerson;
         try

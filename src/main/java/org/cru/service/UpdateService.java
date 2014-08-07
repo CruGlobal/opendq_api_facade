@@ -55,12 +55,12 @@ public class UpdateService extends AddService
         }
 
         RealTimeObjectActionDTO updatedPerson = updateMdm(person, foundPerson);
-        addSlot(person, updatedPerson);
+        addPersonToIndex(person, updatedPerson);
     }
 
     private RealTimeObjectActionDTO updateMdm(Person person, RealTimeObjectActionDTO foundPerson)
     {
-        DataManagementWSImpl mdmService = configureMdmService();
+        DataManagementWSImpl mdmService = getMdmServiceImplementation();
 
         setAddressIds(foundPerson, person);
         setCommunicationIds(foundPerson, person);

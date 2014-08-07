@@ -30,14 +30,14 @@ public class IndexingService
     String stepName;
     private static Logger log = Logger.getLogger(IndexingService.class);
 
-    RuntimeMatchWS callRuntimeMatchService() throws ConnectException
+    RuntimeMatchWS configureAndRetrieveRuntimeMatchService() throws ConnectException
     {
-        RuntimeMatchWS runtimeMatchWS = configureRuntimeService();
-        configureSlot(runtimeMatchWS);
+        RuntimeMatchWS runtimeMatchWS = getRuntimeServiceImplementation();
+        configureRuntimeMatchService(runtimeMatchWS);
         return runtimeMatchWS;
     }
 
-    private void configureSlot(RuntimeMatchWS runtimeMatchWS)
+    private void configureRuntimeMatchService(RuntimeMatchWS runtimeMatchWS)
     {
         ServiceResult configurationResponse = runtimeMatchWS.configureSlot(slotName, transformationFileLocation, stepName);
 
@@ -48,17 +48,17 @@ public class IndexingService
         }
     }
 
-    private RuntimeMatchWS configureRuntimeService()
+    private RuntimeMatchWS getRuntimeServiceImplementation()
     {
-        return ((RuntimeMatchWSService) getServiceImpl("runtime", RuntimeMatchWSService.class)).getRuntimeMatchWSPort();
+        return ((RuntimeMatchWSService) getServiceImplementation("runtime", RuntimeMatchWSService.class)).getRuntimeMatchWSPort();
     }
 
-    DataManagementWSImpl configureMdmService()
+    DataManagementWSImpl getMdmServiceImplementation()
     {
-        return ((DataManagementWSImplService) getServiceImpl("mdm", DataManagementWSImplService.class)).getDataManagementWSImplPort();
+        return ((DataManagementWSImplService) getServiceImplementation("mdm", DataManagementWSImplService.class)).getDataManagementWSImplPort();
     }
 
-    Service getServiceImpl(String serviceName, Class serviceImplType)
+    Service getServiceImplementation(String serviceName, Class serviceImplType)
     {
         transformationFileLocation = openDQProperties.getProperty("transformationFileLocation");
         QName qName = new QName(

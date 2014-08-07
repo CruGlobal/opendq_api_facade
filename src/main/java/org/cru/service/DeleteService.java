@@ -44,7 +44,7 @@ public class DeleteService extends IndexingService
 
     void deleteFromMdm(RealTimeObjectActionDTO foundPerson)
     {
-        DataManagementWSImpl mdmService = configureMdmService();
+        DataManagementWSImpl mdmService = getMdmServiceImplementation();
         String partyId = foundPerson.getObjectEntity().getPartyId();
         try
         {

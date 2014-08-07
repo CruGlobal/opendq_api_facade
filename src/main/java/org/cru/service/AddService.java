@@ -53,12 +53,12 @@ public class AddService extends IndexingService
         }
 
         RealTimeObjectActionDTO addedPerson = addPersonToMdm(person);
-        addSlot(person, addedPerson);
+        addPersonToIndex(person, addedPerson);
     }
 
     private RealTimeObjectActionDTO addPersonToMdm(Person person)
     {
-        DataManagementWSImpl mdmService = configureMdmService();
+        DataManagementWSImpl mdmService = getMdmServiceImplementation();
         PersonToMdmConverter personToMdmConverter = new PersonToMdmConverter(ACTION);
 
         RealTimeObjectActionDTO returnedObject;
@@ -82,24 +82,28 @@ public class AddService extends IndexingService
         return returnedObject;
     }
 
-    void addSlot(Person person, RealTimeObjectActionDTO mdmPerson) throws ConnectException
+    void addPersonToIndex(Person person, RealTimeObjectActionDTO mdmPerson) throws ConnectException
     {
-        RuntimeMatchWS runtimeMatchWS = callRuntimeMatchService();
+        RuntimeMatchWS runtimeMatchWS = configureAndRetrieveRuntimeMatchService();
 
         //Handle cases where no address was passed in
         if(person.getAddresses() == null || person.getAddresses().isEmpty())
         {
-            addSlot(runtimeMatchWS, person, mdmPerson, null);
+            addPersonToIndexWithAddress(runtimeMatchWS, person, mdmPerson, null);
         }
 
         //If more than one address was passed in, add them all to the index
         for(Address personAddress : person.getAddresses())
         {
-            addSlot(runtimeMatchWS, person, mdmPerson, personAddress);
+            addPersonToIndexWithAddress(runtimeMatchWS, person, mdmPerson, personAddress);
         }
     }
 
-    private void addSlot(RuntimeMatchWS runtimeMatchWS, Person person, RealTimeObjectActionDTO mdmPerson, Address addressToUse)
+    private void addPersonToIndexWithAddress(
+        RuntimeMatchWS runtimeMatchWS,
+        Person person,
+        RealTimeObjectActionDTO mdmPerson,
+        Address addressToUse)
     {
         Map<String, String> fieldNamesAndValues = generateFieldNamesAndValues(person, mdmPerson, addressToUse);
 

@@ -65,8 +65,6 @@ public class PersonDeserializerTest
         assertNotNull(deserializedPerson.getAuthentication().getFacebookUidList());
         assertEquals(deserializedPerson.getAuthentication().getFacebookUidList().get(0), "500015648");
 
-        assertEquals(deserializedPerson.getAccountNumber(), "123456789");
-
         assertEquals(deserializedPerson.getLinkedIdentities().size(), 1);
         assertEquals(deserializedPerson.getLinkedIdentities().get(0).getClientIntegrationId(), "1-FG32A");
         assertEquals(deserializedPerson.getLinkedIdentities().get(0).getEmployeeNumber(), "012345678");
@@ -113,7 +111,6 @@ public class PersonDeserializerTest
             "            \"facebook_uid\": 500015648," +
             "            \"google_apps_uid\": [\"f46cf4-5d3e-8934-fjda-j43354fsa3\"]" +
             "        }," +
-            "        \"account_number\": \"123456789\"," +
             "        \"linked_identities\": {" +
             "            \"client_integration_id\": \"1-FG32A\"," +
             "            \"employee_number\": \"012345678\"" +

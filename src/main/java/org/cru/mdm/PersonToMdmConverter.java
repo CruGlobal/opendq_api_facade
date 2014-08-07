@@ -250,7 +250,7 @@ public class PersonToMdmConverter
         ObjAttributeDataDTO householdData = new ObjAttributeDataDTO();
         householdData.setMultDetTypeLev2("HOUSEHOLD");
 
-        householdData.setField1(person.getId()); //TODO: Object ID
+        householdData.setField1(person.getMdmPartyId());
         householdData.setField2(person.getFirstName());
         householdData.setField3(person.getLastName());
 
@@ -276,8 +276,8 @@ public class PersonToMdmConverter
             accountData.setMultDetTypeLev2("ACCOUNTDATA");
 
             accountData.setField1(identity.getSystemId());
-            accountData.setField2(person.getAccountNumber());  //TODO: Is this correct?
-            accountData.setField3(identity.getClientIntegrationId());
+            accountData.setField2(identity.getClientIntegrationId());  // I think this will be more useful than null
+            accountData.setField3(person.getId());
 
             if(person.getClientUpdatedAt() == null)
             {
@@ -341,7 +341,7 @@ public class PersonToMdmConverter
             ObjAttributeDataDTO identityData = new ObjAttributeDataDTO();
             identityData.setMultDetTypeLev2("IDENTITIES");
 
-            identityData.setField1(identity.getSystemId()); //TODO: Name
+            identityData.setField1(identity.getSystemId());
             identityData.setField2(identity.getClientIntegrationId());
             identityData.setField3(identity.getSystemId());
 

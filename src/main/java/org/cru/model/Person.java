@@ -30,7 +30,6 @@ public class Person
     @JsonProperty("address")
     private List<Address> addresses;
     private String gender;
-    private String accountNumber;
     @JsonProperty("phone_number")
     private List<PhoneNumber> phoneNumbers;
     private String clientIntegrationId;
@@ -108,16 +107,6 @@ public class Person
     public void setGender(String gender)
     {
         this.gender = gender;
-    }
-
-    public String getAccountNumber()
-    {
-        return accountNumber;
-    }
-
-    public void setAccountNumber(String accountNumber)
-    {
-        this.accountNumber = accountNumber;
     }
 
     public List<EmailAddress> getEmailAddresses()

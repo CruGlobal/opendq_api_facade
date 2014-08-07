@@ -10,15 +10,14 @@ import org.cru.mdm.MdmConstants;
 import org.cru.mdm.PersonToMdmConverter;
 import org.cru.model.Address;
 import org.cru.model.Person;
+import org.cru.model.map.IndexData;
 import org.cru.qualifiers.Add;
 import org.cru.util.OpenDQProperties;
 
 import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
 import java.net.ConnectException;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Service to handle complexity of adding a {@link Person} to the index
@@ -105,16 +104,13 @@ public class AddService extends IndexingService
         RealTimeObjectActionDTO mdmPerson,
         Address addressToUse)
     {
-        Map<String, String> fieldNamesAndValues = generateFieldNamesAndValues(person, mdmPerson, addressToUse);
+        IndexData fieldNamesAndValues = generateFieldNamesAndValues(person, mdmPerson, addressToUse);
 
         List<String> fieldNames = Lists.newArrayList();
         fieldNames.addAll(fieldNamesAndValues.keySet());
 
-        List<String> fieldValues = Lists.newArrayList();
-        fieldValues.addAll(fieldNamesAndValues.values());
-
         //while updateSlot sounds like an update, it is actually inserting an entry into the index
-        ServiceResult addResponse = runtimeMatchWS.updateSlot(slotName, fieldNames, fieldValues);
+        ServiceResult addResponse = runtimeMatchWS.updateSlot(slotName, fieldNames, fieldNamesAndValues.stringValues());
 
         if(addResponse.isError())
         {
@@ -123,30 +119,24 @@ public class AddService extends IndexingService
         }
     }
 
-    Map<String, String> generateFieldNamesAndValues(Person person, RealTimeObjectActionDTO mdmPerson, Address addressToUse)
+    IndexData generateFieldNamesAndValues(Person person, RealTimeObjectActionDTO mdmPerson, Address addressToUse)
     {
-        Map<String, String> fieldNamesAndValues = new LinkedHashMap<String, String>();
+        IndexData indexData = new IndexData();
 
-        //NOTE: Only 10 fields can be set
-        fieldNamesAndValues.put("FIELD1", person.getFirstName());
-        fieldNamesAndValues.put("FIELD2", person.getLastName());
+        indexData.putFirstName(person.getFirstName());
+        indexData.putLastName(person.getLastName());
+        indexData.putStandardizedFirstName(person.getFirstName());
+        indexData.putPartyId(mdmPerson.getObjectEntity().getPartyId());
 
         if(addressToUse != null)
         {
-            fieldNamesAndValues.put("FIELD3", addressToUse.getAddressLine1());
-
-            if(addressToUse.getAddressLine2() == null) fieldNamesAndValues.put("FIELD4", "NULLDATA");
-            else fieldNamesAndValues.put("FIELD4", addressToUse.getAddressLine2());
-
-            fieldNamesAndValues.put("FIELD5", addressToUse.getCity());
-            fieldNamesAndValues.put("FIELD6", addressToUse.getState());
-            fieldNamesAndValues.put("FIELD7", addressToUse.getZipCode());
+            indexData.putAddressLine1(addressToUse.getAddressLine1());
+            indexData.putAddressLine2(addressToUse.getAddressLine2());
+            indexData.putCity(addressToUse.getCity());
+            indexData.putState(addressToUse.getState());
+            indexData.putZipCode(addressToUse.getZipCode());
         }
 
-        fieldNamesAndValues.put("FIELD8", person.getFirstName());  //TODO: Determine exactly what should go here
-        //FIELD9 is not currently in use
-        fieldNamesAndValues.put("FIELD10", mdmPerson.getObjectEntity().getPartyId());
-
-        return fieldNamesAndValues;
+        return indexData;
     }
 }

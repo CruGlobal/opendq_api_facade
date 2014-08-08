@@ -1,6 +1,15 @@
 opendq_api_facade
 =================
 
+<h3>Intended Use</h3>
+<p>
+  This API sits between Global Registry and OpenDQ as an in-between.  The OpenDQ/Infosolve API requires several calls for each action.  For example, to search on the index, one must first call a configuration endpoint and then a search endpoint.  The OpenDQ/Infosolve API also has very generic names for its parameters and variables such as FIELD1 and arg0.
+</p>
+<p>For this reason, the opendq api facade (OAF) has been created as a nicer API to call from Global Registry.</p>
+<p>
+  The plan for now is that Global Registry will get some data about a person then call OAF using the <strong>match</strong> endpoint to try and find a match.  If a match is found, Global Registry will then call the <strong>add-or-update</strong> endpoint, which will result in an update of the existing record.  If no match is found, Global Registry will still call the <strong>add-or-update</strong> endpoint, and in this case it will result in adding this person as a new record.
+</p>
+
 <h3>Endpoints</h3>
 
 <ul>
@@ -53,8 +62,12 @@ opendq_api_facade
             "zip_code": "String",
             "country": "String"
         },
-        "authentication": {
-            "relay_guid": "String"
+        "authentication": {  //Each of these ids could be either a string or an array of strings
+            "relay_guid": "String",
+            "employee_relay_guid": "String",
+            "google_apps_uid": "String",
+            "facebook_uid": "String",
+            "key_guid": "String"
         },
         "linked_identities": { //Could be single object or array
             "system_id": "String",
@@ -91,5 +104,5 @@ curl -H "Content-Type: application/json" -d '{"person":{"id":"2ad345e","email_ad
 
 <h4>Delete</h4>
 <pre>
-curl -X DELETE -H "Content-Type: application/json" -d '{"person":{"id":"645asf4a643r-w3r54a","email_address":{"id":"645asf4a643r-w3r54a-email","email":"ab@ba.org"},"last_name":"Ab","first_name":"Ba","title":"Mrs.","gender":"Female","phone_number":{"id":"645asf4a643r-w3r54a-phone","number":"3333333333","location":"mobile"},"client_integration_id":"645asf4a643r-w3r54a-client","address":{"id":"645asf4a643r-w3r54a-addr","address_1":"33 Jones St","city":"Orlando","state":"FL","zip_code":"32828","country":"USA"},"authentication":{"relay_guid":"645asf4a643r-w3r54a-guid"},"account_number":"645asf4a643r-w3r54a-account","linked_identities":{"system_id":"OAF","client_integration_id":"645asf4a643r-w3r54a-client","employee_number":"645asf4a643r-w3r54a-employee"},"source":{"system_id":"OAF","client_integration_id":"645asf4a643r-w3r54a-client"},"client_updated_at":"2014-06-21 13:41:21"}}'  http://localhost:8080/oaf/rest/delete
+curl -X DELETE http://localhost:8080/oaf/rest/delete/645asf4a643r-w3r54a
 </pre>

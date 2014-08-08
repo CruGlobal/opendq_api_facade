@@ -5,7 +5,6 @@ import org.cru.model.map.IndexData;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
 
 /**
  * Created by William.Randall on 7/28/2014.
@@ -19,9 +18,9 @@ public class SearchResponseListTest
         SearchResponseList searchResponseList = createSearchResponseListForScoreSort();
         searchResponseList.sortListByScore();
 
-        assertEquals(searchResponseList.get(0).getScore(), 1.0D);
-        assertEquals(searchResponseList.get(1).getScore(), 2.34D);
-        assertEquals(searchResponseList.get(2).getScore(), 1.75D);
+        assertEquals(searchResponseList.get(0).getScore(), 0.94D);
+        assertEquals(searchResponseList.get(1).getScore(), 0.75D);
+        assertEquals(searchResponseList.get(2).getScore(), 0.34D);
         assertEquals(searchResponseList.get(3).getScore(), 0.18D);
     }
 
@@ -46,26 +45,26 @@ public class SearchResponseListTest
     {
         SearchResponseList searchResponseList = new SearchResponseList();
 
-        SearchResponse perfectMatch = new SearchResponse();
-        perfectMatch.setScore(1.0D);
-        perfectMatch.setId("1");
+        SearchResponse match1 = new SearchResponse();
+        match1.setScore(0.94D);
+        match1.setId("1");
 
-        SearchResponse overMatch = new SearchResponse();
-        overMatch.setScore(2.34D);
-        overMatch.setId("2");
+        SearchResponse match2 = new SearchResponse();
+        match2.setScore(0.34D);
+        match2.setId("2");
 
-        SearchResponse underMatch = new SearchResponse();
-        underMatch.setScore(0.18D);
-        underMatch.setId("3");
+        SearchResponse match3 = new SearchResponse();
+        match3.setScore(0.18D);
+        match3.setId("3");
 
-        SearchResponse overMatch2 = new SearchResponse();
-        overMatch2.setScore(1.75D);
-        overMatch2.setId("4");
+        SearchResponse match4 = new SearchResponse();
+        match4.setScore(0.75D);
+        match4.setId("4");
 
-        searchResponseList.add(overMatch2);
-        searchResponseList.add(underMatch);
-        searchResponseList.add(overMatch);
-        searchResponseList.add(perfectMatch);
+        searchResponseList.add(match4);
+        searchResponseList.add(match3);
+        searchResponseList.add(match2);
+        searchResponseList.add(match1);
 
         return searchResponseList;
     }

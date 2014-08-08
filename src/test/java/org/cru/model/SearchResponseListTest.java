@@ -1,7 +1,7 @@
 package org.cru.model;
 
 import org.cru.model.collections.SearchResponseList;
-import org.cru.model.map.ResultData;
+import org.cru.model.map.IndexData;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
@@ -77,14 +77,14 @@ public class SearchResponseListTest
         SearchResponse firstMatch = new SearchResponse();
         firstMatch.setScore(1.0D);
 
-        ResultData firstMapValues = new ResultData();
+        IndexData firstMapValues = new IndexData();
         firstMapValues.putFirstName("Test");
         firstMapValues.putLastName("Tester");
         firstMapValues.putAddressLine1("1125 Way Blvd");
         firstMapValues.putAddressLine2("NULLDATA");
         firstMapValues.putCity("Orlando");
         firstMapValues.putState("FL");
-        firstMapValues.putZip("32832");
+        firstMapValues.putZipCode("32832");
         firstMapValues.putStandardizedFirstName("TEST");
         firstMapValues.putPartyId("1");
 
@@ -94,14 +94,14 @@ public class SearchResponseListTest
         SearchResponse secondMatch = new SearchResponse();
         secondMatch.setScore(1.0D);
 
-        ResultData secondMapValues = new ResultData();
+        IndexData secondMapValues = new IndexData();
         secondMapValues.putFirstName("Test");
         secondMapValues.putLastName("Tester");
         secondMapValues.putAddressLine1("1125 Way Blvd");
         secondMapValues.putAddressLine2("NULLDATA");
         secondMapValues.putCity("Orlando");
         secondMapValues.putState("FL");
-        secondMapValues.putZip("32832");
+        secondMapValues.putZipCode("32832");
         secondMapValues.putStandardizedFirstName("TEST");
         secondMapValues.putPartyId("2");
 
@@ -111,14 +111,14 @@ public class SearchResponseListTest
         SearchResponse thirdMatch = new SearchResponse();
         thirdMatch.setScore(1.0D);
 
-        ResultData thirdMatchValues = new ResultData();
+        IndexData thirdMatchValues = new IndexData();
         thirdMatchValues.putFirstName("Test");
         thirdMatchValues.putLastName("Tester");
         thirdMatchValues.putAddressLine1("1125 Way Blvd");
         thirdMatchValues.putAddressLine2("NULLDATA");
         thirdMatchValues.putCity("Orlando");
         thirdMatchValues.putState("FL");
-        thirdMatchValues.putZip("32832");
+        thirdMatchValues.putZipCode("32832");
         thirdMatchValues.putStandardizedFirstName("TEST");
         thirdMatchValues.putPartyId("3");
 

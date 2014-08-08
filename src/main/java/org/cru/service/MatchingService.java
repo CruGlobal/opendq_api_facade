@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 import org.cru.model.Address;
 import org.cru.model.OafResponse;
 import org.cru.model.Person;
-import org.cru.model.map.ResultData;
+import org.cru.model.map.IndexData;
 import org.cru.model.SearchResponse;
 import org.cru.model.collections.SearchResponseList;
 import org.cru.qualifiers.Delete;
@@ -229,7 +229,7 @@ public class MatchingService extends IndexingService
         return deleteService.personIsDeleted(matchId);
     }
 
-    SearchResponse buildSearchResponse(Float score, ResultData values, String type)
+    SearchResponse buildSearchResponse(Float score, IndexData values, String type)
     {
         SearchResponse searchResponse = new SearchResponse();
         searchResponse.setScore(score);
@@ -268,9 +268,9 @@ public class MatchingService extends IndexingService
         return null;
     }
 
-    List<ResultData> buildListOfValueMaps(List<AnyTypeArray> searchResultValues)
+    List<IndexData> buildListOfValueMaps(List<AnyTypeArray> searchResultValues)
     {
-        List<ResultData> valueMapList = Lists.newArrayList();
+        List<IndexData> valueMapList = Lists.newArrayList();
 
         for(AnyTypeArray valueSet : searchResultValues)
         {
@@ -279,9 +279,9 @@ public class MatchingService extends IndexingService
         return valueMapList;
     }
 
-    ResultData buildResultValues(List<Object> searchResultValues)
+    IndexData buildResultValues(List<Object> searchResultValues)
     {
-        ResultData valueMap = new ResultData();
+        IndexData valueMap = new IndexData();
 
         valueMap.putFirstName(searchResultValues.get(0));
         valueMap.putLastName(searchResultValues.get(1));
@@ -289,7 +289,7 @@ public class MatchingService extends IndexingService
         valueMap.putAddressLine2(searchResultValues.get(3));
         valueMap.putCity(searchResultValues.get(4));
         valueMap.putState(searchResultValues.get(5));
-        valueMap.putZip(searchResultValues.get(6));
+        valueMap.putZipCode(searchResultValues.get(6));
         valueMap.putStandardizedFirstName(searchResultValues.get(7));
         // Value 8 is not mapped to anything yet
         valueMap.putPartyId(searchResultValues.get(9));
@@ -307,7 +307,7 @@ public class MatchingService extends IndexingService
             return null;
         }
 
-        List<ResultData> valueMapList = buildListOfValueMaps(searchResultValues);
+        List<IndexData> valueMapList = buildListOfValueMaps(searchResultValues);
         List<Float> scoreList = searchResult.getScores();
 
         for(int i = 0; i < scoreList.size(); i++)

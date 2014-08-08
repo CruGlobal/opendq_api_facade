@@ -30,7 +30,7 @@ public class IndexData implements Map<String, Object>
         return (String)internalMap.get("FIELD1");
     }
 
-    public void putFirstName(String firstName)
+    public void putFirstName(Object firstName)
     {
         internalMap.put("FIELD1", firstName);
     }
@@ -40,7 +40,7 @@ public class IndexData implements Map<String, Object>
         return (String)internalMap.get("FIELD2");
     }
 
-    public void putLastName(String lastName)
+    public void putLastName(Object lastName)
     {
         internalMap.put("FIELD2", lastName);
     }
@@ -50,7 +50,7 @@ public class IndexData implements Map<String, Object>
         return (String)internalMap.get("FIELD3");
     }
 
-    public void putAddressLine1(String addressLine1)
+    public void putAddressLine1(Object addressLine1)
     {
         internalMap.put("FIELD3", addressLine1);
     }
@@ -60,7 +60,7 @@ public class IndexData implements Map<String, Object>
         return (String)internalMap.get("FIELD4");
     }
 
-    public void putAddressLine2(String addressLine2)
+    public void putAddressLine2(Object addressLine2)
     {
         if(addressLine2 == null) internalMap.put("FIELD4", "NULLDATA");
         else internalMap.put("FIELD4", addressLine2);
@@ -71,7 +71,7 @@ public class IndexData implements Map<String, Object>
         return (String)internalMap.get("FIELD5");
     }
 
-    public void putCity(String city)
+    public void putCity(Object city)
     {
         internalMap.put("FIELD5", city);
     }
@@ -81,7 +81,7 @@ public class IndexData implements Map<String, Object>
         return (String)internalMap.get("FIELD6");
     }
 
-    public void putState(String state)
+    public void putState(Object state)
     {
         internalMap.put("FIELD6", state);
     }
@@ -91,7 +91,7 @@ public class IndexData implements Map<String, Object>
         return (String)internalMap.get("FIELD7");
     }
 
-    public void putZipCode(String zipCode)
+    public void putZipCode(Object zipCode)
     {
         internalMap.put("FIELD7", zipCode);
     }
@@ -101,7 +101,7 @@ public class IndexData implements Map<String, Object>
         return (String)internalMap.get("FIELD8");
     }
 
-    public void putStandardizedFirstName(String standardizedFirstName)
+    public void putStandardizedFirstName(Object standardizedFirstName)
     {
         internalMap.put("FIELD8", standardizedFirstName);
     }
@@ -111,7 +111,7 @@ public class IndexData implements Map<String, Object>
         return (String)internalMap.get("FIELD10");
     }
 
-    public void putPartyId(String partyId)
+    public void putPartyId(Object partyId)
     {
         internalMap.put("FIELD10", partyId);
     }

@@ -1,6 +1,6 @@
 package org.cru.model;
 
-import org.cru.model.map.ResultData;
+import org.cru.model.map.IndexData;
 
 /**
  * Object to hold information that comes back from OpenDQ about the match found
@@ -12,7 +12,7 @@ public class SearchResponse
 {
     private double score;
     private String id;
-    private ResultData resultValues;
+    private IndexData resultValues;
     private String type;
 
     public double getScore()
@@ -35,12 +35,12 @@ public class SearchResponse
         this.id = id;
     }
 
-    public ResultData getResultValues()
+    public IndexData getResultValues()
     {
         return resultValues;
     }
 
-    public void setResultValues(ResultData resultValues)
+    public void setResultValues(IndexData resultValues)
     {
         this.resultValues = resultValues;
     }
@@ -62,7 +62,7 @@ public class SearchResponse
         if(objectToCompare == this) return true;
         if(objectToCompare == null || !(objectToCompare instanceof SearchResponse)) return false;
 
-        ResultData resultValuesToCompare = ((SearchResponse)objectToCompare).getResultValues();
+        IndexData resultValuesToCompare = ((SearchResponse)objectToCompare).getResultValues();
 
         return this.resultValues.getFirstName().equalsIgnoreCase(resultValuesToCompare.getFirstName()) &&
             this.resultValues.getLastName().equalsIgnoreCase(resultValuesToCompare.getLastName()) &&
@@ -70,7 +70,7 @@ public class SearchResponse
             this.resultValues.getAddressLine2().equalsIgnoreCase(resultValuesToCompare.getAddressLine2()) &&
             this.resultValues.getCity().equalsIgnoreCase(resultValuesToCompare.getCity()) &&
             this.resultValues.getState().equalsIgnoreCase(resultValuesToCompare.getState()) &&
-            this.resultValues.getZip().equalsIgnoreCase(resultValuesToCompare.getZip()) &&
+            this.resultValues.getZipCode().equalsIgnoreCase(resultValuesToCompare.getZipCode()) &&
             this.resultValues.getStandardizedFirstName().equalsIgnoreCase(resultValuesToCompare.getStandardizedFirstName());
     }
 

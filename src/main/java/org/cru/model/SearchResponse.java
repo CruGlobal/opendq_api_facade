@@ -47,7 +47,6 @@ public class SearchResponse
 
     public String getType()
     {
-
         return type;
     }
 

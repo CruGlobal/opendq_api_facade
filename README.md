@@ -62,8 +62,12 @@ opendq_api_facade
             "zip_code": "String",
             "country": "String"
         },
-        "authentication": {
-            "relay_guid": "String"
+        "authentication": {  //Each of these ids could be either a string or an array of strings
+            "relay_guid": "String",
+            "employee_relay_guid": "String",
+            "google_apps_uid": "String",
+            "facebook_uid": "String",
+            "key_guid": "String"
         },
         "linked_identities": { //Could be single object or array
             "system_id": "String",

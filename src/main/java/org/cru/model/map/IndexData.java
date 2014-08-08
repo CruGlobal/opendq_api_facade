@@ -135,17 +135,17 @@ public class IndexData implements Map<String, Object>
     public boolean equals(Object objectToCompare)
     {
         if(objectToCompare == this) return true;
-        if(objectToCompare == null || !(objectToCompare instanceof ResultData)) return false;
+        if(objectToCompare == null || !(objectToCompare instanceof IndexData)) return false;
 
-        ResultData resultDataToCompare = (ResultData) objectToCompare;
+        IndexData indexDataToCompare = (IndexData) objectToCompare;
         for(Entry<String, Object> entry : internalMap.entrySet())
         {
             String key = entry.getKey();
-            if(key.equals("partyId")) continue;
+            if(key.equals("FIELD10")) continue;
             Object value = entry.getValue();
             if(value instanceof String)
             {
-                if(!(((String) value).equalsIgnoreCase((String)resultDataToCompare.get(key))))
+                if(!(((String) value).equalsIgnoreCase(indexDataToCompare.get(key))))
                 {
                     return false;
                 }
@@ -162,7 +162,7 @@ public class IndexData implements Map<String, Object>
         for(Entry<String, Object> entry : internalMap.entrySet())
         {
             //I want the objects to be effectively equal even if they have different party ids
-            if(entry.getKey().equals("partyId")) continue;
+            if(entry.getKey().equals("FIELD10")) continue;
             Object value = entry.getValue();
             //Ignore case
             if(value instanceof String) result = 31 * result + ((String)value).toUpperCase().hashCode();

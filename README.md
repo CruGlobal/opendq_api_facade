@@ -79,6 +79,11 @@ opendq_api_facade
 </pre>
 
 <h3>cURL Tests</h3>
+<h4>Match</h4>
+<pre>
+curl -H "Content-Type: application/json" -d '{"person":{"email_address":{"id":"455322","email":"wee@wee.net"},"last_name":"Vom","first_name":"Boo","middle_name":"Slam","preferred_name":"Pogs","title":"Mr.","suffix":"II","gender":"Male","phone_number":{"id":"885462","number":"5555555555","location":"mobile"},"client_integration_id":"123456","address":{"id":"4459874","address_1":"Line 1","address_2":"Line 2","city":"Orlando","state":"FL","zip_code":"32832","country":"USA"},"authentication":{"relay_guid":"f435f4-5f5e-8934-fjda-jk2354oia"},"account_number":"123456789","linked_identities":{"siebel_contact_id":"1-FG32A","employee_number":"012345678"},"client_updated_at":"2014-06-21 13:41:21"}}'  http://localhost:8080/oaf/rest/match
+</pre>
+
 <h4>Match or Add</h4>
 <pre>
 curl -H "Content-Type: application/json" -d '{"person":{"id":"k3rfjs3-f8g9-hfi8-5521-12a6er5423","email_address":{"id":"455322","email":"wee@wee.net"},"last_name":"Vom","first_name":"Boo","middle_name":"Slam","preferred_name":"Pogs","title":"Mr.","suffix":"II","gender":"Male","phone_number":{"id":"885462","number":"5555555555","location":"mobile"},"client_integration_id":"123456","address":{"id":"4459874","address_1":"Line 1","address_2":"Line 2","city":"Orlando","state":"FL","zip_code":"32832","country":"USA"},"authentication":{"relay_guid":"f435f4-5f5e-8934-fjda-jk2354oia"},"account_number":"123456789","linked_identities":{"siebel_contact_id":"1-FG32A","employee_number":"012345678"},"client_updated_at":"2014-06-21 13:41:21"}}'  http://localhost:8080/oaf/rest/match-or-add

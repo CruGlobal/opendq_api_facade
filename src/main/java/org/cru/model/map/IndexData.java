@@ -20,6 +20,16 @@ public class IndexData implements Map<String, Object>
 {
     private Map<String, Object> internalMap;
 
+    private static final String FIRST_NAME_KEY = "FIELD1";
+    private static final String LAST_NAME_KEY = "FIELD2";
+    private static final String ADDRESS1_KEY = "FIELD3";
+    private static final String ADDRESS2_KEY = "FIELD4";
+    private static final String CITY_KEY = "FIELD5";
+    private static final String STATE_KEY = "FIELD6";
+    private static final String ZIP_CODE_KEY = "FIELD7";
+    private static final String STANDARDIZED_FIRST_NAME_KEY = "FIELD8";
+    private static final String PARTY_ID_KEY = "FIELD10";
+
     public IndexData()
     {
         internalMap = new LinkedHashMap<String, Object>();
@@ -27,93 +37,93 @@ public class IndexData implements Map<String, Object>
 
     public String getFirstName()
     {
-        return (String)internalMap.get("FIELD1");
+        return (String)internalMap.get(FIRST_NAME_KEY);
     }
 
     public void putFirstName(Object firstName)
     {
-        internalMap.put("FIELD1", firstName);
+        internalMap.put(FIRST_NAME_KEY, firstName);
     }
 
     public String getLastName()
     {
-        return (String)internalMap.get("FIELD2");
+        return (String)internalMap.get(LAST_NAME_KEY);
     }
 
     public void putLastName(Object lastName)
     {
-        internalMap.put("FIELD2", lastName);
+        internalMap.put(LAST_NAME_KEY, lastName);
     }
 
     public String getAddressLine1()
     {
-        return (String)internalMap.get("FIELD3");
+        return (String)internalMap.get(ADDRESS1_KEY);
     }
 
     public void putAddressLine1(Object addressLine1)
     {
-        internalMap.put("FIELD3", addressLine1);
+        internalMap.put(ADDRESS1_KEY, addressLine1);
     }
 
     public String getAddressLine2()
     {
-        return (String)internalMap.get("FIELD4");
+        return (String)internalMap.get(ADDRESS2_KEY);
     }
 
     public void putAddressLine2(Object addressLine2)
     {
-        if(addressLine2 == null) internalMap.put("FIELD4", "NULLDATA");
-        else internalMap.put("FIELD4", addressLine2);
+        if(addressLine2 == null) internalMap.put(ADDRESS2_KEY, "NULLDATA");
+        else internalMap.put(ADDRESS2_KEY, addressLine2);
     }
 
     public String getCity()
     {
-        return (String)internalMap.get("FIELD5");
+        return (String)internalMap.get(CITY_KEY);
     }
 
     public void putCity(Object city)
     {
-        internalMap.put("FIELD5", city);
+        internalMap.put(CITY_KEY, city);
     }
 
     public String getState()
     {
-        return (String)internalMap.get("FIELD6");
+        return (String)internalMap.get(STATE_KEY);
     }
 
     public void putState(Object state)
     {
-        internalMap.put("FIELD6", state);
+        internalMap.put(STATE_KEY, state);
     }
 
     public String getZipCode()
     {
-        return (String)internalMap.get("FIELD7");
+        return (String)internalMap.get(ZIP_CODE_KEY);
     }
 
     public void putZipCode(Object zipCode)
     {
-        internalMap.put("FIELD7", zipCode);
+        internalMap.put(ZIP_CODE_KEY, zipCode);
     }
 
     public String getStandardizedFirstName()
     {
-        return (String)internalMap.get("FIELD8");
+        return (String)internalMap.get(STANDARDIZED_FIRST_NAME_KEY);
     }
 
     public void putStandardizedFirstName(Object standardizedFirstName)
     {
-        internalMap.put("FIELD8", standardizedFirstName);
+        internalMap.put(STANDARDIZED_FIRST_NAME_KEY, standardizedFirstName);
     }
 
     public String getPartyId()
     {
-        return (String)internalMap.get("FIELD10");
+        return (String)internalMap.get(PARTY_ID_KEY);
     }
 
     public void putPartyId(Object partyId)
     {
-        internalMap.put("FIELD10", partyId);
+        internalMap.put(PARTY_ID_KEY, partyId);
     }
 
     /**
@@ -141,7 +151,7 @@ public class IndexData implements Map<String, Object>
         for(Entry<String, Object> entry : internalMap.entrySet())
         {
             String key = entry.getKey();
-            if(key.equals("FIELD10")) continue;
+            if(key.equals(PARTY_ID_KEY)) continue;
             Object value = entry.getValue();
             if(value instanceof String)
             {
@@ -162,7 +172,7 @@ public class IndexData implements Map<String, Object>
         for(Entry<String, Object> entry : internalMap.entrySet())
         {
             //I want the objects to be effectively equal even if they have different party ids
-            if(entry.getKey().equals("FIELD10")) continue;
+            if(entry.getKey().equals(PARTY_ID_KEY)) continue;
             Object value = entry.getValue();
             //Ignore case
             if(value instanceof String) result = 31 * result + ((String)value).toUpperCase().hashCode();

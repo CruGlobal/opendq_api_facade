@@ -1,6 +1,15 @@
 opendq_api_facade
 =================
 
+<h3>Intended Use</h3>
+<p>
+  This API sits between Global Registry and OpenDQ as an in-between.  The OpenDQ/Infosolve API requires several calls for each action.  For example, to search on the index, one must first call a configuration endpoint and then a search endpoint.  The OpenDQ/Infosolve API also has very generic names for its parameters and variables such as FIELD1 and arg0.
+</p>
+<p>For this reason, the opendq api facade (OAF) has been created as a nicer API to call from Global Registry.</p>
+<p>
+  The plan for now is that Global Registry will get some data about a person then call OAF using the <strong>match</strong> endpoint to try and find a match.  If a match is found, Global Registry will then call the <strong>add-or-update</strong> endpoint, which will result in an update of the existing record.  If no match is found, Global Registry will still call the <strong>add-or-update</strong> endpoint, and in this case it will result in adding this person as a new record.
+</p>
+
 <h3>Endpoints</h3>
 
 <ul>

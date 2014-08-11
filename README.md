@@ -40,7 +40,6 @@ opendq_api_facade
         "last_name": "String",
         "first_name": "String",
         "middle_name": "String",
-        "preferred_name": "String",
         "title": "String",
         "suffix": "String",
         "gender": "String",
@@ -50,7 +49,6 @@ opendq_api_facade
             "location": "String"
         },
         "client_integration_id": "String",
-        "account_number": "String",
         "address": {    //Could be single object or array
             "id": "String",
             "address_1": "String",

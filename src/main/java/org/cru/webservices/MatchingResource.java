@@ -51,7 +51,7 @@ public class MatchingResource
     @Produces(MediaType.APPLICATION_JSON)
     public Response findMatchingPerson(String json, @Context HttpHeaders httpHeaders)
     {
-        if(!authService.hasAccess(httpHeaders)) return notAuthorized();
+        if(!authService.hasAccess(httpHeaders)) return authService.notAuthorized(httpHeaders);
 
         Person person = personDeserializer.deserializePerson(json);
 
@@ -93,13 +93,5 @@ public class MatchingResource
         matchResponse.setMatchId("Not Found");
         matchResponse.setAction(Action.MATCH);
         return Lists.newArrayList(matchResponse);
-    }
-
-    private Response notAuthorized()
-    {
-        log.warn("Unauthorized access attempt to matching service");
-        return Response.status(Response.Status.UNAUTHORIZED)
-            .entity("You do not have access to this service")
-            .build();
     }
 }

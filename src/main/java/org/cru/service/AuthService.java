@@ -43,13 +43,8 @@ public class AuthService
 
     private boolean validateAccessToken(String accessToken)
     {
-        if(accessToken == null) return false;
-
-        int separator = accessToken.indexOf('_');
-        if (separator == -1 || separator == 0)
-        {
-            return false;
-        }
+        int separator = getSeparatorIndex(accessToken);
+        if(separator == -1) return false;
 
         String systemName = accessToken.substring(0, separator);
         String providedKey = accessToken.substring(separator + 1);
@@ -61,5 +56,18 @@ public class AuthService
         Credentials foundCredentials = entityManager.find(Credentials.class, credentialsKey);
 
         return foundCredentials != null && providedKey.equals(foundCredentials.getCredentialsPrimaryKey().getSystemKey());
+    }
+
+    private int getSeparatorIndex(String accessToken)
+    {
+        if(accessToken == null) return -1;
+
+        int separator = accessToken.indexOf('_');
+        if (separator == -1 || separator == 0)
+        {
+            return -1;
+        }
+
+        return separator;
     }
 }

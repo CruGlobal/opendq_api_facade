@@ -9,6 +9,7 @@ import org.cru.qualifiers.Match;
 import org.cru.service.AddressNormalizationService;
 import org.cru.service.MatchingService;
 import org.cru.service.PersonDeserializer;
+import org.cru.service.AuthService;
 import org.cru.util.Action;
 
 import javax.inject.Inject;
@@ -17,6 +18,8 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.ConnectException;
@@ -36,6 +39,8 @@ public class MatchingResource
     private MatchingService matchingService;
     @Inject
     private PersonDeserializer personDeserializer;
+    @Inject
+    private AuthService authService;
 
     private static Logger log = Logger.getLogger(MatchingResource.class);
 
@@ -44,8 +49,10 @@ public class MatchingResource
     @Path("/match")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findMatchingPerson(String json)
+    public Response findMatchingPerson(String json, @Context HttpHeaders httpHeaders)
     {
+        if(!authService.hasAccess(httpHeaders)) return notAuthorized();
+
         Person person = personDeserializer.deserializePerson(json);
 
         for(Address personAddress : person.getAddresses())
@@ -86,5 +93,13 @@ public class MatchingResource
         matchResponse.setMatchId("Not Found");
         matchResponse.setAction(Action.MATCH);
         return Lists.newArrayList(matchResponse);
+    }
+
+    private Response notAuthorized()
+    {
+        log.warn("Unauthorized access attempt to matching service");
+        return Response.status(Response.Status.UNAUTHORIZED)
+            .entity("You do not have access to this service")
+            .build();
     }
 }

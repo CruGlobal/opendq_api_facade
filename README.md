@@ -77,6 +77,7 @@ opendq_api_facade
 </pre>
 
 <h3>cURL Tests</h3>
+<strong>Note: These endpoints require an OAuth token to be accessed</strong>
 
 <h4>Match</h4>
 <pre>
@@ -121,6 +122,12 @@ curl -X DELETE http://localhost:8080/oaf/rest/delete/645asf4a643r-w3r54a
   confidenceLevel: 0.0,
   action: "match"
 }]
+</pre>
+
+<h5>Failed Authentication</h5>
+<pre>
+401: Unauthorized
+"You do not have access to this service"
 </pre>
 
 <h5>Error</h5>

@@ -8,6 +8,7 @@ import org.cru.model.Person;
 import org.cru.qualifiers.Add;
 import org.cru.qualifiers.Match;
 import org.cru.service.AddService;
+import org.cru.service.AuthService;
 import org.cru.service.MatchingService;
 import org.cru.service.PersonDeserializer;
 import org.cru.util.Action;
@@ -18,6 +19,8 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.ConnectException;
@@ -37,6 +40,8 @@ public class AddResource
     private MatchingService matchingService;
     @Inject
     private PersonDeserializer personDeserializer;
+    @Inject
+    private AuthService authService;
 
     private static Logger log = Logger.getLogger(AddResource.class);
 
@@ -45,8 +50,10 @@ public class AddResource
     @Path("/add")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addPerson(String json)
+    public Response addPerson(String json, @Context HttpHeaders httpHeaders)
     {
+        if(!authService.hasAccess(httpHeaders)) return authService.notAuthorized(httpHeaders);
+
         Person person = personDeserializer.deserializePerson(json);
 
         try

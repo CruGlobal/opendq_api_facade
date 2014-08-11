@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import org.cru.model.OafResponse;
 import org.cru.model.Person;
 import org.cru.service.AddOrUpdateService;
+import org.cru.service.AuthService;
 import org.cru.service.PersonDeserializer;
 import org.cru.util.Action;
 
@@ -13,6 +14,8 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.ConnectException;
@@ -31,6 +34,8 @@ public class AddOrUpdateResource
     private AddOrUpdateService addOrUpdateService;
     @Inject
     private PersonDeserializer personDeserializer;
+    @Inject
+    private AuthService authService;
 
     private static Logger log = Logger.getLogger(AddOrUpdateResource.class);
 
@@ -39,8 +44,10 @@ public class AddOrUpdateResource
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addOrUpdatePerson(String json)
+    public Response addOrUpdatePerson(String json, @Context HttpHeaders httpHeaders)
     {
+        if(!authService.hasAccess(httpHeaders)) return authService.notAuthorized(httpHeaders);
+
         Person person = personDeserializer.deserializePerson(json);
 
         try

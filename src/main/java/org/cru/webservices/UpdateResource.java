@@ -3,6 +3,7 @@ package org.cru.webservices;
 import com.google.common.collect.Lists;
 import org.cru.model.OafResponse;
 import org.cru.model.Person;
+import org.cru.service.AuthService;
 import org.cru.service.MatchOrUpdateService;
 import org.cru.service.PersonDeserializer;
 import org.cru.util.Action;
@@ -13,6 +14,8 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.ConnectException;
@@ -30,14 +33,18 @@ public class UpdateResource
     private MatchOrUpdateService matchOrUpdateService;
     @Inject
     private PersonDeserializer personDeserializer;
+    @Inject
+    private AuthService authService;
 
     @SuppressWarnings("unused")  //used by Clients
     @Path("/update")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateIndex(String json)
+    public Response updateIndex(String json, @Context HttpHeaders httpHeaders)
     {
+        if(!authService.hasAccess(httpHeaders)) return authService.notAuthorized(httpHeaders);
+        
         Person person = personDeserializer.deserializePerson(json);
         try
         {

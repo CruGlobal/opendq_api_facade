@@ -22,7 +22,6 @@ import org.cru.util.OpenDQProperties;
 
 import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
-import javax.xml.ws.soap.SOAPFaultException;
 import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
@@ -131,7 +130,7 @@ public class MatchingService extends IndexingService
      * Search MDM database for a person using global registry id.
      *
      * @return null if no person is found, otherwise a {@link RealTimeObjectActionDTO} person
-     * @throws SOAPFaultException if more than one result is found
+     * @throws WebApplicationException if more than one result is found
      */
     public RealTimeObjectActionDTO findMatchInMdmByGlobalRegistryId(String globalRegistryId)
     {

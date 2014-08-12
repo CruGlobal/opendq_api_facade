@@ -127,6 +127,7 @@ public class AddService extends IndexingService
         indexData.putLastName(person.getLastName());
         indexData.putStandardizedFirstName(person.getFirstName());
         indexData.putPartyId(mdmPerson.getObjectEntity().getPartyId());
+        indexData.putGlobalRegistryId(person.getId());
 
         if(addressToUse != null)
         {

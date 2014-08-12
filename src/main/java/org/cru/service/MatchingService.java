@@ -2,7 +2,6 @@ package org.cru.service;
 
 import com.google.common.collect.Lists;
 import com.infosolve.openmdm.webservices.provider.impl.DataManagementWSImpl;
-import com.infosolve.openmdm.webservices.provider.impl.ObjAttributeDataDTO;
 import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import com.infosolve.openmdm.webservices.provider.impl.UniqueIdNameDTO;
 import com.infosolve.openmdm.webservices.provider.impl.UniqueIdNameDTOList;
@@ -13,9 +12,9 @@ import org.apache.log4j.Logger;
 import org.cru.model.Address;
 import org.cru.model.OafResponse;
 import org.cru.model.Person;
-import org.cru.model.map.IndexData;
 import org.cru.model.SearchResponse;
 import org.cru.model.collections.SearchResponseList;
+import org.cru.model.map.IndexData;
 import org.cru.qualifiers.Delete;
 import org.cru.qualifiers.Match;
 import org.cru.util.Action;
@@ -70,8 +69,7 @@ public class MatchingService extends IndexingService
 
         for(SearchResponse response : searchResponseList)
         {
-            String partyId = response.getResultValues().getPartyId();
-            if(!matchHasBeenDeleted(getGlobalRegistryIdFromMdm(partyId))) filteredResults.add(response);
+            if(!matchHasBeenDeleted(response.getId())) filteredResults.add(response);
         }
 
         filteredResults.removeDuplicateResults();
@@ -234,38 +232,10 @@ public class MatchingService extends IndexingService
         SearchResponse searchResponse = new SearchResponse();
         searchResponse.setScore(score);
         searchResponse.setResultValues(values);
-        searchResponse.setId(getGlobalRegistryIdFromMdm(values.getPartyId()));
+        searchResponse.setId(searchResponse.getResultValues().getGlobalRegistryId());
         searchResponse.setType(type);
 
         return searchResponse;
-    }
-
-    String getGlobalRegistryIdFromMdm(String partyId)
-    {
-        DataManagementWSImpl mdmService = getMdmServiceImplementation();
-
-        RealTimeObjectActionDTO foundPerson;
-        try
-        {
-            foundPerson = mdmService.findObject(partyId);
-        }
-        catch(Throwable t)
-        {
-            log.debug("Could not find a person with party id: " + partyId + "in MDM", t);
-            throw new WebApplicationException("Failed to find global registry id using party id: " + partyId);
-        }
-
-        if(foundPerson == null) return null;
-
-        for(ObjAttributeDataDTO attributeData : foundPerson.getObjectAttributeDatas().getObjectAttributeData())
-        {
-            if(attributeData.getMultDetTypeLev1().equalsIgnoreCase("PERSONATTRIBUTES") &&
-                attributeData.getMultDetTypeLev2().equalsIgnoreCase("GLOBALREGISTRYID"))
-            {
-                return attributeData.getField2();
-            }
-        }
-        return null;
     }
 
     List<IndexData> buildListOfValueMaps(List<AnyTypeArray> searchResultValues)
@@ -293,6 +263,7 @@ public class MatchingService extends IndexingService
         valueMap.putStandardizedFirstName(searchResultValues.get(7));
         // Value 8 is not mapped to anything yet
         valueMap.putPartyId(searchResultValues.get(9));
+        valueMap.putGlobalRegistryId(searchResultValues.get(10));
 
         return valueMap;
     }

@@ -29,6 +29,7 @@ public class IndexData implements Map<String, Object>
     private static final String ZIP_CODE_KEY = "FIELD7";
     private static final String STANDARDIZED_FIRST_NAME_KEY = "FIELD8";
     private static final String PARTY_ID_KEY = "FIELD10";
+    private static final String GR_ID_KEY = "FIELD11";
 
     public IndexData()
     {
@@ -124,6 +125,16 @@ public class IndexData implements Map<String, Object>
     public void putPartyId(Object partyId)
     {
         internalMap.put(PARTY_ID_KEY, partyId);
+    }
+
+    public String getGlobalRegistryId()
+    {
+        return (String)internalMap.get(GR_ID_KEY);
+    }
+
+    public void putGlobalRegistryId(Object globalRegistryId)
+    {
+        internalMap.put(GR_ID_KEY, globalRegistryId);
     }
 
     /**

@@ -4,6 +4,7 @@ import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import org.cru.data.TestPeople;
 import org.cru.model.OafResponse;
 import org.cru.model.Person;
+import org.cru.model.collections.SearchResponseList;
 import org.cru.util.Action;
 import org.cru.util.DeletedIndexesFileIO;
 import org.cru.util.OafProperties;
@@ -50,16 +51,22 @@ public class MatchingServiceTest
         matchingService = new MatchingService(openDQProperties, deleteService);
     }
 
-    @Test
-    public void testFindMatch() throws ConnectException
+    @DataProvider
+    private Object[][] validMatches()
     {
-        Person testPerson = TestPeople.createPersonForUpdate();
-        List<OafResponse> matchResponseList = matchingService.findMatches(testPerson, "contactMatch");
+        return new Object[][] {
+            { TestPeople.createPersonForGrInIndex(), 1 },
+            { TestPeople.createPersonFromSoapUITestData(), 2 }
+        };
+    }
 
+    @Test(dataProvider = "validMatches")
+    public void testFindMatch(Person testPerson, int numMatches) throws ConnectException
+    {
+        List<OafResponse> matchResponseList = matchingService.findMatches(testPerson, "contactMatch");
         assertNotNull(matchResponseList);
-        assertEquals(matchResponseList.size(), 1);
+        assertEquals(matchResponseList.size(), numMatches);
         assertEquals(matchResponseList.get(0).getMatchId(), testPerson.getId());
-        assertEquals(matchResponseList.get(0).getAction(), Action.MATCH.toString());
     }
 
     @Test
@@ -121,5 +128,18 @@ public class MatchingServiceTest
 
         assertNotNull(foundPerson);
         System.out.println("Party Id for " + globalRegistryId + ": " + foundPerson.getObjectEntity().getPartyId());
+    }
+
+    @Test
+    public void testFindPersonInIndex() throws ConnectException
+    {
+        matchingService.slotName = "contactMatch";
+        matchingService.stepName = "RtMatchAddr";
+        Person testPerson = TestPeople.createPersonForGrInIndex();
+        SearchResponseList searchResponseList = matchingService.findPersonInIndex(testPerson);
+
+        assertNotNull(searchResponseList);
+        assertEquals(searchResponseList.size(), 1);
+        assertEquals(searchResponseList.get(0).getId(), testPerson.getId());
     }
 }

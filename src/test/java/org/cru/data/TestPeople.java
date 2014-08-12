@@ -101,6 +101,26 @@ public class TestPeople
         return testPerson;
     }
 
+    public static Person createPersonForGrInIndex()
+    {
+        Person testPerson = new Person();
+
+        testPerson.setMdmPartyId("11239904");
+        testPerson.setId("0004a598-e0de-11e3-82af-12768b82bfd5");
+        testPerson.setFirstName("David");
+        testPerson.setLastName("Nieman");
+
+        Address testAddress = new Address();
+        testAddress.setAddressLine1("120 Boylston St");
+        testAddress.setAddressLine2("P.O. Box 9155");
+        testAddress.setCity("Boston");
+        testAddress.setState("MA");
+
+        testPerson.setAddresses(Lists.newArrayList(testAddress));
+
+        return testPerson;
+    }
+
     public static Person createPersonFromSoapUITestData()
     {
         Person testPerson = new Person();
@@ -108,7 +128,7 @@ public class TestPeople
         testPerson.setFirstName("Susan");
         testPerson.setLastName("Snowa");
         testPerson.setMdmPartyId("3995392");
-        testPerson.setId("Susan"); //TODO: Replace with real global registry id when available
+        testPerson.setId("1-100EN5");
 
         Address testAddress = new Address();
         testAddress.setAddressLine1("2824 McManaway Dr");

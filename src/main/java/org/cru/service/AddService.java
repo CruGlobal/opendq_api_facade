@@ -134,7 +134,11 @@ public class AddService extends IndexingService
 
         indexData.putFirstName(person.getFirstName());
         indexData.putLastName(person.getLastName());
-        indexData.putStandardizedFirstName(matchingService.getStandardizedNickName(person.getFirstName()));
+
+        String standardizedFirstName = matchingService.getStandardizedNickName(person.getFirstName());
+        log.info("Using " + standardizedFirstName + " to represent First Name: " + person.getFirstName());
+        indexData.putStandardizedFirstName(standardizedFirstName);
+
         indexData.putPartyId(mdmPerson.getObjectEntity().getPartyId());
         indexData.putGlobalRegistryId(person.getId());
 

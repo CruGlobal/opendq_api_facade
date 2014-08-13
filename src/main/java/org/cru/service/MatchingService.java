@@ -114,7 +114,7 @@ public class MatchingService extends IndexingService
 
     public RealTimeObjectActionDTO findMatchInMdm(String partyId)
     {
-        DataManagementWSImpl mdmService = getMdmServiceImplementation();
+        DataManagementWSImpl mdmService = getMdmServiceImplementation("contact");
         try
         {
             return mdmService.findObject(partyId);
@@ -134,7 +134,7 @@ public class MatchingService extends IndexingService
      */
     public RealTimeObjectActionDTO findMatchInMdmByGlobalRegistryId(String globalRegistryId)
     {
-        DataManagementWSImpl mdmService = getMdmServiceImplementation();
+        DataManagementWSImpl mdmService = getMdmServiceImplementation("contact");
         UniqueIdNameDTOList uniqueNameList = new UniqueIdNameDTOList();
         List<UniqueIdNameDTO> uniqueIdNameDTOs = uniqueNameList.getUniqueIdNames();
 
@@ -187,7 +187,7 @@ public class MatchingService extends IndexingService
 
     private SearchResponseList queryIndex(List<String> searchValues) throws ConnectException
     {
-        RuntimeMatchWS runtimeMatchWS = configureAndRetrieveRuntimeMatchService();
+        RuntimeMatchWS runtimeMatchWS = configureAndRetrieveRuntimeMatchService("contact");
         ServiceResult searchResponse = runtimeMatchWS.searchSlot(slotName, searchValues);
 
         if(searchResponse.isError())

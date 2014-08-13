@@ -57,7 +57,7 @@ public class AddService extends IndexingService
 
     private RealTimeObjectActionDTO addPersonToMdm(Person person)
     {
-        DataManagementWSImpl mdmService = getMdmServiceImplementation();
+        DataManagementWSImpl mdmService = getMdmServiceImplementation("contact");
         PersonToMdmConverter personToMdmConverter = new PersonToMdmConverter(ACTION);
 
         RealTimeObjectActionDTO returnedObject;
@@ -83,7 +83,7 @@ public class AddService extends IndexingService
 
     void addPersonToIndex(Person person, RealTimeObjectActionDTO mdmPerson) throws ConnectException
     {
-        RuntimeMatchWS runtimeMatchWS = configureAndRetrieveRuntimeMatchService();
+        RuntimeMatchWS runtimeMatchWS = configureAndRetrieveRuntimeMatchService("contact");
 
         //Handle cases where no address was passed in
         if(person.getAddresses() == null || person.getAddresses().isEmpty())

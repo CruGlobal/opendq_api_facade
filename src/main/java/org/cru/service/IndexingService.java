@@ -30,9 +30,9 @@ public class IndexingService
     String stepName;
     private static Logger log = Logger.getLogger(IndexingService.class);
 
-    RuntimeMatchWS configureAndRetrieveRuntimeMatchService() throws ConnectException
+    RuntimeMatchWS configureAndRetrieveRuntimeMatchService(String transformationType) throws ConnectException
     {
-        RuntimeMatchWS runtimeMatchWS = getRuntimeServiceImplementation();
+        RuntimeMatchWS runtimeMatchWS = getRuntimeServiceImplementation(transformationType);
         configureRuntimeMatchService(runtimeMatchWS);
         return runtimeMatchWS;
     }
@@ -48,19 +48,27 @@ public class IndexingService
         }
     }
 
-    private RuntimeMatchWS getRuntimeServiceImplementation()
+    private RuntimeMatchWS getRuntimeServiceImplementation(String transformationType)
     {
-        return ((RuntimeMatchWSService) getServiceImplementation("runtime", RuntimeMatchWSService.class)).getRuntimeMatchWSPort();
+        return ((RuntimeMatchWSService) getServiceImplementation(
+            "runtime",
+            RuntimeMatchWSService.class,
+            transformationType
+        )).getRuntimeMatchWSPort();
     }
 
-    DataManagementWSImpl getMdmServiceImplementation()
+    DataManagementWSImpl getMdmServiceImplementation(String transformationType)
     {
-        return ((DataManagementWSImplService) getServiceImplementation("mdm", DataManagementWSImplService.class)).getDataManagementWSImplPort();
+        return ((DataManagementWSImplService) getServiceImplementation(
+                "mdm",
+                DataManagementWSImplService.class,
+                transformationType))
+            .getDataManagementWSImplPort();
     }
 
-    Service getServiceImplementation(String serviceName, Class serviceImplType)
+    Service getServiceImplementation(String serviceName, Class serviceImplType, String transformationType)
     {
-        transformationFileLocation = openDQProperties.getProperty("transformationFileLocation");
+        transformationFileLocation = openDQProperties.getProperty(transformationType + ".transformationFileLocation");
         QName qName = new QName(
             openDQProperties.getProperty(serviceName + ".namespaceURI"),
             openDQProperties.getProperty(serviceName + ".serviceName"));

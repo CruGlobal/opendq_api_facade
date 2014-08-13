@@ -60,8 +60,8 @@ public class EndToEndServiceTest
         DeletedIndexesFileIO deletedIndexesFileIO = new DeletedIndexesFileIO(oafProperties);
 
         deleteService = new DeleteService(deletedIndexesFileIO, openDQProperties);
-        AddService addService = new AddService(openDQProperties, addressNormalizationService);
         matchingService = new MatchingService(openDQProperties, deleteService);
+        AddService addService = new AddService(openDQProperties, addressNormalizationService, matchingService);
         matchOrAddService = new MatchOrAddService(matchingService, addService);
         UpdateService updateService = new UpdateService(openDQProperties, addressNormalizationService);
         matchOrUpdateService = new MatchOrUpdateService(matchingService, updateService);

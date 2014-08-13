@@ -28,6 +28,8 @@ import java.util.List;
 public class AddService extends IndexingService
 {
     AddressNormalizationService addressNormalizationService;
+    MatchingService matchingService;
+
     private static final String ACTION = "A";  // A = Add
     private static Logger log = Logger.getLogger(AddService.class);
 
@@ -35,10 +37,14 @@ public class AddService extends IndexingService
     public AddService() {}
 
     @Inject
-    public AddService(OpenDQProperties openDQProperties, AddressNormalizationService addressNormalizationService)
+    public AddService(
+        OpenDQProperties openDQProperties,
+        AddressNormalizationService addressNormalizationService,
+        MatchingService matchingService)
     {
         this.openDQProperties = openDQProperties;
         this.addressNormalizationService = addressNormalizationService;
+        this.matchingService = matchingService;
     }
 
     public void addPerson(Person person, String slotName) throws ConnectException
@@ -102,7 +108,7 @@ public class AddService extends IndexingService
         RuntimeMatchWS runtimeMatchWS,
         Person person,
         RealTimeObjectActionDTO mdmPerson,
-        Address addressToUse)
+        Address addressToUse) throws ConnectException
     {
         IndexData fieldNamesAndValues = generateFieldNamesAndValues(person, mdmPerson, addressToUse);
 
@@ -119,13 +125,16 @@ public class AddService extends IndexingService
         }
     }
 
-    IndexData generateFieldNamesAndValues(Person person, RealTimeObjectActionDTO mdmPerson, Address addressToUse)
+    IndexData generateFieldNamesAndValues(
+        Person person,
+        RealTimeObjectActionDTO mdmPerson,
+        Address addressToUse) throws ConnectException
     {
         IndexData indexData = new IndexData();
 
         indexData.putFirstName(person.getFirstName());
         indexData.putLastName(person.getLastName());
-        indexData.putStandardizedFirstName(person.getFirstName());
+        indexData.putStandardizedFirstName(matchingService.getStandardizedNickName(person.getFirstName()));
         indexData.putPartyId(mdmPerson.getObjectEntity().getPartyId());
         indexData.putGlobalRegistryId(person.getId());
 

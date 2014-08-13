@@ -43,7 +43,7 @@ public class MatchOrAddServiceTest
 
         MatchingService matchingService = new MatchingService(openDQProperties, deleteService);
         addressNormalizationService = mock(AddressNormalizationService.class);
-        AddService addService = new AddService(openDQProperties, addressNormalizationService);
+        AddService addService = new AddService(openDQProperties, addressNormalizationService, matchingService);
         matchOrAddService = new MatchOrAddService(matchingService, addService);
     }
 

@@ -44,7 +44,7 @@ public class AddOrUpdateServiceTest
         DeleteService deleteService = new DeleteService(deletedIndexesFileIO, openDQProperties);
         UpdateService updateService = new UpdateService(openDQProperties, addressNormalizationService);
         MatchingService matchingService = new MatchingService(openDQProperties, deleteService);
-        AddService addService = new AddService(openDQProperties, addressNormalizationService);
+        AddService addService = new AddService(openDQProperties, addressNormalizationService, matchingService);
 
         MatchOrUpdateService matchOrUpdateService = new MatchOrUpdateService(matchingService, updateService);
         addOrUpdateService = new AddOrUpdateService(addService, matchOrUpdateService);

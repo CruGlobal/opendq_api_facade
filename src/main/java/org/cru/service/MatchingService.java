@@ -10,9 +10,11 @@ import com.infosolvetech.rtmatch.pdi4.ServiceResult;
 import net.java.dev.jaxb.array.AnyTypeArray;
 import org.apache.log4j.Logger;
 import org.cru.model.Address;
+import org.cru.model.NicknameResponse;
 import org.cru.model.OafResponse;
 import org.cru.model.Person;
 import org.cru.model.SearchResponse;
+import org.cru.model.collections.NicknameResponseList;
 import org.cru.model.collections.SearchResponseList;
 import org.cru.model.map.IndexData;
 import org.cru.qualifiers.Delete;
@@ -60,6 +62,23 @@ public class MatchingService extends IndexingService
         if(searchResponseList == null || searchResponseList.isEmpty()) return null;
 
         return buildOafResponseList(filterDuplicatePartyIds(buildFilteredSearchResponseList(searchResponseList)));
+    }
+
+    public String getStandardizedNickName(String firstName) throws ConnectException
+    {
+        this.slotName = "nickNameService";
+        this.stepName = "RtMatchNickName";
+        RuntimeMatchWS runtimeMatchWS = configureAndRetrieveRuntimeMatchService("nickname");
+
+        ServiceResult searchResponse = runtimeMatchWS.searchSlot(slotName, Lists.newArrayList(firstName));
+
+        if(searchResponse.isError())
+        {
+            log.error("Error searching index: " + searchResponse.getMessage());
+            throw new WebApplicationException(searchResponse.getMessage());
+        }
+
+        return buildNicknameResponse(searchResponse).getStandardizedName();
     }
 
     SearchResponseList buildFilteredSearchResponseList(SearchResponseList searchResponseList)
@@ -286,5 +305,37 @@ public class MatchingService extends IndexingService
         }
 
         return searchResponseList;
+    }
+
+    NicknameResponse buildNicknameResponse(ServiceResult searchResult)
+    {
+        List<AnyTypeArray> searchResultValues = searchResult.getRows();
+
+        if(searchResultValues == null || searchResultValues.isEmpty())
+        {
+            return null;
+        }
+
+        NicknameResponseList nicknameResponseList = new NicknameResponseList();
+
+        for(int i = 0; i < searchResultValues.size(); i++)
+        {
+            nicknameResponseList.add(buildNicknameResponse(searchResult.getScores().get(i),
+                (String)searchResultValues.get(i).getItem().get(0),
+                (String)searchResultValues.get(i).getItem().get(1)));
+        }
+
+        nicknameResponseList.sortListByScore();
+        return nicknameResponseList.get(0);
+    }
+
+    NicknameResponse buildNicknameResponse(Float score, String nickName, String standardizedName)
+    {
+        NicknameResponse nicknameResponse = new NicknameResponse();
+        nicknameResponse.setScore(score);
+        nicknameResponse.setNickName(nickName);
+        nicknameResponse.setStandardizedName(standardizedName);
+
+        return nicknameResponse;
     }
 }

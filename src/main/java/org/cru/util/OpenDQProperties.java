@@ -51,4 +51,9 @@ public class OpenDQProperties
         if(Strings.isNullOrEmpty(propertyName)) return null;
         return properties.getProperty(propertyName);
     }
+
+    public String getTransformationFileLocation(String type)
+    {
+        return getProperty(type + ".transformationFileLocation");
+    }
 }

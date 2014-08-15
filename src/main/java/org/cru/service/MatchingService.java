@@ -265,16 +265,22 @@ public class MatchingService extends IndexingService
 
     List<IndexData> buildListOfValueMaps(List<AnyTypeArray> searchResultValues, IndexType indexType)
     {
+        switch(indexType)
+        {
+            case ADDRESS:
+                return buildListOfValueMapsForAddressIndex(searchResultValues);
+            default:
+                return null;
+        }
+    }
+
+    List<IndexData> buildListOfValueMapsForAddressIndex(List<AnyTypeArray> searchResultValues)
+    {
         List<IndexData> valueMapList = Lists.newArrayList();
 
         for(AnyTypeArray valueSet : searchResultValues)
         {
-            switch(indexType)
-            {
-                case ADDRESS:
-                    valueMapList.add(buildNameAndAddressResultValues(valueSet.getItem()));
-                    break;
-            }
+            valueMapList.add(buildNameAndAddressResultValues(valueSet.getItem()));
         }
         return valueMapList;
     }

@@ -186,27 +186,27 @@ public class MatchingService extends IndexingService
     SearchResponseList findPersonInIndex(Person person) throws ConnectException
     {
         SearchResponseList searchResponseList = new SearchResponseList();
+        RuntimeMatchWS runtimeMatchWS = configureAndRetrieveRuntimeMatchService("contact");
 
         //Handle cases where no address was passed in
         if(person.getAddresses() == null || person.getAddresses().isEmpty())
         {
-            SearchResponseList responses = queryIndex(createSearchValuesFromPerson(person, null));
+            SearchResponseList responses = queryIndex(createSearchValuesFromPerson(person, null), runtimeMatchWS);
             if(responses != null) searchResponseList.addAll(responses);
         }
 
         //If given more than one address, we need to make sure we search on all of them
         for(Address personAddress : person.getAddresses())
         {
-            SearchResponseList responses = queryIndex(createSearchValuesFromPerson(person, personAddress));
+            SearchResponseList responses = queryIndex(createSearchValuesFromPerson(person, personAddress), runtimeMatchWS);
             if(responses!= null) searchResponseList.addAll(responses);
         }
 
         return searchResponseList;
     }
 
-    private SearchResponseList queryIndex(List<String> searchValues) throws ConnectException
+    private SearchResponseList queryIndex(List<String> searchValues, RuntimeMatchWS runtimeMatchWS) throws ConnectException
     {
-        RuntimeMatchWS runtimeMatchWS = configureAndRetrieveRuntimeMatchService("contact");
         ServiceResult searchResponse = runtimeMatchWS.searchSlot(slotName, searchValues);
 
         if(searchResponse.isError())

@@ -17,6 +17,7 @@ import java.util.List;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
 
 /**
  * Test the {@link MatchingService} class with exact and near matches
@@ -75,7 +76,7 @@ public class MatchingServiceTest
         Person deletedPerson = TestPeople.createTestPersonHasBeenDeleted();
 
         List<OafResponse> matchResponseList = matchingService.findMatches(deletedPerson, "Match");
-        assertEquals(matchResponseList.size(), 0);
+        assertNull(matchResponseList);
     }
 
     @Test
@@ -137,6 +138,17 @@ public class MatchingServiceTest
         matchingService.stepName = "RtMatchAddr";
         Person testPerson = TestPeople.createPersonForGrInIndex();
         SearchResponseList searchResponseList = matchingService.findPersonInIndex(testPerson);
+
+        assertNotNull(searchResponseList);
+        assertEquals(searchResponseList.size(), 1);
+        assertEquals(searchResponseList.get(0).getId(), testPerson.getId());
+    }
+
+    @Test
+    public void testFindPersonInIndexUsingEmail() throws ConnectException
+    {
+        Person testPerson = TestPeople.createPersonWithoutAddress();
+        SearchResponseList searchResponseList = matchingService.findPersonInIndexUsingEmail(testPerson);
 
         assertNotNull(searchResponseList);
         assertEquals(searchResponseList.size(), 1);

@@ -11,12 +11,15 @@ import com.infosolvetech.rtmatch.pdi4.ServiceResult;
 import net.java.dev.jaxb.array.AnyTypeArray;
 import org.apache.log4j.Logger;
 import org.cru.model.Address;
+import org.cru.model.EmailAddress;
 import org.cru.model.OafResponse;
 import org.cru.model.Person;
+import org.cru.model.PhoneNumber;
 import org.cru.model.SearchResponse;
 import org.cru.model.collections.SearchResponseList;
 import org.cru.model.map.IndexData;
 import org.cru.model.map.NameAndAddressIndexData;
+import org.cru.model.map.NameAndCommunicationIndexData;
 import org.cru.qualifiers.Delete;
 import org.cru.qualifiers.Match;
 import org.cru.qualifiers.Nickname;
@@ -171,15 +174,25 @@ public class MatchingService extends IndexingService
 
     SearchResponseList findPersonInIndex(Person person) throws ConnectException
     {
-        IndexType indexType = determineIndexType(person);
+        SearchResponseList searchResponseList;
 
-        switch(indexType)
+        if(person.getAddresses() != null && !person.getAddresses().isEmpty())
         {
-            case ADDRESS:
-                return findPersonInIndexUsingAddress(person);
-            default:
-                return null;
+            searchResponseList = findPersonInIndexUsingAddress(person);
+            if(searchResponseList.hasAStrongMatch()) return searchResponseList;
         }
+        if(person.getEmailAddresses() != null && !person.getEmailAddresses().isEmpty())
+        {
+            searchResponseList = findPersonInIndexUsingEmail(person);
+            if(searchResponseList.hasAStrongMatch()) return searchResponseList;
+        }
+        if(person.getPhoneNumbers() != null && !person.getPhoneNumbers().isEmpty())
+        {
+            searchResponseList = findPersonInIndexUsingPhoneNumber(person);
+            if(searchResponseList.hasAStrongMatch()) return searchResponseList;
+        }
+
+        return null;
     }
 
     private SearchResponseList findPersonInIndexUsingAddress(Person person) throws ConnectException
@@ -188,25 +201,64 @@ public class MatchingService extends IndexingService
         this.stepName = "RtMatchAddr";
         RuntimeMatchWS runtimeMatchWS = configureAndRetrieveRuntimeMatchService("contact");
 
-        //Handle cases where no address was passed in
-        if(person.getAddresses() == null || person.getAddresses().isEmpty())
+        //If given more than one address, we need to make sure we search on all of them
+        for(Address personAddress : person.getAddresses())
         {
             SearchResponseList responses = queryIndexByNameAndAddress(
-                createNameAndAddressSearchValuesFromPerson(person, null), runtimeMatchWS);
+            createNameAndAddressSearchValuesFromPerson(person, personAddress), runtimeMatchWS);
 
             if(responses != null) searchResponseList.addAll(responses);
         }
 
-        //If given more than one address, we need to make sure we search on all of them
-        if(person.getAddresses() != null && !person.getAddresses().isEmpty())
-        {
-            for(Address personAddress : person.getAddresses())
-            {
-                SearchResponseList responses = queryIndexByNameAndAddress(
-                createNameAndAddressSearchValuesFromPerson(person, personAddress), runtimeMatchWS);
+        return searchResponseList;
+    }
 
-                if(responses!= null) searchResponseList.addAll(responses);
+    SearchResponseList findPersonInIndexUsingEmail(Person person) throws ConnectException
+    {
+        this.stepName = "RtMatchComm";
+        this.slotName = "contactCommMatch";
+        RuntimeMatchWS runtimeMatchWS = configureAndRetrieveRuntimeMatchService("communication");
+
+        SearchResponseList searchResponseList = new SearchResponseList();
+
+        for(EmailAddress emailAddress : person.getEmailAddresses())
+        {
+            ServiceResult searchResponse =
+                runtimeMatchWS.searchSlot(slotName, createNameAndEmailSearchValuesFromPerson(person, emailAddress));
+
+            if(searchResponse.isError())
+            {
+                log.error("Error searching index: " + searchResponse.getMessage());
+                throw new WebApplicationException(searchResponse.getMessage());
             }
+
+            SearchResponseList responses = buildSearchResponses(searchResponse, IndexType.COMMUNICATION);
+            if(responses != null) searchResponseList.addAll(responses);
+        }
+
+        return searchResponseList;
+    }
+
+    private SearchResponseList findPersonInIndexUsingPhoneNumber(Person person) throws ConnectException
+    {
+        this.stepName = "RtMatchCommunication"; //TODO: Find out what this is
+        RuntimeMatchWS runtimeMatchWS = configureAndRetrieveRuntimeMatchService("contact");
+
+        SearchResponseList searchResponseList = new SearchResponseList();
+
+        for(PhoneNumber phoneNumber : person.getPhoneNumbers())
+        {
+            ServiceResult searchResponse =
+                runtimeMatchWS.searchSlot(slotName, createNameAndPhoneNumberSearchValuesFromPerson(person, phoneNumber));
+
+            if(searchResponse.isError())
+            {
+                log.error("Error searching index: " + searchResponse.getMessage());
+                throw new WebApplicationException(searchResponse.getMessage());
+            }
+
+            SearchResponseList responses = buildSearchResponses(searchResponse, IndexType.COMMUNICATION);
+            if(responses != null) searchResponseList.addAll(responses);
         }
 
         return searchResponseList;
@@ -247,6 +299,28 @@ public class MatchingService extends IndexingService
         return searchValues;
     }
 
+    private List<String> createNameAndEmailSearchValuesFromPerson(Person person, EmailAddress emailAddressToSearchOn)
+    {
+        List<String> searchValues = Lists.newArrayList();
+
+        searchValues.add(person.getFirstName());
+        searchValues.add(person.getLastName());
+        searchValues.add(emailAddressToSearchOn.getEmail());
+
+        return searchValues;
+    }
+
+    private List<String> createNameAndPhoneNumberSearchValuesFromPerson(Person person, PhoneNumber phoneNumberToSearchOn)
+    {
+        List<String> searchValues = Lists.newArrayList();
+
+        searchValues.add(person.getFirstName());
+        searchValues.add(person.getLastName());
+        searchValues.add(phoneNumberToSearchOn.getNumber());
+
+        return searchValues;
+    }
+
     private boolean matchHasBeenDeleted(String matchId)
     {
         return deleteService.personIsDeleted(matchId);
@@ -269,6 +343,8 @@ public class MatchingService extends IndexingService
         {
             case ADDRESS:
                 return buildListOfValueMapsForAddressIndex(searchResultValues);
+            case COMMUNICATION:
+                return buildListOfValueMapsForCommunicationIndex(searchResultValues);
             default:
                 return null;
         }
@@ -281,6 +357,17 @@ public class MatchingService extends IndexingService
         for(AnyTypeArray valueSet : searchResultValues)
         {
             valueMapList.add(buildNameAndAddressResultValues(valueSet.getItem()));
+        }
+        return valueMapList;
+    }
+
+    List<IndexData> buildListOfValueMapsForCommunicationIndex(List<AnyTypeArray> searchResultValues)
+    {
+        List<IndexData> valueMapList = Lists.newArrayList();
+
+        for(AnyTypeArray valueSet : searchResultValues)
+        {
+            valueMapList.add(buildNameAndCommunicationResultValues(valueSet.getItem()));
         }
         return valueMapList;
     }
@@ -304,6 +391,19 @@ public class MatchingService extends IndexingService
         return valueMap;
     }
 
+    IndexData buildNameAndCommunicationResultValues(List<Object> searchResultValues)
+    {
+        NameAndCommunicationIndexData valueMap = new NameAndCommunicationIndexData();
+
+        valueMap.putFirstName(searchResultValues.get(0));
+        valueMap.putLastName(searchResultValues.get(1));
+        valueMap.putCommunicationData(searchResultValues.get(2));
+        valueMap.putPartyId(searchResultValues.get(3));
+        valueMap.putGlobalRegistryId(searchResultValues.get(4));
+
+        return valueMap;
+    }
+
     SearchResponseList buildSearchResponses(ServiceResult searchResult, IndexType indexType)
     {
         SearchResponseList searchResponseList = new SearchResponseList();
@@ -323,22 +423,5 @@ public class MatchingService extends IndexingService
         }
 
         return searchResponseList;
-    }
-
-    IndexType determineIndexType(Person person)
-    {
-        if(person.getEmailAddresses() != null && !person.getEmailAddresses().isEmpty())
-        {
-            if(person.getAddresses() != null && !person.getAddresses().isEmpty())
-            {
-                if(person.getPhoneNumbers() != null && !person.getPhoneNumbers().isEmpty())
-                {
-                    return IndexType.FULL;
-                }
-                else return IndexType.ADDRESS_AND_EMAIL;
-            }
-            else return IndexType.EMAIL;
-        }
-        else return IndexType.ADDRESS;
     }
 }

@@ -325,6 +325,21 @@ public class TestPeople
         return deletedPerson;
     }
 
+    public static Person createPersonWithoutAddress()
+    {
+        Person person = new Person();
+
+        person.setId("1-1E6-4616");
+        person.setFirstName("Betsy");
+        person.setLastName("Eagar");
+
+        EmailAddress emailAddress = new EmailAddress();
+        emailAddress.setEmail("eager@windstream.net");
+        person.setEmailAddresses(Lists.newArrayList(emailAddress));
+
+        return person;
+    }
+
 
     public static RealTimeObjectActionDTO createMockMdmPerson()
     {

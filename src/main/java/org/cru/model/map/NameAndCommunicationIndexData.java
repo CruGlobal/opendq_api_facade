@@ -7,27 +7,26 @@ import java.util.List;
 /**
  * Created by William.Randall on 8/15/2014.
  */
-public class NameAndEmailIndexData extends IndexData
+public class NameAndCommunicationIndexData extends IndexData
 {
-    private static final String EMAIL_ADDRESS_KEY = "FIELD3";
+    private static final String COMMUNICATION_DATA_KEY = "FIELD3";  // Can be either Phone or Email
 
-    public NameAndEmailIndexData()
+    public NameAndCommunicationIndexData()
     {
         FIRST_NAME_KEY = "FIELD1";
         LAST_NAME_KEY = "FIELD2";
-        STANDARDIZED_FIRST_NAME_KEY = "FIELD4";
-        PARTY_ID_KEY = "FIELD5";
-        GR_ID_KEY = "FIELD6";
+        PARTY_ID_KEY = "FIELD4";
+        GR_ID_KEY = "FIELD5";
     }
 
-    public String getEmailAddress()
+    public String getCommunicationData()
     {
-        return (String)internalMap.get(EMAIL_ADDRESS_KEY);
+        return (String)internalMap.get(COMMUNICATION_DATA_KEY);
     }
 
-    public void putEmailAddress(Object emailAddress)
+    public void putCommunicationData(Object communicationData)
     {
-        internalMap.put(EMAIL_ADDRESS_KEY, emailAddress);
+        internalMap.put(COMMUNICATION_DATA_KEY, communicationData);
     }
 
     public List<String> getValuesForEquality()
@@ -37,7 +36,7 @@ public class NameAndEmailIndexData extends IndexData
         valuesForEquality.add(getFirstName());
         valuesForEquality.add(getLastName());
         valuesForEquality.add(getStandardizedFirstName());
-        valuesForEquality.add(getEmailAddress());
+        valuesForEquality.add(getCommunicationData());
 
         return valuesForEquality;
     }

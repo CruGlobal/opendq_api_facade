@@ -1,7 +1,7 @@
 package org.cru.model;
 
 import org.cru.model.map.NameAndAddressIndexData;
-import org.cru.model.map.NameAndEmailIndexData;
+import org.cru.model.map.NameAndCommunicationIndexData;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
@@ -75,39 +75,39 @@ public class IndexDataTest
         return indexData;
     }
 
-    private NameAndEmailIndexData createEmailIndexData1()
+    private NameAndCommunicationIndexData createEmailIndexData1()
     {
-        NameAndEmailIndexData indexData = new NameAndEmailIndexData();
+        NameAndCommunicationIndexData indexData = new NameAndCommunicationIndexData();
         indexData.putPartyId("1");
         indexData.putFirstName("Al");
         indexData.putLastName("Last");
-        indexData.putEmailAddress("al.last@cru.org");
+        indexData.putCommunicationData("al.last@cru.org");
         indexData.putGlobalRegistryId("111-222-333");
         indexData.putStandardizedFirstName("AL");
 
         return indexData;
     }
 
-    private NameAndEmailIndexData createEmailIndexData2()
+    private NameAndCommunicationIndexData createEmailIndexData2()
     {
-        NameAndEmailIndexData indexData = new NameAndEmailIndexData();
+        NameAndCommunicationIndexData indexData = new NameAndCommunicationIndexData();
         indexData.putPartyId("2");
         indexData.putFirstName("AL");
         indexData.putLastName("lAsT");
-        indexData.putEmailAddress("al.last@cru.org");
+        indexData.putCommunicationData("al.last@cru.org");
         indexData.putGlobalRegistryId("111-222-333");
         indexData.putStandardizedFirstName("AL");
 
         return indexData;
     }
 
-    private NameAndEmailIndexData createEmailIndexData3()
+    private NameAndCommunicationIndexData createEmailIndexData3()
     {
-        NameAndEmailIndexData indexData = new NameAndEmailIndexData();
+        NameAndCommunicationIndexData indexData = new NameAndCommunicationIndexData();
         indexData.putPartyId("1");
         indexData.putFirstName("Al");
         indexData.putLastName("Last");
-        indexData.putEmailAddress("allast@yahoo.com");
+        indexData.putCommunicationData("allast@yahoo.com");
         indexData.putGlobalRegistryId("44422-66234");
         indexData.putStandardizedFirstName("AL");
 

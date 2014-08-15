@@ -49,6 +49,13 @@ public class SearchResponseList implements List<SearchResponse>
         else if("B".equalsIgnoreCase(type)) filterLowConfidenceForBroadMatch();
     }
 
+    public boolean hasAStrongMatch()
+    {
+        if(internalList == null || internalList.isEmpty()) return false;
+        filterLowConfidenceMatches();
+        return !internalList.isEmpty();
+    }
+
     private void filterLowConfidenceForFuzzyMatch()
     {
         if(internalList == null || internalList.isEmpty()) return;

@@ -33,7 +33,7 @@ public class IndexingService
 
     enum IndexType
     {
-        ADDRESS, FULL, EMAIL, ADDRESS_AND_EMAIL
+        ADDRESS, FULL, COMMUNICATION, ADDRESS_AND_EMAIL
     }
 
     RuntimeMatchWS configureAndRetrieveRuntimeMatchService(String transformationType) throws ConnectException
@@ -95,22 +95,5 @@ public class IndexingService
 
         log.error("Invalid Service: " + serviceImplType.getSimpleName());
         throw new IllegalArgumentException(serviceImplType.getSimpleName() + " is not a valid service");
-    }
-
-    IndexType determineIndexType(Person person)
-    {
-        if(person.getEmailAddresses() != null && !person.getEmailAddresses().isEmpty())
-        {
-            if(person.getAddresses() != null && !person.getAddresses().isEmpty())
-            {
-                if(person.getPhoneNumbers() != null && !person.getPhoneNumbers().isEmpty())
-                {
-                    return IndexType.FULL;
-                }
-                else return IndexType.ADDRESS_AND_EMAIL;
-            }
-            else return IndexType.EMAIL;
-        }
-        else return IndexType.ADDRESS;
     }
 }

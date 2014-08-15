@@ -40,6 +40,11 @@ public class MatchingService extends IndexingService
     private NicknameService nicknameService;
     private static Logger log = Logger.getLogger(MatchingService.class);
 
+    enum IndexType
+    {
+        ADDRESS
+    }
+
     @SuppressWarnings("unused")  //used by CDI
     public MatchingService() {}
 
@@ -59,7 +64,6 @@ public class MatchingService extends IndexingService
     public List<OafResponse> findMatches(Person person, String slotName) throws ConnectException
     {
         this.slotName = slotName;
-        this.stepName = "RtMatchAddr";
 
         SearchResponseList searchResponseList = findPersonInIndex(person);
         if(searchResponseList == null || searchResponseList.isEmpty()) return null;
@@ -172,12 +176,15 @@ public class MatchingService extends IndexingService
     SearchResponseList findPersonInIndex(Person person) throws ConnectException
     {
         SearchResponseList searchResponseList = new SearchResponseList();
+        this.stepName = "RtMatchAddr";
         RuntimeMatchWS runtimeMatchWS = configureAndRetrieveRuntimeMatchService("contact");
 
         //Handle cases where no address was passed in
         if(person.getAddresses() == null || person.getAddresses().isEmpty())
         {
-            SearchResponseList responses = queryIndex(createSearchValuesFromPerson(person, null), runtimeMatchWS);
+            SearchResponseList responses = queryIndexByNameAndAddress(
+                createNameAndAddressSearchValuesFromPerson(person, null), runtimeMatchWS);
+
             if(responses != null) searchResponseList.addAll(responses);
         }
 
@@ -186,7 +193,9 @@ public class MatchingService extends IndexingService
         {
             for(Address personAddress : person.getAddresses())
             {
-                SearchResponseList responses = queryIndex(createSearchValuesFromPerson(person, personAddress), runtimeMatchWS);
+                SearchResponseList responses = queryIndexByNameAndAddress(
+                createNameAndAddressSearchValuesFromPerson(person, personAddress), runtimeMatchWS);
+
                 if(responses!= null) searchResponseList.addAll(responses);
             }
         }
@@ -194,7 +203,7 @@ public class MatchingService extends IndexingService
         return searchResponseList;
     }
 
-    private SearchResponseList queryIndex(List<String> searchValues, RuntimeMatchWS runtimeMatchWS) throws ConnectException
+    private SearchResponseList queryIndexByNameAndAddress(List<String> searchValues, RuntimeMatchWS runtimeMatchWS) throws ConnectException
     {
         ServiceResult searchResponse = runtimeMatchWS.searchSlot(slotName, searchValues);
 
@@ -204,10 +213,10 @@ public class MatchingService extends IndexingService
             throw new WebApplicationException(searchResponse.getMessage());
         }
 
-        return buildSearchResponses(searchResponse);
+        return buildSearchResponses(searchResponse, IndexType.ADDRESS);
     }
 
-    private List<String> createSearchValuesFromPerson(Person person, Address addressToSearchOn) throws ConnectException
+    private List<String> createNameAndAddressSearchValuesFromPerson(Person person, Address addressToSearchOn) throws ConnectException
     {
         // Order must match the transformation file
         List<String> searchValues = new ArrayList<String>();
@@ -245,18 +254,23 @@ public class MatchingService extends IndexingService
         return searchResponse;
     }
 
-    List<IndexData> buildListOfValueMaps(List<AnyTypeArray> searchResultValues)
+    List<IndexData> buildListOfValueMaps(List<AnyTypeArray> searchResultValues, IndexType indexType)
     {
         List<IndexData> valueMapList = Lists.newArrayList();
 
         for(AnyTypeArray valueSet : searchResultValues)
         {
-            valueMapList.add(buildResultValues(valueSet.getItem()));
+            switch(indexType)
+            {
+                case ADDRESS:
+                    valueMapList.add(buildNameAndAddressResultValues(valueSet.getItem()));
+                    break;
+            }
         }
         return valueMapList;
     }
 
-    IndexData buildResultValues(List<Object> searchResultValues)
+    IndexData buildNameAndAddressResultValues(List<Object> searchResultValues)
     {
         IndexData valueMap = new IndexData();
 
@@ -275,7 +289,7 @@ public class MatchingService extends IndexingService
         return valueMap;
     }
 
-    SearchResponseList buildSearchResponses(ServiceResult searchResult)
+    SearchResponseList buildSearchResponses(ServiceResult searchResult, IndexType indexType)
     {
         SearchResponseList searchResponseList = new SearchResponseList();
         List<AnyTypeArray> searchResultValues = searchResult.getRows();
@@ -285,7 +299,7 @@ public class MatchingService extends IndexingService
             return null;
         }
 
-        List<IndexData> valueMapList = buildListOfValueMaps(searchResultValues);
+        List<IndexData> valueMapList = buildListOfValueMaps(searchResultValues, indexType);
         List<Float> scoreList = searchResult.getScores();
 
         for(int i = 0; i < scoreList.size(); i++)

@@ -11,7 +11,7 @@ import org.cru.qualifiers.Match;
 import org.cru.service.AddService;
 import org.cru.service.AuthService;
 import org.cru.service.MatchingService;
-import org.cru.service.PersonDeserializer;
+import org.cru.service.PersonDeserializationService;
 import org.cru.util.Action;
 
 import javax.inject.Inject;
@@ -40,7 +40,7 @@ public class AddResource
     @Inject @Match
     private MatchingService matchingService;
     @Inject
-    private PersonDeserializer personDeserializer;
+    private PersonDeserializationService personDeserializationService;
     @Inject
     private AuthService authService;
 
@@ -55,7 +55,7 @@ public class AddResource
     {
         if(!authService.hasAccess(httpHeaders)) return authService.notAuthorized(httpHeaders);
 
-        Person person = personDeserializer.deserializePerson(json);
+        Person person = personDeserializationService.deserializePerson(json);
 
         if(Strings.isNullOrEmpty(person.getId()))
         {

@@ -7,7 +7,7 @@ import org.cru.model.OafResponse;
 import org.cru.model.Person;
 import org.cru.service.AddOrUpdateService;
 import org.cru.service.AuthService;
-import org.cru.service.PersonDeserializer;
+import org.cru.service.PersonDeserializationService;
 import org.cru.util.Action;
 
 import javax.inject.Inject;
@@ -34,7 +34,7 @@ public class AddOrUpdateResource
     @Inject
     private AddOrUpdateService addOrUpdateService;
     @Inject
-    private PersonDeserializer personDeserializer;
+    private PersonDeserializationService personDeserializationService;
     @Inject
     private AuthService authService;
 
@@ -49,7 +49,7 @@ public class AddOrUpdateResource
     {
         if(!authService.hasAccess(httpHeaders)) return authService.notAuthorized(httpHeaders);
 
-        Person person = personDeserializer.deserializePerson(json);
+        Person person = personDeserializationService.deserializePerson(json);
 
         if(Strings.isNullOrEmpty(person.getId()))
         {

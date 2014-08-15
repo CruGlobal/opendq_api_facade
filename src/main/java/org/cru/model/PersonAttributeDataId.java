@@ -1,6 +1,8 @@
 package org.cru.model;
 
 /**
+ * Used to identify a specific Person Attribute for updating the MDM database
+ *
  * Created by William.Randall on 8/1/2014.
  */
 public class PersonAttributeDataId
@@ -36,11 +38,12 @@ public class PersonAttributeDataId
 
         PersonAttributeDataId that = (PersonAttributeDataId) o;
 
-        if(!attributeDataType.equals(that.attributeDataType)) return false;
-        if(secondaryIdentifier != null ? !secondaryIdentifier.equals(that.secondaryIdentifier) : that.secondaryIdentifier != null)
-            return false;
+        return
+            attributeDataType.equals(that.attributeDataType) &&
+                !(secondaryIdentifier != null ?
+                    !secondaryIdentifier.equals(that.secondaryIdentifier) :
+                    that.secondaryIdentifier != null);
 
-        return true;
     }
 
     @Override

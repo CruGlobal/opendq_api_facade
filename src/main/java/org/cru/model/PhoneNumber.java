@@ -4,6 +4,9 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.cru.mdm.MdmConstants;
 
 /**
+ * Model to hold phone number data.  JSON will look like this:
+ * "phone_number": {"id": "String", "number": "String", "location": "String"}
+ *
  * Created by William.Randall on 6/20/14.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)

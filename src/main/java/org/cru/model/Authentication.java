@@ -6,6 +6,18 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import java.util.List;
 
 /**
+ * Model to hold authentication data.  JSON can contain any/all of the following as objects or arrays:
+ *
+ * <pre>
+ * "authentication": {
+ *   "relay_guid": "String",
+ *   "employee_relay_guid": "String",
+ *   "google_apps_uid": ["String", "String", "String"],
+ *   "facebook_uid": ["String"],
+ *   "key_guid": "String"
+ * }
+ * </pre>
+ *
  * Created by William.Randall on 6/27/14.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)

@@ -6,6 +6,8 @@ import javax.persistence.Table;
 import java.io.Serializable;
 
 /**
+ * Holds data for authorization of client systems.
+ *
  * Created by William.Randall on 8/11/2014.
  */
 @Entity

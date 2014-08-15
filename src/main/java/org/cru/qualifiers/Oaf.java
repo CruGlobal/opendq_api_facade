@@ -11,6 +11,8 @@ import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.ElementType.TYPE;
 
 /**
+ * Qualifier for the oaf_credentials datasource
+ *
  * Created by William.Randall on 8/11/2014.
  */
 @Qualifier

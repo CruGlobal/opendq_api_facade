@@ -3,6 +3,8 @@ package org.cru.model;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 /**
+ * Wrapper class for Person in order to parse the json more easily
+ *
  * Created by William.Randall on 7/8/2014.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)

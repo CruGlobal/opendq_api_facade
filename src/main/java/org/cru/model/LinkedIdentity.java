@@ -3,6 +3,9 @@ package org.cru.model;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 /**
+ * Model to hold linked identity data.  JSON will look like this:
+ * "linked_identity": {"system_id": "String", "client_integration_id": "String", "employee_number": "String"}
+ *
  * Created by William.Randall on 6/27/14.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)

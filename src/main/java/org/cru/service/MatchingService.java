@@ -43,7 +43,7 @@ public class MatchingService extends IndexingService
 
     enum IndexType
     {
-        ADDRESS
+        ADDRESS, FULL, EMAIL, ADDRESS_AND_EMAIL
     }
 
     @SuppressWarnings("unused")  //used by CDI
@@ -175,6 +175,19 @@ public class MatchingService extends IndexingService
     }
 
     SearchResponseList findPersonInIndex(Person person) throws ConnectException
+    {
+        IndexType indexType = determineIndexType(person);
+
+        switch(indexType)
+        {
+            case ADDRESS:
+                return findPersonInIndexUsingAddress(person);
+            default:
+                return null;
+        }
+    }
+
+    private SearchResponseList findPersonInIndexUsingAddress(Person person) throws ConnectException
     {
         SearchResponseList searchResponseList = new SearchResponseList();
         this.stepName = "RtMatchAddr";
@@ -309,5 +322,22 @@ public class MatchingService extends IndexingService
         }
 
         return searchResponseList;
+    }
+
+    IndexType determineIndexType(Person person)
+    {
+        if(person.getEmailAddresses() != null && !person.getEmailAddresses().isEmpty())
+        {
+            if(person.getAddresses() != null && !person.getAddresses().isEmpty())
+            {
+                if(person.getPhoneNumbers() != null && !person.getPhoneNumbers().isEmpty())
+                {
+                    return IndexType.FULL;
+                }
+                else return IndexType.ADDRESS_AND_EMAIL;
+            }
+            else return IndexType.EMAIL;
+        }
+        else return IndexType.ADDRESS;
     }
 }

@@ -51,7 +51,6 @@ public class AddService extends IndexingService
     public void addPerson(Person person, String slotName) throws ConnectException
     {
         this.slotName = slotName;
-        this.stepName = "RtMatchAddr";
 
         if(person.getAddresses() != null && !person.getAddresses().isEmpty())
         {
@@ -116,7 +115,8 @@ public class AddService extends IndexingService
         RealTimeObjectActionDTO mdmPerson,
         Address addressToUse) throws ConnectException
     {
-        IndexData fieldNamesAndValues = generateFieldNamesAndValues(person, mdmPerson, addressToUse);
+        this.stepName = "RtMatchAddr";
+        IndexData fieldNamesAndValues = generateFieldNamesAndValuesForNameAndAddressIndex(person, mdmPerson, addressToUse);
 
         List<String> fieldNames = Lists.newArrayList();
         fieldNames.addAll(fieldNamesAndValues.keySet());
@@ -131,7 +131,7 @@ public class AddService extends IndexingService
         }
     }
 
-    IndexData generateFieldNamesAndValues(
+    IndexData generateFieldNamesAndValuesForNameAndAddressIndex(
         Person person,
         RealTimeObjectActionDTO mdmPerson,
         Address addressToUse) throws ConnectException

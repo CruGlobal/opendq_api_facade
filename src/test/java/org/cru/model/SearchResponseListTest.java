@@ -2,6 +2,7 @@ package org.cru.model;
 
 import org.cru.model.collections.SearchResponseList;
 import org.cru.model.map.IndexData;
+import org.cru.model.map.NameAndAddressIndexData;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
@@ -76,7 +77,7 @@ public class SearchResponseListTest
         SearchResponse firstMatch = new SearchResponse();
         firstMatch.setScore(1.0D);
 
-        IndexData firstMapValues = new IndexData();
+        NameAndAddressIndexData firstMapValues = new NameAndAddressIndexData();
         firstMapValues.putFirstName("Test");
         firstMapValues.putLastName("Tester");
         firstMapValues.putAddressLine1("1125 Way Blvd");
@@ -93,7 +94,7 @@ public class SearchResponseListTest
         SearchResponse secondMatch = new SearchResponse();
         secondMatch.setScore(1.0D);
 
-        IndexData secondMapValues = new IndexData();
+        NameAndAddressIndexData secondMapValues = new NameAndAddressIndexData();
         secondMapValues.putFirstName("Test");
         secondMapValues.putLastName("Tester");
         secondMapValues.putAddressLine1("1125 Way Blvd");
@@ -110,7 +111,7 @@ public class SearchResponseListTest
         SearchResponse thirdMatch = new SearchResponse();
         thirdMatch.setScore(1.0D);
 
-        IndexData thirdMatchValues = new IndexData();
+        NameAndAddressIndexData thirdMatchValues = new NameAndAddressIndexData();
         thirdMatchValues.putFirstName("Test");
         thirdMatchValues.putLastName("Tester");
         thirdMatchValues.putAddressLine1("1125 Way Blvd");

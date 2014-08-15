@@ -11,6 +11,7 @@ import org.cru.mdm.PersonToMdmConverter;
 import org.cru.model.Address;
 import org.cru.model.Person;
 import org.cru.model.map.IndexData;
+import org.cru.model.map.NameAndAddressIndexData;
 import org.cru.qualifiers.Add;
 import org.cru.qualifiers.Nickname;
 import org.cru.util.OpenDQProperties;
@@ -136,7 +137,7 @@ public class AddService extends IndexingService
         RealTimeObjectActionDTO mdmPerson,
         Address addressToUse) throws ConnectException
     {
-        IndexData indexData = new IndexData();
+        NameAndAddressIndexData indexData = new NameAndAddressIndexData();
 
         indexData.putFirstName(person.getFirstName());
         indexData.putLastName(person.getLastName());

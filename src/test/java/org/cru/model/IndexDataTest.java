@@ -1,6 +1,7 @@
 package org.cru.model;
 
 import org.cru.model.map.IndexData;
+import org.cru.model.map.NameAndAddressIndexData;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
@@ -13,15 +14,15 @@ import static org.testng.Assert.assertFalse;
 public class IndexDataTest
 {
     @Test
-    public void testEquals()
+    public void testNameAndAddressDataEquals()
     {
         assertEquals(createIndexData1(), createIndexData2());
         assertFalse(createIndexData1().equals(createIndexData3()));
     }
 
-    private IndexData createIndexData1()
+    private NameAndAddressIndexData createIndexData1()
     {
-        IndexData indexData = new IndexData();
+        NameAndAddressIndexData indexData = new NameAndAddressIndexData();
         indexData.putPartyId("1");
         indexData.putFirstName("Al");
         indexData.putLastName("Last");
@@ -35,9 +36,9 @@ public class IndexDataTest
         return indexData;
     }
 
-    private IndexData createIndexData2()
+    private NameAndAddressIndexData createIndexData2()
     {
-        IndexData indexData = new IndexData();
+        NameAndAddressIndexData indexData = new NameAndAddressIndexData();
         indexData.putPartyId("2");
         indexData.putFirstName("al");
         indexData.putLastName("LaSt");
@@ -51,9 +52,9 @@ public class IndexDataTest
         return indexData;
     }
 
-    private IndexData createIndexData3()
+    private NameAndAddressIndexData createIndexData3()
     {
-        IndexData indexData = new IndexData();
+        NameAndAddressIndexData indexData = new NameAndAddressIndexData();
         indexData.putPartyId("1");
         indexData.putFirstName("Albert");
         indexData.putLastName("Last");

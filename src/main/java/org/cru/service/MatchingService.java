@@ -16,6 +16,7 @@ import org.cru.model.Person;
 import org.cru.model.SearchResponse;
 import org.cru.model.collections.SearchResponseList;
 import org.cru.model.map.IndexData;
+import org.cru.model.map.NameAndAddressIndexData;
 import org.cru.qualifiers.Delete;
 import org.cru.qualifiers.Match;
 import org.cru.qualifiers.Nickname;
@@ -272,7 +273,7 @@ public class MatchingService extends IndexingService
 
     IndexData buildNameAndAddressResultValues(List<Object> searchResultValues)
     {
-        IndexData valueMap = new IndexData();
+        NameAndAddressIndexData valueMap = new NameAndAddressIndexData();
 
         valueMap.putFirstName(searchResultValues.get(0));
         valueMap.putLastName(searchResultValues.get(1));

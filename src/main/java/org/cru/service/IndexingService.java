@@ -6,6 +6,7 @@ import com.infosolvetech.rtmatch.pdi4.RuntimeMatchWS;
 import com.infosolvetech.rtmatch.pdi4.RuntimeMatchWSService;
 import com.infosolvetech.rtmatch.pdi4.ServiceResult;
 import org.apache.log4j.Logger;
+import org.cru.model.Person;
 import org.cru.util.OpenDQProperties;
 
 import javax.ws.rs.WebApplicationException;
@@ -29,6 +30,11 @@ public class IndexingService
     String transformationFileLocation;
     String stepName;
     private static Logger log = Logger.getLogger(IndexingService.class);
+
+    enum IndexType
+    {
+        ADDRESS, FULL, EMAIL, ADDRESS_AND_EMAIL
+    }
 
     RuntimeMatchWS configureAndRetrieveRuntimeMatchService(String transformationType) throws ConnectException
     {
@@ -89,5 +95,22 @@ public class IndexingService
 
         log.error("Invalid Service: " + serviceImplType.getSimpleName());
         throw new IllegalArgumentException(serviceImplType.getSimpleName() + " is not a valid service");
+    }
+
+    IndexType determineIndexType(Person person)
+    {
+        if(person.getEmailAddresses() != null && !person.getEmailAddresses().isEmpty())
+        {
+            if(person.getAddresses() != null && !person.getAddresses().isEmpty())
+            {
+                if(person.getPhoneNumbers() != null && !person.getPhoneNumbers().isEmpty())
+                {
+                    return IndexType.FULL;
+                }
+                else return IndexType.ADDRESS_AND_EMAIL;
+            }
+            else return IndexType.EMAIL;
+        }
+        else return IndexType.ADDRESS;
     }
 }

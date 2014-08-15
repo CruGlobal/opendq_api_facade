@@ -41,11 +41,6 @@ public class MatchingService extends IndexingService
     private NicknameService nicknameService;
     private static Logger log = Logger.getLogger(MatchingService.class);
 
-    enum IndexType
-    {
-        ADDRESS, FULL, EMAIL, ADDRESS_AND_EMAIL
-    }
-
     @SuppressWarnings("unused")  //used by CDI
     public MatchingService() {}
 

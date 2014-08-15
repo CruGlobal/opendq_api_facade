@@ -12,6 +12,7 @@ import org.cru.model.Address;
 import org.cru.model.Person;
 import org.cru.model.map.IndexData;
 import org.cru.qualifiers.Add;
+import org.cru.qualifiers.Match;
 import org.cru.util.OpenDQProperties;
 
 import javax.inject.Inject;
@@ -40,7 +41,7 @@ public class AddService extends IndexingService
     public AddService(
         OpenDQProperties openDQProperties,
         AddressNormalizationService addressNormalizationService,
-        MatchingService matchingService)
+        @Match MatchingService matchingService)
     {
         this.openDQProperties = openDQProperties;
         this.addressNormalizationService = addressNormalizationService;

@@ -1,31 +1,27 @@
 package org.cru.webservices;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import org.cru.model.OafResponse;
 import org.cru.model.Person;
-import org.cru.model.SearchResponse;
 import org.cru.qualifiers.Delete;
 import org.cru.qualifiers.Match;
 import org.cru.service.AuthService;
 import org.cru.service.DeleteService;
+import org.cru.service.MatchingService;
+import org.cru.service.PersonDeserializer;
+import org.cru.util.Action;
 
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.net.ConnectException;
 import java.util.List;
-
-import org.cru.service.MatchingService;
-import org.cru.service.PersonDeserializer;
-import org.cru.util.Action;
 
 /**
  * Endpoint to delete a {@link Person} from the index
@@ -48,9 +44,13 @@ public class DeleteResource
     @Path("/delete/{id}")
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deletePersonByGlobalRegistryId(String globalRegistryId, @Context HttpHeaders httpHeaders)
+    public Response deletePersonByGlobalRegistryId(@PathParam("id") String globalRegistryId, @Context HttpHeaders httpHeaders)
     {
         if(!authService.hasAccess(httpHeaders)) return authService.notAuthorized(httpHeaders);
+        if(Strings.isNullOrEmpty(globalRegistryId))
+        {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Global Registry ID is required for delete").build();
+        }
         deleteService.deletePerson(globalRegistryId, matchingService.findMatchInMdmByGlobalRegistryId(globalRegistryId));
         return Response.ok().entity(buildResponseEntity(globalRegistryId)).build();
     }

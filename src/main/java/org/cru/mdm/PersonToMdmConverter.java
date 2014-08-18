@@ -59,7 +59,7 @@ public class PersonToMdmConverter
 
     private void addAddressesIfExist(RealTimeObjectActionDTO realTimeObject, ObjAddressDTOList addressList)
     {
-        if(addressList.getObjectAddress() != null && !addressList.getObjectAddress().isEmpty())
+        if(addressList != null && addressList.getObjectAddress() != null && !addressList.getObjectAddress().isEmpty())
         {
             realTimeObject.setObjectAddresses(addressList);
         }
@@ -67,7 +67,9 @@ public class PersonToMdmConverter
 
     private void addCommunicationsIfExist(RealTimeObjectActionDTO realTimeObject, ObjCommunicationDTOList communicationList)
     {
-        if(communicationList.getObjectCommunication() != null && !communicationList.getObjectCommunication().isEmpty())
+        if(communicationList != null &&
+            communicationList.getObjectCommunication() != null &&
+            !communicationList.getObjectCommunication().isEmpty())
         {
             realTimeObject.setObjectCommunications(communicationList);
         }
@@ -75,7 +77,9 @@ public class PersonToMdmConverter
 
     private void addAttributeDataIfExists(RealTimeObjectActionDTO realTimeObject, ObjAttributeDataDTOList attributeDataList)
     {
-        if(attributeDataList.getObjectAttributeData() != null && !attributeDataList.getObjectAttributeData().isEmpty())
+        if(attributeDataList != null &&
+            attributeDataList.getObjectAttributeData() != null &&
+            !attributeDataList.getObjectAttributeData().isEmpty())
         {
             realTimeObject.setObjectAttributeDatas(attributeDataList);
         }

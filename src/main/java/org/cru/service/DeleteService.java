@@ -44,6 +44,15 @@ public class DeleteService extends IndexingService
 
     void deleteFromMdm(RealTimeObjectActionDTO foundPerson)
     {
+        if(foundPerson == null || foundPerson.getObjectEntity() == null)
+        {
+            throw new WebApplicationException(
+                Response.status(Response.Status.NOT_FOUND)
+                .entity("Could not find person in MDM to delete")
+                .build()
+            );
+        }
+
         DataManagementWSImpl mdmService = getMdmServiceImplementation("contact");
         String partyId = foundPerson.getObjectEntity().getPartyId();
         try

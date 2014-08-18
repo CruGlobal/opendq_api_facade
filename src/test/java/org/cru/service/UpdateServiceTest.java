@@ -30,7 +30,7 @@ public class UpdateServiceTest
 
         addressNormalizationService = mock(AddressNormalizationService.class);
 
-        updateService = new UpdateService(openDQProperties, addressNormalizationService);
+        updateService = new UpdateService(openDQProperties, addressNormalizationService, null);
     }
 
     @Test

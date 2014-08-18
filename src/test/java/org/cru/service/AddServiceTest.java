@@ -3,7 +3,6 @@ package org.cru.service;
 import org.cru.data.TestPeople;
 import org.cru.model.Address;
 import org.cru.model.Person;
-import org.cru.util.DeletedIndexesFileIO;
 import org.cru.util.OafProperties;
 import org.cru.util.OpenDQProperties;
 import org.testng.annotations.BeforeClass;
@@ -35,10 +34,8 @@ public class AddServiceTest
         oafProperties.init();
 
         addressNormalizationService = mock(AddressNormalizationService.class);
-        DeletedIndexesFileIO deletedIndexesFileIO = new DeletedIndexesFileIO(oafProperties);
-        DeleteService deleteService = new DeleteService(deletedIndexesFileIO, openDQProperties);
-        MatchingService matchingService = new MatchingService(openDQProperties, deleteService);
-        addService = new AddService(openDQProperties, addressNormalizationService, matchingService);
+        NicknameService nicknameService = new NicknameService(openDQProperties);
+        addService = new AddService(openDQProperties, addressNormalizationService, nicknameService);
     }
 
     @Test

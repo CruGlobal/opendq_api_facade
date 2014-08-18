@@ -41,7 +41,7 @@ public class MatchOrUpdateServiceTest
 
         DeletedIndexesFileIO deletedIndexesFileIO = new DeletedIndexesFileIO(oafProperties);
         DeleteService deleteService = new DeleteService(deletedIndexesFileIO, openDQProperties);
-        UpdateService updateService = new UpdateService(openDQProperties, addressNormalizationService);
+        UpdateService updateService = new UpdateService(openDQProperties, addressNormalizationService, null);
         MatchingService matchingService = new MatchingService(openDQProperties, deleteService);
         matchOrUpdateService = new MatchOrUpdateService(matchingService, updateService);
     }

@@ -6,7 +6,6 @@ import org.cru.data.TestPeople;
 import org.cru.model.EmailAddress;
 import org.cru.model.OafResponse;
 import org.cru.model.Person;
-import org.cru.model.SearchResponse;
 import org.cru.postalsoft.PostalsoftServiceWrapper;
 import org.cru.util.DeletedIndexesFileIO;
 import org.cru.util.OafProperties;
@@ -61,9 +60,10 @@ public class EndToEndServiceTest
 
         deleteService = new DeleteService(deletedIndexesFileIO, openDQProperties);
         matchingService = new MatchingService(openDQProperties, deleteService);
-        AddService addService = new AddService(openDQProperties, addressNormalizationService, matchingService);
+        NicknameService nicknameService = new NicknameService(openDQProperties);
+        AddService addService = new AddService(openDQProperties, addressNormalizationService, nicknameService);
         matchOrAddService = new MatchOrAddService(matchingService, addService);
-        UpdateService updateService = new UpdateService(openDQProperties, addressNormalizationService);
+        UpdateService updateService = new UpdateService(openDQProperties, addressNormalizationService, nicknameService);
         matchOrUpdateService = new MatchOrUpdateService(matchingService, updateService);
 
         filename = oafProperties.getProperty("deletedIndexFile");

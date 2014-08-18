@@ -41,10 +41,11 @@ public class AddOrUpdateServiceTest
         addressNormalizationService = mock(AddressNormalizationService.class);
 
         DeletedIndexesFileIO deletedIndexesFileIO = new DeletedIndexesFileIO(oafProperties);
+        NicknameService nicknameService = new NicknameService(openDQProperties);
         DeleteService deleteService = new DeleteService(deletedIndexesFileIO, openDQProperties);
-        UpdateService updateService = new UpdateService(openDQProperties, addressNormalizationService);
+        UpdateService updateService = new UpdateService(openDQProperties, addressNormalizationService, nicknameService);
         MatchingService matchingService = new MatchingService(openDQProperties, deleteService);
-        AddService addService = new AddService(openDQProperties, addressNormalizationService, matchingService);
+        AddService addService = new AddService(openDQProperties, addressNormalizationService, nicknameService);
 
         MatchOrUpdateService matchOrUpdateService = new MatchOrUpdateService(matchingService, updateService);
         addOrUpdateService = new AddOrUpdateService(addService, matchOrUpdateService);

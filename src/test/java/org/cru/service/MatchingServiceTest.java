@@ -141,24 +141,4 @@ public class MatchingServiceTest
         assertEquals(searchResponseList.size(), 1);
         assertEquals(searchResponseList.get(0).getId(), testPerson.getId());
     }
-
-    @DataProvider
-    private Object[][] getNicknames()
-    {
-        return new Object[][] {
-            { "Bobby", "ROBERT" },
-            { "Bob", "ROBERT" },
-            { "Davey", "DAVID" },
-            { "Dave", "DAVID" },
-            { "Bill", "WILLIAM" }
-        };
-    }
-
-    @Test(dataProvider = "getNicknames")
-    public void testGetStandardizedNickName(String nickname, String standardizedName) throws ConnectException
-    {
-        String foundName = matchingService.getStandardizedNickName(nickname);
-        assertNotNull(foundName);
-        assertEquals(foundName, standardizedName);
-    }
 }

@@ -12,7 +12,7 @@ import org.cru.model.Address;
 import org.cru.model.Person;
 import org.cru.model.map.IndexData;
 import org.cru.qualifiers.Add;
-import org.cru.qualifiers.Match;
+import org.cru.qualifiers.Nickname;
 import org.cru.util.OpenDQProperties;
 
 import javax.inject.Inject;
@@ -29,7 +29,7 @@ import java.util.List;
 public class AddService extends IndexingService
 {
     AddressNormalizationService addressNormalizationService;
-    MatchingService matchingService;
+    NicknameService nicknameService;
 
     private static final String ACTION = "A";  // A = Add
     private static Logger log = Logger.getLogger(AddService.class);
@@ -41,11 +41,11 @@ public class AddService extends IndexingService
     public AddService(
         OpenDQProperties openDQProperties,
         AddressNormalizationService addressNormalizationService,
-        @Match MatchingService matchingService)
+        @Nickname NicknameService nicknameService)
     {
         this.openDQProperties = openDQProperties;
         this.addressNormalizationService = addressNormalizationService;
-        this.matchingService = matchingService;
+        this.nicknameService = nicknameService;
     }
 
     public void addPerson(Person person, String slotName) throws ConnectException
@@ -141,7 +141,7 @@ public class AddService extends IndexingService
         indexData.putFirstName(person.getFirstName());
         indexData.putLastName(person.getLastName());
 
-        String standardizedFirstName = matchingService.getStandardizedNickName(person.getFirstName());
+        String standardizedFirstName = nicknameService.getStandardizedNickName(person.getFirstName());
         log.info("Using " + standardizedFirstName + " to represent First Name: " + person.getFirstName());
         indexData.putStandardizedFirstName(standardizedFirstName);
 

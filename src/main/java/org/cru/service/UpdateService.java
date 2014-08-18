@@ -15,6 +15,7 @@ import org.cru.model.EmailAddress;
 import org.cru.model.Person;
 import org.cru.model.PersonAttributeDataId;
 import org.cru.model.PhoneNumber;
+import org.cru.qualifiers.Nickname;
 import org.cru.util.OpenDQProperties;
 
 import javax.inject.Inject;
@@ -39,10 +40,13 @@ public class UpdateService extends AddService
     public UpdateService() {}
 
     @Inject
-    public UpdateService(OpenDQProperties openDQProperties, AddressNormalizationService addressNormalizationService)
+    public UpdateService(OpenDQProperties openDQProperties,
+        AddressNormalizationService addressNormalizationService,
+        @Nickname NicknameService nicknameService)
     {
         this.openDQProperties = openDQProperties;
         this.addressNormalizationService = addressNormalizationService;
+        this.nicknameService = nicknameService;
     }
 
     public void updatePerson(Person person, RealTimeObjectActionDTO foundPerson, String slotName) throws ConnectException

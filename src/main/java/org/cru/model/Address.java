@@ -15,13 +15,13 @@ public class Address
     private String mdmAddressId;
 
     private String id;
-    @JsonProperty("address_1")
+    @JsonProperty("line1")
     private String addressLine1;
-    @JsonProperty("address_2")
+    @JsonProperty("line2")
     private String addressLine2;
-    @JsonProperty("address_3")
+    @JsonProperty("line3")
     private String addressLine3;
-    @JsonProperty("address_4")
+    @JsonProperty("line4")
     private String addressLine4;
     private String city;
     private String state;

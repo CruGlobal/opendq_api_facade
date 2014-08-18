@@ -1,6 +1,7 @@
 package org.cru.model;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.cru.deserialization.DateTimeDeserializer;
@@ -15,6 +16,7 @@ import java.util.Map;
  *
  * Created by William.Randall on 6/6/14.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Person
 {
     @JsonIgnore

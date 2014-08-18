@@ -1,8 +1,11 @@
 package org.cru.model;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
 /**
  * Created by William.Randall on 6/27/14.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class LinkedIdentity
 {
     private String systemId;

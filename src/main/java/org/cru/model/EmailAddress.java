@@ -1,10 +1,12 @@
 package org.cru.model;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.cru.mdm.MdmConstants;
 
 /**
  * Created by William.Randall on 6/20/14.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class EmailAddress
 {
     private String mdmCommunicationId;

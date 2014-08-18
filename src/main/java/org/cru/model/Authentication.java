@@ -1,5 +1,6 @@
 package org.cru.model;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.List;
 /**
  * Created by William.Randall on 6/27/14.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Authentication
 {
     @JsonProperty("relay_guid")

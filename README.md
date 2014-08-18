@@ -22,6 +22,7 @@ opendq_api_facade
 </ul>
 
 <h3>Data</h3>
+<p>The following is all of the data that OAF does anything with.  Anything extra will be ignored.</p>
 
 <pre>
 {
@@ -51,10 +52,10 @@ opendq_api_facade
         "client_integration_id": "String",
         "address": {    //Could be single object or array
             "id": "String",
-            "address_1": "String",
-            "address_2": "String",
-            "address_3": "String",
-            "address_4": "String",
+            "line1": "String",
+            "line2": "String",
+            "line3": "String",
+            "line4": "String",
             "city": "String",
             "state": "String",
             "zip_code": "String",
@@ -69,9 +70,14 @@ opendq_api_facade
         },
         "linked_identities": { //Could be single object or array
             "system_id": "String",
-            "client_integration_id": "String"
+            "client_integration_id": "String",
+            "employee_number": "String"
         },
-        "client_updated_at": "yyyy-MM-dd HH:mm:ss"
+        "client_updated_at": "yyyy-MM-dd HH:mm:ss",
+        "source": {
+            "system_id": "String",
+            "client_integration_id": "String"
+        }
     }
 }
 </pre>

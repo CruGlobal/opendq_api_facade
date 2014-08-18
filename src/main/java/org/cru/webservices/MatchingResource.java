@@ -55,9 +55,12 @@ public class MatchingResource
 
         Person person = personDeserializer.deserializePerson(json);
 
-        for(Address personAddress : person.getAddresses())
+        if(person.getAddresses() != null && !person.getAddresses().isEmpty())
         {
-            addressNormalizationService.normalizeAddress(personAddress);
+            for(Address personAddress : person.getAddresses())
+            {
+                addressNormalizationService.normalizeAddress(personAddress);
+            }
         }
 
         try

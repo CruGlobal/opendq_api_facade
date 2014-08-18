@@ -53,9 +53,12 @@ public class AddService extends IndexingService
         this.slotName = slotName;
         this.stepName = "RtMatchAddr";
 
-        for(Address address : person.getAddresses())
+        if(person.getAddresses() != null && !person.getAddresses().isEmpty())
         {
-            addressNormalizationService.normalizeAddress(address);
+            for(Address personAddress : person.getAddresses())
+            {
+                addressNormalizationService.normalizeAddress(personAddress);
+            }
         }
 
         RealTimeObjectActionDTO addedPerson = addPersonToMdm(person);

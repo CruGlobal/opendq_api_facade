@@ -1,5 +1,6 @@
 package org.cru.service;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.infosolve.openmdm.webservices.provider.impl.DataManagementWSImpl;
 import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
@@ -10,11 +11,9 @@ import com.infosolvetech.rtmatch.pdi4.ServiceResult;
 import net.java.dev.jaxb.array.AnyTypeArray;
 import org.apache.log4j.Logger;
 import org.cru.model.Address;
-import org.cru.model.NicknameResponse;
 import org.cru.model.OafResponse;
 import org.cru.model.Person;
 import org.cru.model.SearchResponse;
-import org.cru.model.collections.NicknameResponseList;
 import org.cru.model.collections.SearchResponseList;
 import org.cru.model.map.IndexData;
 import org.cru.qualifiers.Delete;
@@ -216,7 +215,7 @@ public class MatchingService extends IndexingService
         {
             searchValues.add(addressToSearchOn.getAddressLine1());
 
-            if(addressToSearchOn.getAddressLine2() == null) searchValues.add("NULLDATA");
+            if(Strings.isNullOrEmpty(addressToSearchOn.getAddressLine2())) searchValues.add("NULLDATA");
             else searchValues.add(addressToSearchOn.getAddressLine2());
 
             searchValues.add(addressToSearchOn.getCity());

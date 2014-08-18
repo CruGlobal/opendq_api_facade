@@ -196,10 +196,13 @@ public class MatchingService extends IndexingService
         }
 
         //If given more than one address, we need to make sure we search on all of them
-        for(Address personAddress : person.getAddresses())
+        if(person.getAddresses() != null && !person.getAddresses().isEmpty())
         {
-            SearchResponseList responses = queryIndex(createSearchValuesFromPerson(person, personAddress), runtimeMatchWS);
-            if(responses!= null) searchResponseList.addAll(responses);
+            for(Address personAddress : person.getAddresses())
+            {
+                SearchResponseList responses = queryIndex(createSearchValuesFromPerson(person, personAddress), runtimeMatchWS);
+                if(responses!= null) searchResponseList.addAll(responses);
+            }
         }
 
         return searchResponseList;

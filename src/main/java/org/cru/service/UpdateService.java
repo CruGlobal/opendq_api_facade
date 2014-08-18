@@ -49,9 +49,13 @@ public class UpdateService extends AddService
     {
         this.slotName = slotName;
         this.stepName = "RtMatchAddr";
-        for(Address address : person.getAddresses())
+
+        if(person.getAddresses() != null && !person.getAddresses().isEmpty())
         {
-            addressNormalizationService.normalizeAddress(address);
+            for(Address address : person.getAddresses())
+            {
+                addressNormalizationService.normalizeAddress(address);
+            }
         }
 
         RealTimeObjectActionDTO updatedPerson = updateMdm(person, foundPerson);
@@ -96,6 +100,7 @@ public class UpdateService extends AddService
         List<Address> passedInAddresses = person.getAddresses();
 
         if(passedInAddresses == null || passedInAddresses.isEmpty()) return;
+        if(foundAddresses == null || foundAddresses.isEmpty()) return;
 
         Map<String, String> existingAddressIds = new HashMap<String, String>();
 
@@ -117,6 +122,7 @@ public class UpdateService extends AddService
     private void setCommunicationIds(RealTimeObjectActionDTO foundObject, Person person)
     {
         List<ObjCommunicationDTO> foundCommunications = foundObject.getObjectCommunications().getObjectCommunication();
+        if(foundCommunications == null || foundCommunications.isEmpty()) return;
 
         setEmailIds(foundCommunications, person);
         setPhoneIds(foundCommunications, person);
@@ -181,6 +187,8 @@ public class UpdateService extends AddService
         List<ObjAttributeDataDTO> attributeData = foundObject.getObjectAttributeDatas().getObjectAttributeData();
         Map<PersonAttributeDataId, String> mdmPersonAttributesIdMap = new HashMap<PersonAttributeDataId, String>();
 
+        if(attributeData == null || attributeData.isEmpty()) return mdmPersonAttributesIdMap;
+
         for(ObjAttributeDataDTO attributes : attributeData)
         {
             if("PERSONATTRIBUTES".equals(attributes.getMultDetTypeLev1()))
@@ -200,6 +208,8 @@ public class UpdateService extends AddService
     private String obtainPersonId(RealTimeObjectActionDTO foundObject)
     {
         List<ObjAttributeDataDTO> attributeData = foundObject.getObjectAttributeDatas().getObjectAttributeData();
+
+        if(attributeData == null || attributeData.isEmpty()) return null;
 
         for(ObjAttributeDataDTO attributes : attributeData)
         {

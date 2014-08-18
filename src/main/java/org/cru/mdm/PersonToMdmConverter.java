@@ -106,6 +106,8 @@ public class PersonToMdmConverter
         ObjAddressDTOList addressDTOList = new ObjAddressDTOList();
         List<ObjAddressDTO> internalList = addressDTOList.getObjectAddress();
 
+        if(addresses == null || addresses.isEmpty()) return null;
+
         for(Address address : addresses)
         {
             ObjAddressDTO addressToAdd = new ObjAddressDTO();

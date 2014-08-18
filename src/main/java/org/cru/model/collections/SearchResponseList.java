@@ -51,6 +51,8 @@ public class SearchResponseList implements List<SearchResponse>
 
     private void filterLowConfidenceForFuzzyMatch()
     {
+        if(internalList == null || internalList.isEmpty()) return;
+
         List<SearchResponse> filteredList = Lists.newArrayList();
         for(SearchResponse response : internalList)
         {
@@ -61,6 +63,8 @@ public class SearchResponseList implements List<SearchResponse>
 
     private void filterLowConfidenceForBroadMatch()
     {
+        if(internalList == null || internalList.isEmpty()) return;
+
         List<SearchResponse> filteredList = Lists.newArrayList();
         for(SearchResponse response : internalList)
         {

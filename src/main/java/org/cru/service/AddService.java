@@ -100,11 +100,13 @@ public class AddService extends IndexingService
         {
             addPersonToIndexWithAddress(runtimeMatchWS, person, mdmPerson, null);
         }
-
-        //If more than one address was passed in, add them all to the index
-        for(Address personAddress : person.getAddresses())
+        else
         {
-            addPersonToIndexWithAddress(runtimeMatchWS, person, mdmPerson, personAddress);
+            //If more than one address was passed in, add them all to the index
+            for(Address personAddress : person.getAddresses())
+            {
+                addPersonToIndexWithAddress(runtimeMatchWS, person, mdmPerson, personAddress);
+            }
         }
     }
 

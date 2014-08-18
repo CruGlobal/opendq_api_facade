@@ -1,5 +1,6 @@
 package org.cru.webservices;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import org.apache.log4j.Logger;
 import org.cru.model.OafResponse;
@@ -49,6 +50,11 @@ public class AddOrUpdateResource
         if(!authService.hasAccess(httpHeaders)) return authService.notAuthorized(httpHeaders);
 
         Person person = personDeserializer.deserializePerson(json);
+
+        if(Strings.isNullOrEmpty(person.getId()))
+        {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Global Registry ID is required for add/update").build();
+        }
 
         try
         {

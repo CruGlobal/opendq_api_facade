@@ -1,5 +1,6 @@
 package org.cru.webservices;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import org.cru.model.OafResponse;
 import org.cru.model.Person;
@@ -46,6 +47,12 @@ public class UpdateResource
         if(!authService.hasAccess(httpHeaders)) return authService.notAuthorized(httpHeaders);
         
         Person person = personDeserializer.deserializePerson(json);
+
+        if(Strings.isNullOrEmpty(person.getId()))
+        {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Global Registry ID is required for update").build();
+        }
+
         try
         {
             List<OafResponse> matchOrUpdateResponseList = matchOrUpdateService.matchOrUpdatePerson(person);

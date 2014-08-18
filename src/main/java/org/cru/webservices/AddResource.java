@@ -1,5 +1,6 @@
 package org.cru.webservices;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import org.apache.log4j.Logger;
@@ -56,6 +57,10 @@ public class AddResource
 
         Person person = personDeserializer.deserializePerson(json);
 
+        if(Strings.isNullOrEmpty(person.getId()))
+        {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Global Registry ID is required for add").build();
+        }
         try
         {
             RealTimeObjectActionDTO foundPerson = matchingService.findMatchInMdmByGlobalRegistryId(person.getId());

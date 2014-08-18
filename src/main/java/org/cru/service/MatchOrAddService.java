@@ -1,11 +1,14 @@
 package org.cru.service;
 
+import com.google.common.base.Strings;
 import org.cru.model.OafResponse;
 import org.cru.model.Person;
 import org.cru.qualifiers.Add;
 import org.cru.qualifiers.Match;
 
 import javax.inject.Inject;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 import java.net.ConnectException;
 import java.util.List;
 
@@ -36,6 +39,11 @@ public class MatchOrAddService
 
         if(matchResponseList != null && !matchResponseList.isEmpty()) return matchResponseList;
 
+        if(Strings.isNullOrEmpty(person.getId()))
+        {
+            throw new WebApplicationException(
+                Response.status(Response.Status.BAD_REQUEST).entity("Global Registry ID is required for add").build());
+        }
         addService.addPerson(person, slotName);
         return null;
     }

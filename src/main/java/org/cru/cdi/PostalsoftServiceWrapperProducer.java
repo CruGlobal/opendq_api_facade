@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.ccci.postalsoft.Util_002fPostalSoft;
 import org.cru.postalsoft.PostalsoftServiceWrapper;
 import org.cru.util.PostalsoftServiceProperties;
+import org.cru.util.Timer;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -35,10 +36,12 @@ public class PostalsoftServiceWrapperProducer
     @PostConstruct
     public void init()
     {
+        long startTime = System.nanoTime();
         initProperties();
         postalsoftServiceWrapper =
                 new PostalsoftServiceWrapper(new Util_002fPostalSoft(wsdlUrl, serviceName).
                         getUtil_002fPostalSoftHttpPort(), namespace, postalsoftServiceProperties);
+        Timer.logTime(startTime, System.nanoTime(), "PostalSoft service initiation");
     }
 
     @Produces

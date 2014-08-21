@@ -18,6 +18,7 @@ import org.cru.model.collections.SearchResponseList;
 import org.cru.model.map.IndexData;
 import org.cru.qualifiers.Delete;
 import org.cru.qualifiers.Match;
+import org.cru.qualifiers.Nickname;
 import org.cru.util.Action;
 import org.cru.util.OpenDQProperties;
 
@@ -36,16 +37,19 @@ import java.util.List;
 public class MatchingService extends IndexingService
 {
     private DeleteService deleteService;
+    private NicknameService nicknameService;
     private static Logger log = Logger.getLogger(MatchingService.class);
 
     @SuppressWarnings("unused")  //used by CDI
     public MatchingService() {}
 
     @Inject
-    public MatchingService(OpenDQProperties openDQProperties, @Delete DeleteService deleteService)
+    public MatchingService(OpenDQProperties openDQProperties, @Delete DeleteService deleteService,
+        @Nickname NicknameService nicknameService)
     {
         this.openDQProperties = openDQProperties;
         this.deleteService = deleteService;
+        this.nicknameService = nicknameService;
     }
 
     /**
@@ -203,12 +207,12 @@ public class MatchingService extends IndexingService
         return buildSearchResponses(searchResponse);
     }
 
-    private List<String> createSearchValuesFromPerson(Person person, Address addressToSearchOn)
+    private List<String> createSearchValuesFromPerson(Person person, Address addressToSearchOn) throws ConnectException
     {
         // Order must match the transformation file
         List<String> searchValues = new ArrayList<String>();
 
-        searchValues.add(person.getFirstName());
+        searchValues.add(nicknameService.getStandardizedNickName(person.getFirstName()));
         searchValues.add(person.getLastName());
 
         if(addressToSearchOn != null)

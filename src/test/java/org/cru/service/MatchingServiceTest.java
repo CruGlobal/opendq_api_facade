@@ -47,7 +47,8 @@ public class MatchingServiceTest
 
         DeletedIndexesFileIO deletedIndexesFileIO = new DeletedIndexesFileIO(oafProperties);
         DeleteService deleteService = new DeleteService(deletedIndexesFileIO, openDQProperties);
-        matchingService = new MatchingService(openDQProperties, deleteService);
+        NicknameService nicknameService = new NicknameService(openDQProperties);
+        matchingService = new MatchingService(openDQProperties, deleteService, nicknameService);
     }
 
     @DataProvider

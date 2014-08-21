@@ -57,10 +57,11 @@ public class EndToEndServiceTest
         AddressNormalizationService addressNormalizationService = new AddressNormalizationService(postalsoftServiceWrapper);
 
         DeletedIndexesFileIO deletedIndexesFileIO = new DeletedIndexesFileIO(oafProperties);
+        NicknameService nicknameService = new NicknameService(openDQProperties);
 
         deleteService = new DeleteService(deletedIndexesFileIO, openDQProperties);
-        matchingService = new MatchingService(openDQProperties, deleteService);
-        NicknameService nicknameService = new NicknameService(openDQProperties);
+        matchingService = new MatchingService(openDQProperties, deleteService, nicknameService);
+
         AddService addService = new AddService(openDQProperties, addressNormalizationService, nicknameService);
         matchOrAddService = new MatchOrAddService(matchingService, addService);
         UpdateService updateService = new UpdateService(openDQProperties, addressNormalizationService, nicknameService);

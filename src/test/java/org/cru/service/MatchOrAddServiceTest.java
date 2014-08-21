@@ -41,9 +41,10 @@ public class MatchOrAddServiceTest
         DeletedIndexesFileIO deletedIndexesFileIO = new DeletedIndexesFileIO(oafProperties);
         DeleteService deleteService = new DeleteService(deletedIndexesFileIO, openDQProperties);
 
-        MatchingService matchingService = new MatchingService(openDQProperties, deleteService);
-        addressNormalizationService = mock(AddressNormalizationService.class);
         NicknameService nicknameService = new NicknameService(openDQProperties);
+
+        MatchingService matchingService = new MatchingService(openDQProperties, deleteService, nicknameService);
+        addressNormalizationService = mock(AddressNormalizationService.class);
         AddService addService = new AddService(openDQProperties, addressNormalizationService, nicknameService);
         matchOrAddService = new MatchOrAddService(matchingService, addService);
     }

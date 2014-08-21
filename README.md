@@ -107,7 +107,7 @@ curl -H "Content-Type: application/json" -H "Authorization: Token" -d '{"person"
 
 <h4>Delete</h4>
 <pre>
-curl -X DELETE http://localhost:8080/oaf/rest/delete/645asf4a643r-w3r54a
+curl -H "Authorization: Token" -X DELETE http://localhost:8080/oaf/rest/delete/645asf4a643r-w3r54a
 </pre>
 
 <h3>Responses</h3>

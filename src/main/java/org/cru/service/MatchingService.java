@@ -302,7 +302,10 @@ public class MatchingService extends IndexingService
         // Order must match the transformation file
         List<String> searchValues = new ArrayList<String>();
 
+        long nicknameStartTime = System.nanoTime();
         searchValues.add(nicknameService.getStandardizedNickName(person.getFirstName()));
+        Timer.logTime(nicknameStartTime, System.nanoTime(), "get standardized first name");
+
         searchValues.add(person.getLastName());
 
         if(addressToSearchOn != null)

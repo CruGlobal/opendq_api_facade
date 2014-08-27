@@ -146,20 +146,14 @@ public class AddService extends IndexingService
         }
     }
 
-    private void addPersonToIndexWithEmail(
-        Person person,
-        RealTimeObjectActionDTO mdmPerson,
-        EmailAddress emailAddressToUse) throws ConnectException
+    private void addPersonToCommunicationIndex(IndexData fieldNamesAndValues) throws ConnectException
     {
-        this.stepName = "RtMatchComm";
-        RuntimeMatchWS runtimeMatchWS = configureAndRetrieveRuntimeMatchService("communication");
-
-        IndexData fieldNamesAndValues = generateFieldNamesAndValuesForEmailIndex(person, mdmPerson, emailAddressToUse);
-
         List<String> fieldNames = Lists.newArrayList();
         fieldNames.addAll(fieldNamesAndValues.keySet());
 
         //while updateSlot sounds like an update, it is actually inserting an entry into the index
+        this.stepName = "RtMatchComm";
+        RuntimeMatchWS runtimeMatchWS = configureAndRetrieveRuntimeMatchService("communication");
         ServiceResult addResponse = runtimeMatchWS.updateSlot(slotName, fieldNames, fieldNamesAndValues.stringValues());
 
         if(addResponse.isError())
@@ -169,27 +163,20 @@ public class AddService extends IndexingService
         }
     }
 
+    private void addPersonToIndexWithEmail(
+        Person person,
+        RealTimeObjectActionDTO mdmPerson,
+        EmailAddress emailAddressToUse) throws ConnectException
+    {
+        addPersonToCommunicationIndex(generateFieldNamesAndValuesForEmailIndex(person, mdmPerson, emailAddressToUse));
+    }
+
     private void addPersonToIndexWithPhoneNumber(
         Person person,
         RealTimeObjectActionDTO mdmPerson,
         PhoneNumber phoneNumberToUse) throws ConnectException
     {
-        this.stepName = "RtMatchComm";
-        RuntimeMatchWS runtimeMatchWS = configureAndRetrieveRuntimeMatchService("communication");
-
-        IndexData fieldNamesAndValues = generateFieldNamesAndValuesForPhoneNumberIndex(person, mdmPerson, phoneNumberToUse);
-
-        List<String> fieldNames = Lists.newArrayList();
-        fieldNames.addAll(fieldNamesAndValues.keySet());
-
-        //while updateSlot sounds like an update, it is actually inserting an entry into the index
-        ServiceResult addResponse = runtimeMatchWS.updateSlot(slotName, fieldNames, fieldNamesAndValues.stringValues());
-
-        if(addResponse.isError())
-        {
-            log.error("Failed to add index: " + addResponse.getMessage());
-            throw new WebApplicationException(addResponse.getMessage());
-        }
+        addPersonToCommunicationIndex(generateFieldNamesAndValuesForPhoneNumberIndex(person, mdmPerson, phoneNumberToUse));
     }
 
     IndexData generateFieldNamesAndValuesForNameAndAddressIndex(
@@ -221,19 +208,25 @@ public class AddService extends IndexingService
         return indexData;
     }
 
-    IndexData generateFieldNamesAndValuesForEmailIndex(
-        Person person,
-        RealTimeObjectActionDTO mdmPerson,
-        EmailAddress emailAddressToUse)
+    NameAndCommunicationIndexData generateFieldNamesAndValuesForCommunicationIndex(Person person, RealTimeObjectActionDTO mdmPerson)
     {
         NameAndCommunicationIndexData indexData = new NameAndCommunicationIndexData();
 
         indexData.putFirstName(person.getFirstName());
         indexData.putLastName(person.getLastName());
-        indexData.putCommunicationData(emailAddressToUse.getEmail());
         indexData.putPartyId(mdmPerson.getObjectEntity().getPartyId());
         indexData.putGlobalRegistryId(person.getId());
 
+        return indexData;
+    }
+
+    IndexData generateFieldNamesAndValuesForEmailIndex(
+        Person person,
+        RealTimeObjectActionDTO mdmPerson,
+        EmailAddress emailAddressToUse)
+    {
+        NameAndCommunicationIndexData indexData = generateFieldNamesAndValuesForCommunicationIndex(person, mdmPerson);
+        indexData.putCommunicationData(emailAddressToUse.getEmail());
         return indexData;
     }
 
@@ -242,14 +235,8 @@ public class AddService extends IndexingService
         RealTimeObjectActionDTO mdmPerson,
         PhoneNumber phoneNumberToUse)
     {
-        NameAndCommunicationIndexData indexData = new NameAndCommunicationIndexData();
-
-        indexData.putFirstName(person.getFirstName());
-        indexData.putLastName(person.getLastName());
+        NameAndCommunicationIndexData indexData = generateFieldNamesAndValuesForCommunicationIndex(person, mdmPerson);
         indexData.putCommunicationData(phoneNumberToUse.getNumber());
-        indexData.putPartyId(mdmPerson.getObjectEntity().getPartyId());
-        indexData.putGlobalRegistryId(person.getId());
-
         return indexData;
     }
 }

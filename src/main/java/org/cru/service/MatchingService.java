@@ -241,8 +241,9 @@ public class MatchingService extends IndexingService
 
     private SearchResponseList findPersonInIndexUsingPhoneNumber(Person person) throws ConnectException
     {
-        this.stepName = "RtMatchCommunication"; //TODO: Find out what this is
-        RuntimeMatchWS runtimeMatchWS = configureAndRetrieveRuntimeMatchService("contact");
+        this.stepName = "RtMatchComm";
+        this.slotName = "contactCommMatch";
+        RuntimeMatchWS runtimeMatchWS = configureAndRetrieveRuntimeMatchService("communication");
 
         SearchResponseList searchResponseList = new SearchResponseList();
 

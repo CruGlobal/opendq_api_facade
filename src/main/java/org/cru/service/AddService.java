@@ -100,6 +100,7 @@ public class AddService extends IndexingService
 
         if(person.getAddresses() != null && !person.getAddresses().isEmpty())
         {
+            this.stepName = "RtMatchAddr";
             runtimeMatchWS = configureAndRetrieveRuntimeMatchService("contact");
             //If more than one address was passed in, add them all to the index
             for(Address personAddress : person.getAddresses())
@@ -135,7 +136,6 @@ public class AddService extends IndexingService
         RealTimeObjectActionDTO mdmPerson,
         Address addressToUse) throws ConnectException
     {
-        this.stepName = "RtMatchAddr";
         IndexData fieldNamesAndValues = generateFieldNamesAndValuesForNameAndAddressIndex(person, mdmPerson, addressToUse);
 
         List<String> fieldNames = Lists.newArrayList();

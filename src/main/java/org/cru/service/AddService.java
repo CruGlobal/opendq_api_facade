@@ -9,9 +9,12 @@ import org.apache.log4j.Logger;
 import org.cru.mdm.MdmConstants;
 import org.cru.mdm.PersonToMdmConverter;
 import org.cru.model.Address;
+import org.cru.model.EmailAddress;
 import org.cru.model.Person;
+import org.cru.model.PhoneNumber;
 import org.cru.model.map.IndexData;
 import org.cru.model.map.NameAndAddressIndexData;
+import org.cru.model.map.NameAndCommunicationIndexData;
 import org.cru.qualifiers.Add;
 import org.cru.qualifiers.Nickname;
 import org.cru.util.OpenDQProperties;
@@ -95,17 +98,28 @@ public class AddService extends IndexingService
     {
         RuntimeMatchWS runtimeMatchWS = configureAndRetrieveRuntimeMatchService("contact");
 
-        //Handle cases where no address was passed in
-        if(person.getAddresses() == null || person.getAddresses().isEmpty())
-        {
-            addPersonToIndexWithAddress(runtimeMatchWS, person, mdmPerson, null);
-        }
-        else
+        if(person.getAddresses() != null && !person.getAddresses().isEmpty())
         {
             //If more than one address was passed in, add them all to the index
             for(Address personAddress : person.getAddresses())
             {
                 addPersonToIndexWithAddress(runtimeMatchWS, person, mdmPerson, personAddress);
+            }
+        }
+        if(person.getEmailAddresses() != null && !person.getEmailAddresses().isEmpty())
+        {
+            //If more than one email address was passed in, add them all to the index
+            for(EmailAddress emailAddress : person.getEmailAddresses())
+            {
+                addPersonToIndexWithEmail(person, mdmPerson, emailAddress);
+            }
+        }
+        if(person.getPhoneNumbers() != null && !person.getPhoneNumbers().isEmpty())
+        {
+            //If more than one phone number was passed in, add them all to the index
+            for(PhoneNumber phoneNumber : person.getPhoneNumbers())
+            {
+                addPersonToIndexWithPhoneNumber(person, mdmPerson, phoneNumber);
             }
         }
     }
@@ -118,6 +132,52 @@ public class AddService extends IndexingService
     {
         this.stepName = "RtMatchAddr";
         IndexData fieldNamesAndValues = generateFieldNamesAndValuesForNameAndAddressIndex(person, mdmPerson, addressToUse);
+
+        List<String> fieldNames = Lists.newArrayList();
+        fieldNames.addAll(fieldNamesAndValues.keySet());
+
+        //while updateSlot sounds like an update, it is actually inserting an entry into the index
+        ServiceResult addResponse = runtimeMatchWS.updateSlot(slotName, fieldNames, fieldNamesAndValues.stringValues());
+
+        if(addResponse.isError())
+        {
+            log.error("Failed to add index: " + addResponse.getMessage());
+            throw new WebApplicationException(addResponse.getMessage());
+        }
+    }
+
+    private void addPersonToIndexWithEmail(
+        Person person,
+        RealTimeObjectActionDTO mdmPerson,
+        EmailAddress emailAddressToUse) throws ConnectException
+    {
+        this.stepName = "RtMatchComm";
+        RuntimeMatchWS runtimeMatchWS = configureAndRetrieveRuntimeMatchService("communication");
+
+        IndexData fieldNamesAndValues = generateFieldNamesAndValuesForEmailIndex(person, mdmPerson, emailAddressToUse);
+
+        List<String> fieldNames = Lists.newArrayList();
+        fieldNames.addAll(fieldNamesAndValues.keySet());
+
+        //while updateSlot sounds like an update, it is actually inserting an entry into the index
+        ServiceResult addResponse = runtimeMatchWS.updateSlot(slotName, fieldNames, fieldNamesAndValues.stringValues());
+
+        if(addResponse.isError())
+        {
+            log.error("Failed to add index: " + addResponse.getMessage());
+            throw new WebApplicationException(addResponse.getMessage());
+        }
+    }
+
+    private void addPersonToIndexWithPhoneNumber(
+        Person person,
+        RealTimeObjectActionDTO mdmPerson,
+        PhoneNumber phoneNumberToUse) throws ConnectException
+    {
+        this.stepName = "RtMatchComm";
+        RuntimeMatchWS runtimeMatchWS = configureAndRetrieveRuntimeMatchService("communication");
+
+        IndexData fieldNamesAndValues = generateFieldNamesAndValuesForPhoneNumberIndex(person, mdmPerson, phoneNumberToUse);
 
         List<String> fieldNames = Lists.newArrayList();
         fieldNames.addAll(fieldNamesAndValues.keySet());
@@ -157,6 +217,38 @@ public class AddService extends IndexingService
             indexData.putState(addressToUse.getState());
             indexData.putZipCode(addressToUse.getZipCode());
         }
+
+        return indexData;
+    }
+
+    IndexData generateFieldNamesAndValuesForEmailIndex(
+        Person person,
+        RealTimeObjectActionDTO mdmPerson,
+        EmailAddress emailAddressToUse)
+    {
+        NameAndCommunicationIndexData indexData = new NameAndCommunicationIndexData();
+
+        indexData.putFirstName(person.getFirstName());
+        indexData.putLastName(person.getLastName());
+        indexData.putCommunicationData(emailAddressToUse.getEmail());
+        indexData.putPartyId(mdmPerson.getObjectEntity().getPartyId());
+        indexData.putGlobalRegistryId(person.getId());
+
+        return indexData;
+    }
+
+    IndexData generateFieldNamesAndValuesForPhoneNumberIndex(
+        Person person,
+        RealTimeObjectActionDTO mdmPerson,
+        PhoneNumber phoneNumberToUse)
+    {
+        NameAndCommunicationIndexData indexData = new NameAndCommunicationIndexData();
+
+        indexData.putFirstName(person.getFirstName());
+        indexData.putLastName(person.getLastName());
+        indexData.putCommunicationData(phoneNumberToUse.getNumber());
+        indexData.putPartyId(mdmPerson.getObjectEntity().getPartyId());
+        indexData.putGlobalRegistryId(person.getId());
 
         return indexData;
     }

@@ -136,22 +136,12 @@ public class AddService extends IndexingService
         RealTimeObjectActionDTO mdmPerson,
         Address addressToUse) throws ConnectException
     {
-        IndexData fieldNamesAndValues = generateFieldNamesAndValuesForNameAndAddressIndex(person, mdmPerson, addressToUse);
-
-        List<String> fieldNames = Lists.newArrayList();
-        fieldNames.addAll(fieldNamesAndValues.keySet());
-
-        //while updateSlot sounds like an update, it is actually inserting an entry into the index
-        ServiceResult addResponse = runtimeMatchWS.updateSlot(slotName, fieldNames, fieldNamesAndValues.stringValues());
-
-        if(addResponse.isError())
-        {
-            log.error("Failed to add index: " + addResponse.getMessage());
-            throw new WebApplicationException(addResponse.getMessage());
-        }
+        addToIndex(
+            runtimeMatchWS,
+            generateFieldNamesAndValuesForNameAndAddressIndex(person, mdmPerson, addressToUse));
     }
 
-    private void addPersonToCommunicationIndex(
+    private void addToIndex(
         RuntimeMatchWS runtimeMatchWS,
         IndexData fieldNamesAndValues) throws ConnectException
     {
@@ -174,7 +164,7 @@ public class AddService extends IndexingService
         RealTimeObjectActionDTO mdmPerson,
         EmailAddress emailAddressToUse) throws ConnectException
     {
-        addPersonToCommunicationIndex(
+        addToIndex(
             runtimeMatchWS,
             generateFieldNamesAndValuesForEmailIndex(person, mdmPerson, emailAddressToUse));
     }
@@ -185,7 +175,7 @@ public class AddService extends IndexingService
         RealTimeObjectActionDTO mdmPerson,
         PhoneNumber phoneNumberToUse) throws ConnectException
     {
-        addPersonToCommunicationIndex(
+        addToIndex(
             runtimeMatchWS,
             generateFieldNamesAndValuesForPhoneNumberIndex(person, mdmPerson, phoneNumberToUse));
     }

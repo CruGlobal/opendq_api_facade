@@ -239,7 +239,7 @@ public class MatchingService extends IndexingService
         return searchResponseList;
     }
 
-    private SearchResponseList findPersonInIndexUsingPhoneNumber(Person person) throws ConnectException
+    SearchResponseList findPersonInIndexUsingPhoneNumber(Person person) throws ConnectException
     {
         this.stepName = "RtMatchComm";
         this.slotName = "contactCommMatch";

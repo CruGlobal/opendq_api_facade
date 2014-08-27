@@ -337,6 +337,11 @@ public class TestPeople
         emailAddress.setEmail("eager@windstream.net");
         person.setEmailAddresses(Lists.newArrayList(emailAddress));
 
+        PhoneNumber phoneNumber = new PhoneNumber();
+        phoneNumber.setNumber("7069688967");
+        phoneNumber.setLocation("home");
+        person.setPhoneNumbers(Lists.newArrayList(phoneNumber));
+
         return person;
     }
 

@@ -154,4 +154,15 @@ public class MatchingServiceTest
         assertEquals(searchResponseList.size(), 1);
         assertEquals(searchResponseList.get(0).getId(), testPerson.getId());
     }
+
+    @Test
+    public void testFindPersonInIndexUsingPhoneNumber() throws ConnectException
+    {
+        Person testPerson = TestPeople.createPersonWithoutAddress();
+        SearchResponseList searchResponseList = matchingService.findPersonInIndexUsingPhoneNumber(testPerson);
+
+        assertNotNull(searchResponseList);
+        assertEquals(searchResponseList.size(), 1);
+        assertEquals(searchResponseList.get(0).getId(), testPerson.getId());
+    }
 }

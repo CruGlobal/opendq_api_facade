@@ -83,7 +83,6 @@ public class IndexDataTest
         indexData.putLastName("Last");
         indexData.putCommunicationData("al.last@cru.org");
         indexData.putGlobalRegistryId("111-222-333");
-        indexData.putStandardizedFirstName("AL");
 
         return indexData;
     }
@@ -96,7 +95,6 @@ public class IndexDataTest
         indexData.putLastName("lAsT");
         indexData.putCommunicationData("al.last@cru.org");
         indexData.putGlobalRegistryId("111-222-333");
-        indexData.putStandardizedFirstName("AL");
 
         return indexData;
     }
@@ -109,7 +107,6 @@ public class IndexDataTest
         indexData.putLastName("Last");
         indexData.putCommunicationData("allast@yahoo.com");
         indexData.putGlobalRegistryId("44422-66234");
-        indexData.putStandardizedFirstName("AL");
 
         return indexData;
     }

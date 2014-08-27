@@ -24,7 +24,7 @@ public abstract class IndexData implements Map<String, Object>
     protected String LAST_NAME_KEY;
     protected String PARTY_ID_KEY;
     protected String GR_ID_KEY;
-    protected String STANDARDIZED_FIRST_NAME_KEY;
+
 
     public IndexData()
     {
@@ -49,16 +49,6 @@ public abstract class IndexData implements Map<String, Object>
     public void putLastName(Object lastName)
     {
         internalMap.put(LAST_NAME_KEY, lastName);
-    }
-
-    public String getStandardizedFirstName()
-    {
-        return (String)internalMap.get(STANDARDIZED_FIRST_NAME_KEY);
-    }
-
-    public void putStandardizedFirstName(Object standardizedFirstName)
-    {
-        internalMap.put(STANDARDIZED_FIRST_NAME_KEY, standardizedFirstName);
     }
 
     public String getPartyId()

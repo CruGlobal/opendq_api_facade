@@ -35,7 +35,6 @@ public class NameAndCommunicationIndexData extends IndexData
 
         valuesForEquality.add(getFirstName());
         valuesForEquality.add(getLastName());
-        valuesForEquality.add(getStandardizedFirstName());
         valuesForEquality.add(getCommunicationData());
 
         return valuesForEquality;

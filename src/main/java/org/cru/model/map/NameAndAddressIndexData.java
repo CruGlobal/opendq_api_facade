@@ -14,12 +14,12 @@ public class NameAndAddressIndexData extends IndexData
     private static final String CITY_KEY = "FIELD5";
     private static final String STATE_KEY = "FIELD6";
     private static final String ZIP_CODE_KEY = "FIELD7";
+    private static String STANDARDIZED_FIRST_NAME_KEY = "FIELD8";
 
     public NameAndAddressIndexData()
     {
         FIRST_NAME_KEY = "FIELD1";
         LAST_NAME_KEY = "FIELD2";
-        STANDARDIZED_FIRST_NAME_KEY = "FIELD8";
         PARTY_ID_KEY = "FIELD10";
         GR_ID_KEY = "FIELD11";
     }
@@ -74,6 +74,17 @@ public class NameAndAddressIndexData extends IndexData
     {
         internalMap.put(ZIP_CODE_KEY, zipCode);
     }
+
+    public String getStandardizedFirstName()
+    {
+        return (String)internalMap.get(STANDARDIZED_FIRST_NAME_KEY);
+    }
+
+    public void putStandardizedFirstName(Object standardizedFirstName)
+    {
+        internalMap.put(STANDARDIZED_FIRST_NAME_KEY, standardizedFirstName);
+    }
+
 
     public List<String> getValuesForEquality()
     {

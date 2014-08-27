@@ -136,12 +136,12 @@ public class AddService extends IndexingService
         RealTimeObjectActionDTO mdmPerson,
         Address addressToUse) throws ConnectException
     {
-        addToIndex(
+        updateIndex(
             runtimeMatchWS,
             generateFieldNamesAndValuesForNameAndAddressIndex(person, mdmPerson, addressToUse));
     }
 
-    private void addToIndex(
+    private void updateIndex(
         RuntimeMatchWS runtimeMatchWS,
         IndexData fieldNamesAndValues) throws ConnectException
     {
@@ -164,7 +164,7 @@ public class AddService extends IndexingService
         RealTimeObjectActionDTO mdmPerson,
         EmailAddress emailAddressToUse) throws ConnectException
     {
-        addToIndex(
+        updateIndex(
             runtimeMatchWS,
             generateFieldNamesAndValuesForEmailIndex(person, mdmPerson, emailAddressToUse));
     }
@@ -175,7 +175,7 @@ public class AddService extends IndexingService
         RealTimeObjectActionDTO mdmPerson,
         PhoneNumber phoneNumberToUse) throws ConnectException
     {
-        addToIndex(
+        updateIndex(
             runtimeMatchWS,
             generateFieldNamesAndValuesForPhoneNumberIndex(person, mdmPerson, phoneNumberToUse));
     }

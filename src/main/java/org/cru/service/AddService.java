@@ -96,10 +96,11 @@ public class AddService extends IndexingService
 
     void addPersonToIndex(Person person, RealTimeObjectActionDTO mdmPerson) throws ConnectException
     {
-        RuntimeMatchWS runtimeMatchWS = configureAndRetrieveRuntimeMatchService("contact");
+        RuntimeMatchWS runtimeMatchWS;
 
         if(person.getAddresses() != null && !person.getAddresses().isEmpty())
         {
+            runtimeMatchWS = configureAndRetrieveRuntimeMatchService("contact");
             //If more than one address was passed in, add them all to the index
             for(Address personAddress : person.getAddresses())
             {
@@ -108,18 +109,22 @@ public class AddService extends IndexingService
         }
         if(person.getEmailAddresses() != null && !person.getEmailAddresses().isEmpty())
         {
+            this.stepName = "RtMatchComm";
+            runtimeMatchWS = configureAndRetrieveRuntimeMatchService("communication");
             //If more than one email address was passed in, add them all to the index
             for(EmailAddress emailAddress : person.getEmailAddresses())
             {
-                addPersonToIndexWithEmail(person, mdmPerson, emailAddress);
+                addPersonToIndexWithEmail(runtimeMatchWS, person, mdmPerson, emailAddress);
             }
         }
         if(person.getPhoneNumbers() != null && !person.getPhoneNumbers().isEmpty())
         {
+            this.stepName = "RtMatchComm";
+            runtimeMatchWS = configureAndRetrieveRuntimeMatchService("communication");
             //If more than one phone number was passed in, add them all to the index
             for(PhoneNumber phoneNumber : person.getPhoneNumbers())
             {
-                addPersonToIndexWithPhoneNumber(person, mdmPerson, phoneNumber);
+                addPersonToIndexWithPhoneNumber(runtimeMatchWS, person, mdmPerson, phoneNumber);
             }
         }
     }
@@ -146,14 +151,14 @@ public class AddService extends IndexingService
         }
     }
 
-    private void addPersonToCommunicationIndex(IndexData fieldNamesAndValues) throws ConnectException
+    private void addPersonToCommunicationIndex(
+        RuntimeMatchWS runtimeMatchWS,
+        IndexData fieldNamesAndValues) throws ConnectException
     {
         List<String> fieldNames = Lists.newArrayList();
         fieldNames.addAll(fieldNamesAndValues.keySet());
 
         //while updateSlot sounds like an update, it is actually inserting an entry into the index
-        this.stepName = "RtMatchComm";
-        RuntimeMatchWS runtimeMatchWS = configureAndRetrieveRuntimeMatchService("communication");
         ServiceResult addResponse = runtimeMatchWS.updateSlot(slotName, fieldNames, fieldNamesAndValues.stringValues());
 
         if(addResponse.isError())
@@ -164,19 +169,25 @@ public class AddService extends IndexingService
     }
 
     private void addPersonToIndexWithEmail(
+        RuntimeMatchWS runtimeMatchWS,
         Person person,
         RealTimeObjectActionDTO mdmPerson,
         EmailAddress emailAddressToUse) throws ConnectException
     {
-        addPersonToCommunicationIndex(generateFieldNamesAndValuesForEmailIndex(person, mdmPerson, emailAddressToUse));
+        addPersonToCommunicationIndex(
+            runtimeMatchWS,
+            generateFieldNamesAndValuesForEmailIndex(person, mdmPerson, emailAddressToUse));
     }
 
     private void addPersonToIndexWithPhoneNumber(
+        RuntimeMatchWS runtimeMatchWS,
         Person person,
         RealTimeObjectActionDTO mdmPerson,
         PhoneNumber phoneNumberToUse) throws ConnectException
     {
-        addPersonToCommunicationIndex(generateFieldNamesAndValuesForPhoneNumberIndex(person, mdmPerson, phoneNumberToUse));
+        addPersonToCommunicationIndex(
+            runtimeMatchWS,
+            generateFieldNamesAndValuesForPhoneNumberIndex(person, mdmPerson, phoneNumberToUse));
     }
 
     IndexData generateFieldNamesAndValuesForNameAndAddressIndex(

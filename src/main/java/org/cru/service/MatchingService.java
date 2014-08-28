@@ -317,7 +317,7 @@ public class MatchingService extends IndexingService
 
         searchValues.add(person.getFirstName());
         searchValues.add(person.getLastName());
-        searchValues.add(phoneNumberToSearchOn.getNumber());
+        searchValues.add(phoneNumberToSearchOn.getDigitsOnly());
 
         return searchValues;
     }

@@ -57,4 +57,9 @@ public class PhoneNumber
     {
         this.location = location;
     }
+
+    public String getDigitsOnly()
+    {
+        return number.replaceAll("[^0-9]","");
+    }
 }

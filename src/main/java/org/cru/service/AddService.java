@@ -237,7 +237,7 @@ public class AddService extends IndexingService
         PhoneNumber phoneNumberToUse)
     {
         NameAndCommunicationIndexData indexData = generateFieldNamesAndValuesForCommunicationIndex(person, mdmPerson);
-        indexData.putCommunicationData(phoneNumberToUse.getNumber());
+        indexData.putCommunicationData(phoneNumberToUse.getDigitsOnly());
         return indexData;
     }
 }

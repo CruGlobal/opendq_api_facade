@@ -1,9 +1,12 @@
 package org.cru.service;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import org.cru.data.TestPeople;
 import org.cru.model.OafResponse;
 import org.cru.model.Person;
+import org.cru.model.PhoneNumber;
 import org.cru.model.collections.SearchResponseList;
 import org.cru.util.DeletedIndexesFileIO;
 import org.cru.util.OafProperties;
@@ -18,6 +21,7 @@ import java.util.List;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Test the {@link MatchingService} class with exact and near matches
@@ -158,12 +162,83 @@ public class MatchingServiceTest
     @Test
     public void testFindPersonInIndexUsingPhoneNumber() throws ConnectException
     {
+        //Person's phone number is: (706) 968-8967
+        //Person has 2 records with different GR IDs: 1-1E6-4616 and 002a294e-e057-11e3-af9a-12768b82bfd5
+        List<String> possibleIds = ImmutableList.of("1-1E6-4616", "002a294e-e057-11e3-af9a-12768b82bfd5");
+
+        //The first format of phone number is 7069688967
         Person testPerson = TestPeople.createPersonWithoutAddress();
+        testPerson.setEmailAddresses(null);
         SearchResponseList searchResponseList = matchingService.findPersonInIndexUsingPhoneNumber(testPerson);
 
         assertNotNull(searchResponseList);
-        assertEquals(searchResponseList.size(), 1);
-        assertEquals(searchResponseList.get(0).getId(), testPerson.getId());
+        assertTrue(possibleIds.contains(searchResponseList.get(0).getId()));
+        assertTrue(searchResponseList.get(0).getScore() > 0.95D);
+        System.out.println(
+            "Phone Number: " + testPerson.getPhoneNumbers().get(0).getNumber() +
+            "; ID: " + searchResponseList.get(0).getId() +
+            "; Score: " + searchResponseList.get(0).getScore()
+        );
+
+        PhoneNumber format2 = new PhoneNumber();
+        format2.setNumber("706-968-8967");
+        format2.setLocation("home");
+        testPerson.setPhoneNumbers(Lists.newArrayList(format2));
+
+        searchResponseList = matchingService.findPersonInIndexUsingPhoneNumber(testPerson);
+        assertNotNull(searchResponseList);
+        assertTrue(possibleIds.contains(searchResponseList.get(0).getId()));
+        assertTrue(searchResponseList.get(0).getScore() > 0.95D);
+        System.out.println(
+            "Phone Number: " + testPerson.getPhoneNumbers().get(0).getNumber() +
+                "; ID: " + searchResponseList.get(0).getId() +
+                "; Score: " + searchResponseList.get(0).getScore()
+        );
+
+        PhoneNumber format3 = new PhoneNumber();
+        format3.setNumber("(706) 968-8967");
+        format3.setLocation("home");
+        testPerson.setPhoneNumbers(Lists.newArrayList(format3));
+
+        searchResponseList = matchingService.findPersonInIndexUsingPhoneNumber(testPerson);
+        assertNotNull(searchResponseList);
+        assertTrue(possibleIds.contains(searchResponseList.get(0).getId()));
+        assertTrue(searchResponseList.get(0).getScore() > 0.95D);
+        System.out.println(
+            "Phone Number: " + testPerson.getPhoneNumbers().get(0).getNumber() +
+                "; ID: " + searchResponseList.get(0).getId() +
+                "; Score: " + searchResponseList.get(0).getScore()
+        );
+
+        PhoneNumber format4 = new PhoneNumber();
+        format4.setNumber("706.968.8967");
+        format4.setLocation("home");
+        testPerson.setPhoneNumbers(Lists.newArrayList(format4));
+
+        searchResponseList = matchingService.findPersonInIndexUsingPhoneNumber(testPerson);
+        assertNotNull(searchResponseList);
+        assertTrue(possibleIds.contains(searchResponseList.get(0).getId()));
+        assertTrue(searchResponseList.get(0).getScore() > 0.95D);
+        System.out.println(
+            "Phone Number: " + testPerson.getPhoneNumbers().get(0).getNumber() +
+                "; ID: " + searchResponseList.get(0).getId() +
+                "; Score: " + searchResponseList.get(0).getScore()
+        );
+
+        PhoneNumber format5 = new PhoneNumber();
+        format5.setNumber("706/968-8967");
+        format5.setLocation("home");
+        testPerson.setPhoneNumbers(Lists.newArrayList(format5));
+
+        searchResponseList = matchingService.findPersonInIndexUsingPhoneNumber(testPerson);
+        assertNotNull(searchResponseList);
+        assertTrue(possibleIds.contains(searchResponseList.get(0).getId()));
+        assertTrue(searchResponseList.get(0).getScore() > 0.95D);
+        System.out.println(
+            "Phone Number: " + testPerson.getPhoneNumbers().get(0).getNumber() +
+                "; ID: " + searchResponseList.get(0).getId() +
+                "; Score: " + searchResponseList.get(0).getScore()
+        );
     }
 
     @Test

@@ -148,10 +148,10 @@ public class MatchingServiceTest
     public void testFindPersonInIndexUsingEmail() throws ConnectException
     {
         Person testPerson = TestPeople.createPersonWithoutAddress();
+        testPerson.setPhoneNumbers(null);
         SearchResponseList searchResponseList = matchingService.findPersonInIndexUsingEmail(testPerson);
 
         assertNotNull(searchResponseList);
-        assertEquals(searchResponseList.size(), 1);
         assertEquals(searchResponseList.get(0).getId(), testPerson.getId());
     }
 
@@ -164,5 +164,31 @@ public class MatchingServiceTest
         assertNotNull(searchResponseList);
         assertEquals(searchResponseList.size(), 1);
         assertEquals(searchResponseList.get(0).getId(), testPerson.getId());
+    }
+
+    @Test
+    public void testFindMatchesDifferentTypes() throws ConnectException
+    {
+        Person testPerson = TestPeople.createPersonForSearchTypeTesting();
+        String slotName = "Match";
+
+        //Should be address search
+        List<OafResponse> matchResponseList = matchingService.findMatches(testPerson, slotName);
+        assertNotNull(matchResponseList);
+        assertEquals(matchResponseList.get(0).getMatchId(), testPerson.getId());
+
+        testPerson.setAddresses(null);
+
+        //Should be email search
+        matchResponseList = matchingService.findMatches(testPerson, slotName);
+        assertNotNull(matchResponseList);
+        assertEquals(matchResponseList.get(0).getMatchId(), testPerson.getId());
+
+        testPerson.setEmailAddresses(null);
+
+        //Should be phone number search
+        matchResponseList = matchingService.findMatches(testPerson, slotName);
+        assertNotNull(matchResponseList);
+        assertEquals(matchResponseList.get(0).getMatchId(), testPerson.getId());
     }
 }

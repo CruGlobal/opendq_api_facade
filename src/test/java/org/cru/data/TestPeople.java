@@ -334,13 +334,67 @@ public class TestPeople
         person.setLastName("Eagar");
 
         EmailAddress emailAddress = new EmailAddress();
-        emailAddress.setEmail("eager@windstream.net");
+        emailAddress.setEmail("eagar@windstream.net");
         person.setEmailAddresses(Lists.newArrayList(emailAddress));
 
         PhoneNumber phoneNumber = new PhoneNumber();
         phoneNumber.setNumber("7069688967");
         phoneNumber.setLocation("home");
         person.setPhoneNumbers(Lists.newArrayList(phoneNumber));
+
+        return person;
+    }
+
+    public static Person createPersonForSearchTypeTesting()
+    {
+        Person person = new Person();
+
+        person.setId("1-1E6-4616");
+        person.setFirstName("Betsy");
+        person.setLastName("Eagar");
+
+        EmailAddress emailAddress = new EmailAddress();
+        emailAddress.setEmail("eagar@windstream.net");
+        person.setEmailAddresses(Lists.newArrayList(emailAddress));
+
+        PhoneNumber phoneNumber = new PhoneNumber();
+        phoneNumber.setNumber("7069688967");
+        phoneNumber.setLocation("home");
+        person.setPhoneNumbers(Lists.newArrayList(phoneNumber));
+
+        Address address1 = new Address();
+        address1.setAddressLine1("PO Box 2553");
+        address1.setCity("Highlands");
+        address1.setState("NC");
+        address1.setCountry("USA");
+        address1.setZipCode("28741");
+        address1.setMdmAddressId("7185377");
+
+        Address address2 = new Address();
+        address2.setAddressLine1("1064 Annandale Dr");
+        address2.setCity("Clarkesville");
+        address2.setState("GA");
+        address2.setCountry("USA");
+        address2.setZipCode("30523-3092");
+        address2.setMdmAddressId("14149698");
+
+        Address address3 = new Address();
+        address3.setAddressLine1("140 Lower Carriage Hill Rd");
+        address3.setCity("Highlands");
+        address3.setState("NC");
+        address3.setCountry("USA");
+        address3.setZipCode("28741-6550");
+        address3.setMdmAddressId("15657509");
+
+        Address address4 = new Address();
+        address4.setAddressLine1("4507 Rowland N Dr");
+        address4.setCity("Stone Mountain");
+        address4.setState("GA");
+        address4.setCountry("USA");
+        address4.setZipCode("30083-4833");
+        address4.setMdmAddressId("16412153");
+
+        person.setAddresses(Lists.newArrayList(address1, address2, address3, address4));
 
         return person;
     }

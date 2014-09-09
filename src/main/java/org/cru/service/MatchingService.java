@@ -68,6 +68,9 @@ public class MatchingService extends IndexingService
         SearchResponseList searchResponseList = findPersonInIndex(person);
         if(searchResponseList == null || searchResponseList.isEmpty()) return null;
 
+        //If we only have 1 result, there is no need to go through the filtering process
+        if(searchResponseList.size() == 1) return buildOafResponseList(searchResponseList);
+
         return buildOafResponseList(filterDuplicatePartyIds(buildFilteredSearchResponseList(searchResponseList)));
     }
 

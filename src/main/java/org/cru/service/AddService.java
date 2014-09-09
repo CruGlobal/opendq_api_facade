@@ -9,8 +9,12 @@ import org.apache.log4j.Logger;
 import org.cru.mdm.MdmConstants;
 import org.cru.mdm.PersonToMdmConverter;
 import org.cru.model.Address;
+import org.cru.model.EmailAddress;
 import org.cru.model.Person;
+import org.cru.model.PhoneNumber;
 import org.cru.model.map.IndexData;
+import org.cru.model.map.NameAndAddressIndexData;
+import org.cru.model.map.NameAndCommunicationIndexData;
 import org.cru.qualifiers.Add;
 import org.cru.qualifiers.Nickname;
 import org.cru.util.OpenDQProperties;
@@ -51,7 +55,6 @@ public class AddService extends IndexingService
     public void addPerson(Person person, String slotName) throws ConnectException
     {
         this.slotName = slotName;
-        this.stepName = "RtMatchAddr";
 
         if(person.getAddresses() != null && !person.getAddresses().isEmpty())
         {
@@ -93,19 +96,36 @@ public class AddService extends IndexingService
 
     void addPersonToIndex(Person person, RealTimeObjectActionDTO mdmPerson) throws ConnectException
     {
-        RuntimeMatchWS runtimeMatchWS = configureAndRetrieveRuntimeMatchService("contact");
+        RuntimeMatchWS runtimeMatchWS;
 
-        //Handle cases where no address was passed in
-        if(person.getAddresses() == null || person.getAddresses().isEmpty())
+        if(person.getAddresses() != null && !person.getAddresses().isEmpty())
         {
-            addPersonToIndexWithAddress(runtimeMatchWS, person, mdmPerson, null);
-        }
-        else
-        {
+            this.stepName = "RtMatchAddr";
+            runtimeMatchWS = configureAndRetrieveRuntimeMatchService("contact");
             //If more than one address was passed in, add them all to the index
             for(Address personAddress : person.getAddresses())
             {
                 addPersonToIndexWithAddress(runtimeMatchWS, person, mdmPerson, personAddress);
+            }
+        }
+        if(person.getEmailAddresses() != null && !person.getEmailAddresses().isEmpty())
+        {
+            this.stepName = "RtMatchComm";
+            runtimeMatchWS = configureAndRetrieveRuntimeMatchService("communication");
+            //If more than one email address was passed in, add them all to the index
+            for(EmailAddress emailAddress : person.getEmailAddresses())
+            {
+                addPersonToIndexWithEmail(runtimeMatchWS, person, mdmPerson, emailAddress);
+            }
+        }
+        if(person.getPhoneNumbers() != null && !person.getPhoneNumbers().isEmpty())
+        {
+            this.stepName = "RtMatchComm";
+            runtimeMatchWS = configureAndRetrieveRuntimeMatchService("communication");
+            //If more than one phone number was passed in, add them all to the index
+            for(PhoneNumber phoneNumber : person.getPhoneNumbers())
+            {
+                addPersonToIndexWithPhoneNumber(runtimeMatchWS, person, mdmPerson, phoneNumber);
             }
         }
     }
@@ -116,8 +136,15 @@ public class AddService extends IndexingService
         RealTimeObjectActionDTO mdmPerson,
         Address addressToUse) throws ConnectException
     {
-        IndexData fieldNamesAndValues = generateFieldNamesAndValues(person, mdmPerson, addressToUse);
+        updateIndex(
+            runtimeMatchWS,
+            generateFieldNamesAndValuesForNameAndAddressIndex(person, mdmPerson, addressToUse));
+    }
 
+    private void updateIndex(
+        RuntimeMatchWS runtimeMatchWS,
+        IndexData fieldNamesAndValues) throws ConnectException
+    {
         List<String> fieldNames = Lists.newArrayList();
         fieldNames.addAll(fieldNamesAndValues.keySet());
 
@@ -131,12 +158,34 @@ public class AddService extends IndexingService
         }
     }
 
-    IndexData generateFieldNamesAndValues(
+    private void addPersonToIndexWithEmail(
+        RuntimeMatchWS runtimeMatchWS,
+        Person person,
+        RealTimeObjectActionDTO mdmPerson,
+        EmailAddress emailAddressToUse) throws ConnectException
+    {
+        updateIndex(
+            runtimeMatchWS,
+            generateFieldNamesAndValuesForEmailIndex(person, mdmPerson, emailAddressToUse));
+    }
+
+    private void addPersonToIndexWithPhoneNumber(
+        RuntimeMatchWS runtimeMatchWS,
+        Person person,
+        RealTimeObjectActionDTO mdmPerson,
+        PhoneNumber phoneNumberToUse) throws ConnectException
+    {
+        updateIndex(
+            runtimeMatchWS,
+            generateFieldNamesAndValuesForPhoneNumberIndex(person, mdmPerson, phoneNumberToUse));
+    }
+
+    IndexData generateFieldNamesAndValuesForNameAndAddressIndex(
         Person person,
         RealTimeObjectActionDTO mdmPerson,
         Address addressToUse) throws ConnectException
     {
-        IndexData indexData = new IndexData();
+        NameAndAddressIndexData indexData = new NameAndAddressIndexData();
 
         indexData.putFirstName(person.getFirstName());
         indexData.putLastName(person.getLastName());
@@ -157,6 +206,38 @@ public class AddService extends IndexingService
             indexData.putZipCode(addressToUse.getZipCode());
         }
 
+        return indexData;
+    }
+
+    NameAndCommunicationIndexData generateFieldNamesAndValuesForCommunicationIndex(Person person, RealTimeObjectActionDTO mdmPerson)
+    {
+        NameAndCommunicationIndexData indexData = new NameAndCommunicationIndexData();
+
+        indexData.putFirstName(person.getFirstName());
+        indexData.putLastName(person.getLastName());
+        indexData.putPartyId(mdmPerson.getObjectEntity().getPartyId());
+        indexData.putGlobalRegistryId(person.getId());
+
+        return indexData;
+    }
+
+    IndexData generateFieldNamesAndValuesForEmailIndex(
+        Person person,
+        RealTimeObjectActionDTO mdmPerson,
+        EmailAddress emailAddressToUse)
+    {
+        NameAndCommunicationIndexData indexData = generateFieldNamesAndValuesForCommunicationIndex(person, mdmPerson);
+        indexData.putCommunicationData(emailAddressToUse.getEmail());
+        return indexData;
+    }
+
+    IndexData generateFieldNamesAndValuesForPhoneNumberIndex(
+        Person person,
+        RealTimeObjectActionDTO mdmPerson,
+        PhoneNumber phoneNumberToUse)
+    {
+        NameAndCommunicationIndexData indexData = generateFieldNamesAndValuesForCommunicationIndex(person, mdmPerson);
+        indexData.putCommunicationData(phoneNumberToUse.getDigitsOnly());
         return indexData;
     }
 }

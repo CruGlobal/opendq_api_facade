@@ -2,7 +2,6 @@ package org.cru.service;
 
 import com.infosolve.openmdm.webservices.provider.impl.ObjEntityDTO;
 import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
-import org.cru.model.SearchResponse;
 import org.cru.util.DeletedIndexesFileIO;
 import org.cru.util.OafProperties;
 import org.cru.util.OpenDQProperties;

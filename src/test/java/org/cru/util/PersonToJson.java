@@ -9,6 +9,9 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 /**
+ * This is purely to get the JSON representations of the people I'm testing with
+ * it holds no value in terms of an automated test.
+ *
  * Created by William.Randall on 8/1/2014.
  */
 @Test

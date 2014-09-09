@@ -16,20 +16,15 @@ import java.util.Set;
  *
  * Created by William.Randall on 8/7/2014.
  */
-public class IndexData implements Map<String, Object>
+public abstract class IndexData implements Map<String, Object>
 {
-    private Map<String, Object> internalMap;
+    protected Map<String, Object> internalMap;
 
-    private static final String FIRST_NAME_KEY = "FIELD1";
-    private static final String LAST_NAME_KEY = "FIELD2";
-    private static final String ADDRESS1_KEY = "FIELD3";
-    private static final String ADDRESS2_KEY = "FIELD4";
-    private static final String CITY_KEY = "FIELD5";
-    private static final String STATE_KEY = "FIELD6";
-    private static final String ZIP_CODE_KEY = "FIELD7";
-    private static final String STANDARDIZED_FIRST_NAME_KEY = "FIELD8";
-    private static final String PARTY_ID_KEY = "FIELD10";
-    private static final String GR_ID_KEY = "FIELD11";
+    protected String FIRST_NAME_KEY;
+    protected String LAST_NAME_KEY;
+    protected String PARTY_ID_KEY;
+    protected String GR_ID_KEY;
+
 
     public IndexData()
     {
@@ -54,67 +49,6 @@ public class IndexData implements Map<String, Object>
     public void putLastName(Object lastName)
     {
         internalMap.put(LAST_NAME_KEY, lastName);
-    }
-
-    public String getAddressLine1()
-    {
-        return (String)internalMap.get(ADDRESS1_KEY);
-    }
-
-    public void putAddressLine1(Object addressLine1)
-    {
-        internalMap.put(ADDRESS1_KEY, addressLine1);
-    }
-
-    public String getAddressLine2()
-    {
-        return (String)internalMap.get(ADDRESS2_KEY);
-    }
-
-    public void putAddressLine2(Object addressLine2)
-    {
-        if(addressLine2 == null) internalMap.put(ADDRESS2_KEY, "NULLDATA");
-        else internalMap.put(ADDRESS2_KEY, addressLine2);
-    }
-
-    public String getCity()
-    {
-        return (String)internalMap.get(CITY_KEY);
-    }
-
-    public void putCity(Object city)
-    {
-        internalMap.put(CITY_KEY, city);
-    }
-
-    public String getState()
-    {
-        return (String)internalMap.get(STATE_KEY);
-    }
-
-    public void putState(Object state)
-    {
-        internalMap.put(STATE_KEY, state);
-    }
-
-    public String getZipCode()
-    {
-        return (String)internalMap.get(ZIP_CODE_KEY);
-    }
-
-    public void putZipCode(Object zipCode)
-    {
-        internalMap.put(ZIP_CODE_KEY, zipCode);
-    }
-
-    public String getStandardizedFirstName()
-    {
-        return (String)internalMap.get(STANDARDIZED_FIRST_NAME_KEY);
-    }
-
-    public void putStandardizedFirstName(Object standardizedFirstName)
-    {
-        internalMap.put(STANDARDIZED_FIRST_NAME_KEY, standardizedFirstName);
     }
 
     public String getPartyId()
@@ -151,6 +85,8 @@ public class IndexData implements Map<String, Object>
 
         return stringCollection;
     }
+
+    public abstract List<String> getValuesForEquality();
 
     @Override
     public boolean equals(Object objectToCompare)

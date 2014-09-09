@@ -2,7 +2,6 @@ package org.cru.service;
 
 import org.cru.data.TestPeople;
 import org.cru.model.Address;
-import org.cru.model.LinkedIdentity;
 import org.cru.model.Person;
 import org.cru.util.OpenDQProperties;
 import org.testng.annotations.BeforeClass;

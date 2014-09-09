@@ -18,9 +18,9 @@ import java.io.IOException;
  *
  * Created by William.Randall on 7/8/2014.
  */
-public class PersonDeserializer
+public class PersonDeserializationService
 {
-    private static Logger log = Logger.getLogger(PersonDeserializer.class);
+    private static Logger log = Logger.getLogger(PersonDeserializationService.class);
 
     public Person deserializePerson(String json)
     {

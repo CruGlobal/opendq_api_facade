@@ -1,6 +1,7 @@
 package org.cru.model;
 
-import org.cru.model.map.IndexData;
+import org.cru.model.map.NameAndAddressIndexData;
+import org.cru.model.map.NameAndCommunicationIndexData;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
@@ -13,15 +14,22 @@ import static org.testng.Assert.assertFalse;
 public class IndexDataTest
 {
     @Test
-    public void testEquals()
+    public void testNameAndAddressDataEquals()
     {
-        assertEquals(createIndexData1(), createIndexData2());
-        assertFalse(createIndexData1().equals(createIndexData3()));
+        assertEquals(createAddressIndexData1(), createAddressIndexData2());
+        assertFalse(createAddressIndexData1().equals(createAddressIndexData3()));
     }
 
-    private IndexData createIndexData1()
+    @Test
+    public void testNameAndEmailDataEquals()
     {
-        IndexData indexData = new IndexData();
+        assertEquals(createEmailIndexData1(), createEmailIndexData2());
+        assertFalse(createEmailIndexData1().equals(createEmailIndexData3()));
+    }
+
+    private NameAndAddressIndexData createAddressIndexData1()
+    {
+        NameAndAddressIndexData indexData = new NameAndAddressIndexData();
         indexData.putPartyId("1");
         indexData.putFirstName("Al");
         indexData.putLastName("Last");
@@ -35,9 +43,9 @@ public class IndexDataTest
         return indexData;
     }
 
-    private IndexData createIndexData2()
+    private NameAndAddressIndexData createAddressIndexData2()
     {
-        IndexData indexData = new IndexData();
+        NameAndAddressIndexData indexData = new NameAndAddressIndexData();
         indexData.putPartyId("2");
         indexData.putFirstName("al");
         indexData.putLastName("LaSt");
@@ -51,9 +59,9 @@ public class IndexDataTest
         return indexData;
     }
 
-    private IndexData createIndexData3()
+    private NameAndAddressIndexData createAddressIndexData3()
     {
-        IndexData indexData = new IndexData();
+        NameAndAddressIndexData indexData = new NameAndAddressIndexData();
         indexData.putPartyId("1");
         indexData.putFirstName("Albert");
         indexData.putLastName("Last");
@@ -63,6 +71,42 @@ public class IndexDataTest
         indexData.putState("FL");
         indexData.putZipCode("32832");
         indexData.putStandardizedFirstName("AL");
+
+        return indexData;
+    }
+
+    private NameAndCommunicationIndexData createEmailIndexData1()
+    {
+        NameAndCommunicationIndexData indexData = new NameAndCommunicationIndexData();
+        indexData.putPartyId("1");
+        indexData.putFirstName("Al");
+        indexData.putLastName("Last");
+        indexData.putCommunicationData("al.last@cru.org");
+        indexData.putGlobalRegistryId("111-222-333");
+
+        return indexData;
+    }
+
+    private NameAndCommunicationIndexData createEmailIndexData2()
+    {
+        NameAndCommunicationIndexData indexData = new NameAndCommunicationIndexData();
+        indexData.putPartyId("2");
+        indexData.putFirstName("AL");
+        indexData.putLastName("lAsT");
+        indexData.putCommunicationData("al.last@cru.org");
+        indexData.putGlobalRegistryId("111-222-333");
+
+        return indexData;
+    }
+
+    private NameAndCommunicationIndexData createEmailIndexData3()
+    {
+        NameAndCommunicationIndexData indexData = new NameAndCommunicationIndexData();
+        indexData.putPartyId("1");
+        indexData.putFirstName("Al");
+        indexData.putLastName("Last");
+        indexData.putCommunicationData("allast@yahoo.com");
+        indexData.putGlobalRegistryId("44422-66234");
 
         return indexData;
     }

@@ -113,7 +113,7 @@ public class EndToEndServiceTest
         checkPersonNotExists(testPerson);
 
         //The record in MDM should have been "deleted"
-        checkPersonDeletedInMdm(testPerson, partyId);
+        checkPersonDeletedInMdm(partyId);
     }
 
     private void checkPersonNotExists(Person testPerson) throws Exception
@@ -166,7 +166,7 @@ public class EndToEndServiceTest
         assertEquals(foundPerson.getObjectCommunications().getObjectCommunication().size(), 1);
     }
 
-    private void checkPersonDeletedInMdm(Person testPerson, String partyId) throws Exception
+    private void checkPersonDeletedInMdm(String partyId) throws Exception
     {
         RealTimeObjectActionDTO deletedPerson = matchingService.findMatchInMdm(partyId);
         assertNotNull(deletedPerson);

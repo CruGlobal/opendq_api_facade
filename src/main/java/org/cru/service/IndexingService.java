@@ -6,6 +6,7 @@ import com.infosolvetech.rtmatch.pdi4.RuntimeMatchWS;
 import com.infosolvetech.rtmatch.pdi4.RuntimeMatchWSService;
 import com.infosolvetech.rtmatch.pdi4.ServiceResult;
 import org.apache.log4j.Logger;
+import org.cru.model.Person;
 import org.cru.util.OpenDQProperties;
 
 import javax.ws.rs.WebApplicationException;
@@ -29,6 +30,11 @@ public class IndexingService
     String transformationFileLocation;
     String stepName;
     private static Logger log = Logger.getLogger(IndexingService.class);
+
+    enum IndexType
+    {
+        ADDRESS, FULL, COMMUNICATION, ADDRESS_AND_EMAIL
+    }
 
     RuntimeMatchWS configureAndRetrieveRuntimeMatchService(String transformationType) throws ConnectException
     {

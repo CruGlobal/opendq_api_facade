@@ -18,7 +18,7 @@ import java.io.IOException;
 public class DateTimeDeserializer extends JsonDeserializer<DateTime>
 {
     @Override
-    public DateTime deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException
+    public DateTime deserialize(JsonParser jp, DeserializationContext context) throws IOException
     {
         JsonNode dateTime = jp.getCodec().readTree(jp);
         String dateTimeString = dateTime.asText();

@@ -13,21 +13,21 @@ import static org.testng.AssertJUnit.assertEquals;
  * Created by William.Randall on 7/24/2014.
  */
 @Test
-public class PersonDeserializerTest
+public class PersonDeserializationServiceTest
 {
-    private PersonDeserializer personDeserializer;
+    private PersonDeserializationService personDeserializationService;
     DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 
     @BeforeClass
     public void setup()
     {
-        personDeserializer = new PersonDeserializer();
+        personDeserializationService = new PersonDeserializationService();
     }
 
     @Test
     public void testDeserialization()
     {
-        Person deserializedPerson = personDeserializer.deserializePerson(getJson());
+        Person deserializedPerson = personDeserializationService.deserializePerson(getJson());
 
         assertNotNull(deserializedPerson);
         assertEquals(deserializedPerson.getId(), "k3rfjs3-f8g9-hfi8-5521-12a6er5423");

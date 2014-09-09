@@ -9,7 +9,7 @@ import org.cru.qualifiers.Match;
 import org.cru.service.AuthService;
 import org.cru.service.DeleteService;
 import org.cru.service.MatchingService;
-import org.cru.service.PersonDeserializer;
+import org.cru.service.PersonDeserializationService;
 import org.cru.util.Action;
 
 import javax.inject.Inject;
@@ -36,7 +36,7 @@ public class DeleteResource
     @Inject @Match
     private MatchingService matchingService;
     @Inject
-    private PersonDeserializer personDeserializer;
+    private PersonDeserializationService personDeserializationService;
     @Inject
     private AuthService authService;
 

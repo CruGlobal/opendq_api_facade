@@ -8,7 +8,7 @@ import org.cru.model.Person;
 import org.cru.qualifiers.Match;
 import org.cru.service.AddressNormalizationService;
 import org.cru.service.MatchingService;
-import org.cru.service.PersonDeserializer;
+import org.cru.service.PersonDeserializationService;
 import org.cru.service.AuthService;
 import org.cru.util.Action;
 
@@ -38,7 +38,7 @@ public class MatchingResource
     @Inject @Match
     private MatchingService matchingService;
     @Inject
-    private PersonDeserializer personDeserializer;
+    private PersonDeserializationService personDeserializationService;
     @Inject
     private AuthService authService;
 
@@ -53,7 +53,7 @@ public class MatchingResource
     {
         if(!authService.hasAccess(httpHeaders)) return authService.notAuthorized(httpHeaders);
 
-        Person person = personDeserializer.deserializePerson(json);
+        Person person = personDeserializationService.deserializePerson(json);
 
         if(person.getAddresses() != null && !person.getAddresses().isEmpty())
         {

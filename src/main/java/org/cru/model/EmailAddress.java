@@ -4,6 +4,9 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.cru.mdm.MdmConstants;
 
 /**
+ * Model to hold email address data.  JSON will look like this:
+ * "email_address": {"id": "String", "email": "String"}
+ *
  * Created by William.Randall on 6/20/14.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)

@@ -221,7 +221,7 @@ public class MatchingService extends IndexingService
         for(Address personAddress : person.getAddresses())
         {
             SearchResponseList responses = queryIndexByNameAndAddress(
-            createNameAndAddressSearchValuesFromPerson(person, personAddress), runtimeMatchWS);
+                createNameAndAddressSearchValuesFromPerson(person, personAddress), runtimeMatchWS);
 
             if(responses != null) searchResponseList.addAll(responses);
         }

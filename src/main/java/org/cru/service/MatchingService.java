@@ -223,7 +223,17 @@ public class MatchingService extends IndexingService
             SearchResponseList responses = queryIndexByNameAndAddress(
                 createNameAndAddressSearchValuesFromPerson(person, personAddress), runtimeMatchWS);
 
-            if(responses != null) searchResponseList.addAll(responses);
+            if(responses != null)
+            {
+                if(hasAPerfectMatch(responses))
+                {
+                    return responses;
+                }
+                else
+                {
+                    searchResponseList.addAll(responses);
+                }
+            }
         }
 
         return searchResponseList;
@@ -249,7 +259,17 @@ public class MatchingService extends IndexingService
             }
 
             SearchResponseList responses = buildSearchResponses(searchResponse, IndexType.COMMUNICATION);
-            if(responses != null) searchResponseList.addAll(responses);
+            if(responses != null)
+            {
+                if(hasAPerfectMatch(responses))
+                {
+                    return responses;
+                }
+                else
+                {
+                    searchResponseList.addAll(responses);
+                }
+            }
         }
 
         return searchResponseList;
@@ -275,7 +295,17 @@ public class MatchingService extends IndexingService
             }
 
             SearchResponseList responses = buildSearchResponses(searchResponse, IndexType.COMMUNICATION);
-            if(responses != null) searchResponseList.addAll(responses);
+            if(responses != null)
+            {
+                if(hasAPerfectMatch(responses))
+                {
+                    return responses;
+                }
+                else
+                {
+                    searchResponseList.addAll(responses);
+                }
+            }
         }
 
         return searchResponseList;
@@ -449,5 +479,14 @@ public class MatchingService extends IndexingService
         Timer.logTime(startTime, System.nanoTime(), "buildSearchResponses()");
 
         return searchResponseList;
+    }
+
+    boolean hasAPerfectMatch(SearchResponseList searchResponseList)
+    {
+        for(SearchResponse response : searchResponseList)
+        {
+            if(response.getScore() == 1.0D) return true;
+        }
+        return false;
     }
 }

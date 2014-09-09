@@ -61,7 +61,8 @@ public class MatchingServiceTest
     {
         return new Object[][] {
             { TestPeople.createPersonForGrInIndex(), 1 },
-            { TestPeople.createPersonFromSoapUITestData(), 2 }
+            { TestPeople.createPersonFromSoapUITestData(), 2 },
+            { TestPeople.generatePersonWithLotsOfData(), 2 }
         };
     }
 

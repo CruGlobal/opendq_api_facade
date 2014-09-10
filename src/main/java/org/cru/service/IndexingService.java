@@ -6,7 +6,6 @@ import com.infosolvetech.rtmatch.pdi4.RuntimeMatchWS;
 import com.infosolvetech.rtmatch.pdi4.RuntimeMatchWSService;
 import com.infosolvetech.rtmatch.pdi4.ServiceResult;
 import org.apache.log4j.Logger;
-import org.cru.model.Person;
 import org.cru.util.OpenDQProperties;
 
 import javax.ws.rs.WebApplicationException;
@@ -33,7 +32,7 @@ public class IndexingService
 
     enum IndexType
     {
-        ADDRESS, FULL, COMMUNICATION, ADDRESS_AND_EMAIL
+        ADDRESS, COMMUNICATION
     }
 
     RuntimeMatchWS configureAndRetrieveRuntimeMatchService(String transformationType) throws ConnectException

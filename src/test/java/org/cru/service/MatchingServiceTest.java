@@ -242,29 +242,33 @@ public class MatchingServiceTest
         );
     }
 
-    @Test
-    public void testFindMatchesDifferentTypes() throws ConnectException
+    @DataProvider
+    public Object[][] matchTypeData()
     {
-        Person testPerson = TestPeople.createPersonForSearchTypeTesting();
+        Person testPersonWithAllData = TestPeople.createPersonForSearchTypeTesting();
+
+        Person testPersonWithNoAddress = TestPeople.createPersonForSearchTypeTesting();
+        testPersonWithNoAddress.setAddresses(null);
+
+        Person testPersonWithNoAddressOrEmail = TestPeople.createPersonForSearchTypeTesting();
+        testPersonWithNoAddressOrEmail.setAddresses(null);
+        testPersonWithNoAddressOrEmail.setEmailAddresses(null);
+
+        return new Object[][] {
+            { testPersonWithAllData, "RtMatchAddr" },
+            { testPersonWithNoAddress, "RtMatchComm" },
+            { testPersonWithNoAddressOrEmail, "RtMatchComm" }
+        };
+    }
+
+    @Test(dataProvider = "matchTypeData")
+    public void testFindMatchesDifferentTypes(Person testPerson, String expectedStepName) throws ConnectException
+    {
         String slotName = "Match";
 
-        //Should be address search
         List<OafResponse> matchResponseList = matchingService.findMatches(testPerson, slotName);
         assertNotNull(matchResponseList);
         assertEquals(matchResponseList.get(0).getMatchId(), testPerson.getId());
-
-        testPerson.setAddresses(null);
-
-        //Should be email search
-        matchResponseList = matchingService.findMatches(testPerson, slotName);
-        assertNotNull(matchResponseList);
-        assertEquals(matchResponseList.get(0).getMatchId(), testPerson.getId());
-
-        testPerson.setEmailAddresses(null);
-
-        //Should be phone number search
-        matchResponseList = matchingService.findMatches(testPerson, slotName);
-        assertNotNull(matchResponseList);
-        assertEquals(matchResponseList.get(0).getMatchId(), testPerson.getId());
+        assertEquals(matchingService.stepName, expectedStepName);
     }
 }

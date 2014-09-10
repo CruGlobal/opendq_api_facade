@@ -33,14 +33,6 @@ public class MatchingServiceTest
 {
     private MatchingService matchingService;
 
-    @DataProvider(name = "successfulMatches")
-    private Object[][] successfulMatches()
-    {
-        return new Object[][] {
-            { TestPeople.generatePersonWithLotsOfData(), "3ikfj32-8rt4-9493-394nfa2348da"}
-        };
-    }
-
     @BeforeMethod
     public void setup()
     {

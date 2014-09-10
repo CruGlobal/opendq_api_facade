@@ -59,7 +59,7 @@ public class MatchingServiceTest
     }
 
     @Test(dataProvider = "validMatches")
-    public void testFindMatch(Person testPerson, int numMatches) throws ConnectException
+    public void testFindMatches(Person testPerson, int numMatches) throws ConnectException
     {
         List<OafResponse> matchResponseList = matchingService.findMatches(testPerson, "contactMatch");
         assertNotNull(matchResponseList);

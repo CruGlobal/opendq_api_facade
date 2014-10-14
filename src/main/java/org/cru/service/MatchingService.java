@@ -125,7 +125,7 @@ public class MatchingService extends IndexingService
         return filteredSearchResponseList;
     }
 
-    public List<OafResponse> buildOafResponseList(SearchResponseList filteredSearchResponseList)
+    List<OafResponse> buildOafResponseList(SearchResponseList filteredSearchResponseList)
     {
         long startTime = System.nanoTime();
         List<OafResponse> oafResponseList = Lists.newArrayList();

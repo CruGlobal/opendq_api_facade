@@ -129,7 +129,7 @@ public class TestPeople
         testPerson.setFirstName("Susan");
         testPerson.setLastName("Snowa");
         testPerson.setMdmPartyId("3995392");
-        testPerson.setId("1-100EN5");
+        testPerson.setId("1-2Y8-1787");
 
         Address testAddress = new Address();
         testAddress.setAddressLine1("2824 McManaway Dr");
@@ -394,6 +394,64 @@ public class TestPeople
         address4.setCountry("USA");
         address4.setZipCode("30083-4833");
         address4.setMdmAddressId("16412153");
+
+        person.setAddresses(Lists.newArrayList(address1, address2, address3, address4));
+
+        return person;
+    }
+
+    public static Person createPersonForSearchTypeTesting2()
+    {
+        Person person = new Person();
+
+        person.setId("3958d652-1fa9-11e4-b22e-12543788cf06");
+        person.setFirstName("William");
+        person.setLastName("Randall");
+
+        EmailAddress emailAddress1 = new EmailAddress();
+        emailAddress1.setEmail("william.randall@cru.org");
+
+        EmailAddress emailAddress2 = new EmailAddress();
+        emailAddress2.setEmail("wrandall@purdue.edu");
+
+        person.setEmailAddresses(Lists.newArrayList(emailAddress1, emailAddress2));
+
+        PhoneNumber phoneNumber = new PhoneNumber();
+        phoneNumber.setNumber("7655321510");
+        phoneNumber.setLocation("home");
+        person.setPhoneNumbers(Lists.newArrayList(phoneNumber));
+
+        Address address1 = new Address();
+        address1.setAddressLine1("11270 Point Sylvan Cir Apt C");
+        address1.setCity("Orlando");
+        address1.setState("FL");
+        address1.setCountry("USA");
+        address1.setZipCode("32825");
+        address1.setMdmAddressId("21612410");
+
+        Address address2 = new Address();
+        address2.setAddressLine1("12012 Lake Cypress Cir Apt C205");
+        address2.setCity("Orlando");
+        address2.setState("FL");
+        address2.setCountry("USA");
+        address2.setZipCode("32828");
+        address2.setMdmAddressId("22527679");
+
+        Address address3 = new Address();
+        address3.setAddressLine1("10212 Falcon Parc Blvd Apt 303");
+        address3.setCity("Orlando");
+        address3.setState("FL");
+        address3.setCountry("USA");
+        address3.setZipCode("32832");
+        address3.setMdmAddressId("26583356");
+
+        Address address4 = new Address();
+        address4.setAddressLine1("1275 1st St");
+        address4.setCity("West Lafayette");
+        address4.setState("IN");
+        address4.setCountry("USA");
+        address4.setZipCode("48125");
+        address4.setMdmAddressId("26396726");
 
         person.setAddresses(Lists.newArrayList(address1, address2, address3, address4));
 

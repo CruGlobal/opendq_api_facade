@@ -53,7 +53,7 @@ public class MatchingServiceTest
     {
         return new Object[][] {
             { TestPeople.createPersonForGrInIndex(), 1 },
-            { TestPeople.createPersonFromSoapUITestData(), 2 },
+            { TestPeople.createPersonFromSoapUITestData(), 4 },
             { TestPeople.generatePersonWithLotsOfData(), 2 }
         };
     }
@@ -79,7 +79,7 @@ public class MatchingServiceTest
     @Test
     public void testFindMatchInMdm() throws Exception
     {
-        RealTimeObjectActionDTO foundPerson = matchingService.findMatchInMdm("37539");
+        RealTimeObjectActionDTO foundPerson = matchingService.findMatchInMdm("19754423");
 
         assertNotNull(foundPerson);
         assertNotNull(foundPerson.getObjectEntity());
@@ -88,21 +88,21 @@ public class MatchingServiceTest
         assertNotNull(foundPerson.getObjectAttributeDatas());
 
         // Person with multiple communications and attribute data rows
-        foundPerson = matchingService.findMatchInMdm("11239883");
+        foundPerson = matchingService.findMatchInMdm("19754423");
         assertNotNull(foundPerson);
         assertNotNull(foundPerson.getObjectEntity());
         assertNotNull(foundPerson.getObjectAddresses());
         assertNotNull(foundPerson.getObjectCommunications());
-        assertEquals(foundPerson.getObjectCommunications().getObjectCommunication().size(), 2);
+        assertEquals(foundPerson.getObjectCommunications().getObjectCommunication().size(), 4);
         assertNotNull(foundPerson.getObjectAttributeDatas());
-        assertEquals(foundPerson.getObjectAttributeDatas().getObjectAttributeData().size(), 7);
+        assertEquals(foundPerson.getObjectAttributeDatas().getObjectAttributeData().size(), 4);
 
         // Person with multiple addresses
-        foundPerson = matchingService.findMatchInMdm("37539");
+        foundPerson = matchingService.findMatchInMdm("19754423");
         assertNotNull(foundPerson);
         assertNotNull(foundPerson.getObjectEntity());
         assertNotNull(foundPerson.getObjectAddresses());
-        assertEquals(foundPerson.getObjectAddresses().getObjectAddress().size(), 2);
+        assertEquals(foundPerson.getObjectAddresses().getObjectAddress().size(), 7);
         assertNotNull(foundPerson.getObjectCommunications());
         assertNotNull(foundPerson.getObjectAttributeDatas());
     }
@@ -111,11 +111,7 @@ public class MatchingServiceTest
     private Object[][] globalRegistryIdsInMdm()
     {
         return new Object[][] {
-            { "0004a598-e0de-11e3-82af-12768b82bfd5" },
-            { "0004A598-E0DE-11E3-82AF-12768B82BFD5" },
-            { "74e97ae1-18f3-11e4-8c21-0800200c9a67" },
-            { "74e97ae1-18f3-11e4-8c21-0800200c9a67".toUpperCase() },
-            { "3ikfj32-8rt4-9493-394nfa2348da" }
+            { "3958d652-1fa9-11e4-b22e-12543788cf06" }
         };
     }
 
@@ -144,24 +140,30 @@ public class MatchingServiceTest
     @Test
     public void testFindPersonInIndexUsingEmail() throws ConnectException
     {
-        Person testPerson = TestPeople.createPersonWithoutAddress();
+        Person testPerson = TestPeople.createPersonForSearchTypeTesting2();
         testPerson.setPhoneNumbers(null);
+
+        List<String> possibleIds = ImmutableList.of("1-2XF-1994", testPerson.getId());
+
         SearchResponseList searchResponseList = matchingService.findPersonInIndexUsingEmail(testPerson);
 
         assertNotNull(searchResponseList);
-        assertEquals(searchResponseList.get(0).getId(), testPerson.getId());
+        assertTrue(possibleIds.contains(searchResponseList.get(0).getId()));
     }
 
     @Test
     public void testFindPersonInIndexUsingPhoneNumber() throws ConnectException
     {
-        //Person's phone number is: (706) 968-8967
-        //Person has 2 records with different GR IDs: 1-1E6-4616 and 002a294e-e057-11e3-af9a-12768b82bfd5
-        List<String> possibleIds = ImmutableList.of("1-1E6-4616", "002a294e-e057-11e3-af9a-12768b82bfd5");
+        //Person's phone number is: (765) 532-1510
 
         //The first format of phone number is 7069688967
-        Person testPerson = TestPeople.createPersonWithoutAddress();
+        Person testPerson = TestPeople.createPersonForSearchTypeTesting2();
+        testPerson.setAddresses(null);
         testPerson.setEmailAddresses(null);
+
+        //Person has 2 records with different GR IDs
+        List<String> possibleIds = ImmutableList.of("1-2XF-1994", testPerson.getId());
+
         SearchResponseList searchResponseList = matchingService.findPersonInIndexUsingPhoneNumber(testPerson);
 
         assertNotNull(searchResponseList);
@@ -174,7 +176,7 @@ public class MatchingServiceTest
         );
 
         PhoneNumber format2 = new PhoneNumber();
-        format2.setNumber("706-968-8967");
+        format2.setNumber("765-532-1510");
         format2.setLocation("home");
         testPerson.setPhoneNumbers(Lists.newArrayList(format2));
 
@@ -189,7 +191,7 @@ public class MatchingServiceTest
         );
 
         PhoneNumber format3 = new PhoneNumber();
-        format3.setNumber("(706) 968-8967");
+        format3.setNumber("(765) 532-1510");
         format3.setLocation("home");
         testPerson.setPhoneNumbers(Lists.newArrayList(format3));
 
@@ -204,7 +206,7 @@ public class MatchingServiceTest
         );
 
         PhoneNumber format4 = new PhoneNumber();
-        format4.setNumber("706.968.8967");
+        format4.setNumber("765.532.1510");
         format4.setLocation("home");
         testPerson.setPhoneNumbers(Lists.newArrayList(format4));
 
@@ -219,7 +221,7 @@ public class MatchingServiceTest
         );
 
         PhoneNumber format5 = new PhoneNumber();
-        format5.setNumber("706/968-8967");
+        format5.setNumber("765/532-1510");
         format5.setLocation("home");
         testPerson.setPhoneNumbers(Lists.newArrayList(format5));
 
@@ -237,12 +239,12 @@ public class MatchingServiceTest
     @DataProvider
     public Object[][] matchTypeData()
     {
-        Person testPersonWithAllData = TestPeople.createPersonForSearchTypeTesting();
+        Person testPersonWithAllData = TestPeople.createPersonForSearchTypeTesting2();
 
-        Person testPersonWithNoAddress = TestPeople.createPersonForSearchTypeTesting();
+        Person testPersonWithNoAddress = TestPeople.createPersonForSearchTypeTesting2();
         testPersonWithNoAddress.setAddresses(null);
 
-        Person testPersonWithNoAddressOrEmail = TestPeople.createPersonForSearchTypeTesting();
+        Person testPersonWithNoAddressOrEmail = TestPeople.createPersonForSearchTypeTesting2();
         testPersonWithNoAddressOrEmail.setAddresses(null);
         testPersonWithNoAddressOrEmail.setEmailAddresses(null);
 
@@ -258,9 +260,11 @@ public class MatchingServiceTest
     {
         String slotName = "Match";
 
+        List<String> possibleIds = ImmutableList.of("1-2XF-1994", testPerson.getId());
+
         List<OafResponse> matchResponseList = matchingService.findMatches(testPerson, slotName);
         assertNotNull(matchResponseList);
-        assertEquals(matchResponseList.get(0).getMatchId(), testPerson.getId());
+        assertTrue(possibleIds.contains(matchResponseList.get(0).getMatchId()));
         assertEquals(matchingService.stepName, expectedStepName);
     }
 }

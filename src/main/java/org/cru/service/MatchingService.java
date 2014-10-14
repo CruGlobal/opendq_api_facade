@@ -356,22 +356,28 @@ public class MatchingService extends IndexingService
         return searchValues;
     }
 
-    private List<String> createNameAndEmailSearchValuesFromPerson(Person person, EmailAddress emailAddressToSearchOn)
+    private List<String> createNameAndEmailSearchValuesFromPerson(Person person, EmailAddress emailAddressToSearchOn) throws ConnectException
     {
         List<String> searchValues = Lists.newArrayList();
 
-        searchValues.add(person.getFirstName());
+        long nicknameStartTime = System.nanoTime();
+        searchValues.add(nicknameService.getStandardizedNickName(person.getFirstName()));
+        Timer.logTime(nicknameStartTime, System.nanoTime(), "get standardized first name");
+
         searchValues.add(person.getLastName());
         searchValues.add(emailAddressToSearchOn.getEmail());
 
         return searchValues;
     }
 
-    private List<String> createNameAndPhoneNumberSearchValuesFromPerson(Person person, PhoneNumber phoneNumberToSearchOn)
+    private List<String> createNameAndPhoneNumberSearchValuesFromPerson(Person person, PhoneNumber phoneNumberToSearchOn) throws ConnectException
     {
         List<String> searchValues = Lists.newArrayList();
 
-        searchValues.add(person.getFirstName());
+        long nicknameStartTime = System.nanoTime();
+        searchValues.add(nicknameService.getStandardizedNickName(person.getFirstName()));
+        Timer.logTime(nicknameStartTime, System.nanoTime(), "get standardized first name");
+
         searchValues.add(person.getLastName());
         searchValues.add(phoneNumberToSearchOn.getDigitsOnly());
 

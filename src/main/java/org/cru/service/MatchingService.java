@@ -65,6 +65,7 @@ public class MatchingService extends IndexingService
     {
         this.slotName = slotName;
 
+        standardizeFirstName(person);
         SearchResponseList searchResponseList = findPersonInIndex(person);
         if(searchResponseList == null || searchResponseList.isEmpty()) return null;
 
@@ -72,6 +73,13 @@ public class MatchingService extends IndexingService
         if(searchResponseList.size() == 1) return buildOafResponseList(searchResponseList);
 
         return buildOafResponseList(filterDuplicatePartyIds(buildFilteredSearchResponseList(searchResponseList)));
+    }
+
+    void standardizeFirstName(Person person) throws ConnectException
+    {
+        long nicknameStartTime = System.nanoTime();
+        person.setFirstName(nicknameService.getStandardizedNickName(person.getFirstName()));
+        Timer.logTime(nicknameStartTime, System.nanoTime(), "get standardized first name");
     }
 
     SearchResponseList buildFilteredSearchResponseList(SearchResponseList searchResponseList)
@@ -335,10 +343,7 @@ public class MatchingService extends IndexingService
         // Order must match the transformation file
         List<String> searchValues = new ArrayList<String>();
 
-        long nicknameStartTime = System.nanoTime();
-        searchValues.add(nicknameService.getStandardizedNickName(person.getFirstName()));
-        Timer.logTime(nicknameStartTime, System.nanoTime(), "get standardized first name");
-
+        searchValues.add(person.getFirstName());
         searchValues.add(person.getLastName());
 
         if(addressToSearchOn != null)
@@ -360,10 +365,7 @@ public class MatchingService extends IndexingService
     {
         List<String> searchValues = Lists.newArrayList();
 
-        long nicknameStartTime = System.nanoTime();
-        searchValues.add(nicknameService.getStandardizedNickName(person.getFirstName()));
-        Timer.logTime(nicknameStartTime, System.nanoTime(), "get standardized first name");
-
+        searchValues.add(person.getFirstName());
         searchValues.add(person.getLastName());
         searchValues.add(emailAddressToSearchOn.getEmail());
 
@@ -374,10 +376,7 @@ public class MatchingService extends IndexingService
     {
         List<String> searchValues = Lists.newArrayList();
 
-        long nicknameStartTime = System.nanoTime();
-        searchValues.add(nicknameService.getStandardizedNickName(person.getFirstName()));
-        Timer.logTime(nicknameStartTime, System.nanoTime(), "get standardized first name");
-
+        searchValues.add(person.getFirstName());
         searchValues.add(person.getLastName());
         searchValues.add(phoneNumberToSearchOn.getDigitsOnly());
 

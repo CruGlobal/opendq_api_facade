@@ -50,8 +50,11 @@ public class MatchingService extends IndexingService
     public MatchingService() {}
 
     @Inject
-    public MatchingService(OpenDQProperties openDQProperties, @Delete DeleteService deleteService,
-        @Nickname NicknameService nicknameService, AddressNormalizationService addressNormalizationService)
+    public MatchingService(
+        OpenDQProperties openDQProperties,
+        @Delete DeleteService deleteService,
+        @Nickname NicknameService nicknameService,
+        AddressNormalizationService addressNormalizationService)
     {
         this.openDQProperties = openDQProperties;
         this.deleteService = deleteService;

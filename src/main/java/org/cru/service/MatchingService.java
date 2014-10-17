@@ -43,6 +43,7 @@ public class MatchingService extends IndexingService
 {
     private DeleteService deleteService;
     private NicknameService nicknameService;
+    private AddressNormalizationService addressNormalizationService;
     private static Logger log = Logger.getLogger(MatchingService.class);
 
     @SuppressWarnings("unused")  //used by CDI
@@ -50,11 +51,12 @@ public class MatchingService extends IndexingService
 
     @Inject
     public MatchingService(OpenDQProperties openDQProperties, @Delete DeleteService deleteService,
-        @Nickname NicknameService nicknameService)
+        @Nickname NicknameService nicknameService, AddressNormalizationService addressNormalizationService)
     {
         this.openDQProperties = openDQProperties;
         this.deleteService = deleteService;
         this.nicknameService = nicknameService;
+        this.addressNormalizationService = addressNormalizationService;
     }
 
     /**
@@ -231,6 +233,8 @@ public class MatchingService extends IndexingService
         //If given more than one address, we need to make sure we search on all of them
         for(Address personAddress : person.getAddresses())
         {
+            addressNormalizationService.normalizeAddress(personAddress);
+
             SearchResponseList responses = queryIndexByNameAndAddress(
                 createNameAndAddressSearchValuesFromPerson(person, personAddress), runtimeMatchWS);
 

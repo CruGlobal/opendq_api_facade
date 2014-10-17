@@ -44,7 +44,7 @@ public class MatchOrUpdateServiceTest
         UpdateService updateService = new UpdateService(openDQProperties, addressNormalizationService, null);
 
         NicknameService nicknameService = new NicknameService(openDQProperties);
-        MatchingService matchingService = new MatchingService(openDQProperties, deleteService, nicknameService);
+        MatchingService matchingService = new MatchingService(openDQProperties, deleteService, nicknameService, addressNormalizationService);
         matchOrUpdateService = new MatchOrUpdateService(matchingService, updateService);
     }
 

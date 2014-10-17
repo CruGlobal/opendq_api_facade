@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.infosolve.openmdm.webservices.provider.impl.RealTimeObjectActionDTO;
 import org.cru.data.TestPeople;
+import org.cru.model.Address;
 import org.cru.model.OafResponse;
 import org.cru.model.Person;
 import org.cru.model.PhoneNumber;
@@ -18,6 +19,9 @@ import org.testng.annotations.Test;
 import java.net.ConnectException;
 import java.util.List;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
@@ -45,7 +49,9 @@ public class MatchingServiceTest
         DeletedIndexesFileIO deletedIndexesFileIO = new DeletedIndexesFileIO(oafProperties);
         DeleteService deleteService = new DeleteService(deletedIndexesFileIO, openDQProperties);
         NicknameService nicknameService = new NicknameService(openDQProperties);
-        matchingService = new MatchingService(openDQProperties, deleteService, nicknameService);
+        AddressNormalizationService addressNormalizationService = mock(AddressNormalizationService.class);
+        when(addressNormalizationService.normalizeAddress(any(Address.class))).thenReturn(false);
+        matchingService = new MatchingService(openDQProperties, deleteService, nicknameService, addressNormalizationService);
     }
 
     @DataProvider

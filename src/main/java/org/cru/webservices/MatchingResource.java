@@ -34,8 +34,6 @@ import java.util.List;
 @Path("/")
 public class MatchingResource
 {
-    @Inject
-    private AddressNormalizationService addressNormalizationService;
     @Inject @Match
     private MatchingService matchingService;
     @Inject
@@ -60,14 +58,6 @@ public class MatchingResource
         startTime = System.nanoTime();
         Person person = personDeserializationService.deserializePerson(json);
         Timer.logTime(startTime, System.nanoTime(), "Person deserialization");
-
-        if(person.getAddresses() != null && !person.getAddresses().isEmpty())
-        {
-            for(Address personAddress : person.getAddresses())
-            {
-                addressNormalizationService.normalizeAddress(personAddress);
-            }
-        }
 
         try
         {

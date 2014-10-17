@@ -42,9 +42,9 @@ public class MatchOrAddServiceTest
         DeleteService deleteService = new DeleteService(deletedIndexesFileIO, openDQProperties);
 
         NicknameService nicknameService = new NicknameService(openDQProperties);
-
-        MatchingService matchingService = new MatchingService(openDQProperties, deleteService, nicknameService);
         addressNormalizationService = mock(AddressNormalizationService.class);
+        MatchingService matchingService = new MatchingService(openDQProperties, deleteService, nicknameService, addressNormalizationService);
+
         AddService addService = new AddService(openDQProperties, addressNormalizationService, nicknameService);
         matchOrAddService = new MatchOrAddService(matchingService, addService);
     }

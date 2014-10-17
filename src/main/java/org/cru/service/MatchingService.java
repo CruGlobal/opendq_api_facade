@@ -254,14 +254,19 @@ public class MatchingService extends IndexingService
     {
         this.stepName = "RtMatchComm";
         this.slotName = "contactCommMatch";
+
+        long startTime = System.nanoTime();
         RuntimeMatchWS runtimeMatchWS = configureAndRetrieveRuntimeMatchService("communication");
+        Timer.logTime(startTime, System.nanoTime(), "Configure runtime service");
 
         SearchResponseList searchResponseList = new SearchResponseList();
 
         for(EmailAddress emailAddress : person.getEmailAddresses())
         {
+            startTime = System.nanoTime();
             ServiceResult searchResponse =
                 runtimeMatchWS.searchSlot(slotName, createNameAndEmailSearchValuesFromPerson(person, emailAddress));
+            Timer.logTime(startTime, System.nanoTime(), "Search slot");
 
             if(searchResponse.isError())
             {
@@ -290,14 +295,19 @@ public class MatchingService extends IndexingService
     {
         this.stepName = "RtMatchComm";
         this.slotName = "contactCommMatch";
+
+        long startTime = System.nanoTime();
         RuntimeMatchWS runtimeMatchWS = configureAndRetrieveRuntimeMatchService("communication");
+        Timer.logTime(startTime, System.nanoTime(), "Configure runtime service");
 
         SearchResponseList searchResponseList = new SearchResponseList();
 
         for(PhoneNumber phoneNumber : person.getPhoneNumbers())
         {
+            startTime = System.nanoTime();
             ServiceResult searchResponse =
                 runtimeMatchWS.searchSlot(slotName, createNameAndPhoneNumberSearchValuesFromPerson(person, phoneNumber));
+            Timer.logTime(startTime, System.nanoTime(), "Search slot");
 
             if(searchResponse.isError())
             {

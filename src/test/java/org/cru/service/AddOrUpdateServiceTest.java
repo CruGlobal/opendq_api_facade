@@ -44,7 +44,7 @@ public class AddOrUpdateServiceTest
         NicknameService nicknameService = new NicknameService(openDQProperties);
         DeleteService deleteService = new DeleteService(deletedIndexesFileIO, openDQProperties);
         UpdateService updateService = new UpdateService(openDQProperties, addressNormalizationService, nicknameService);
-        MatchingService matchingService = new MatchingService(openDQProperties, deleteService, nicknameService);
+        MatchingService matchingService = new MatchingService(openDQProperties, deleteService, nicknameService, addressNormalizationService);
         AddService addService = new AddService(openDQProperties, addressNormalizationService, nicknameService);
 
         MatchOrUpdateService matchOrUpdateService = new MatchOrUpdateService(matchingService, updateService);

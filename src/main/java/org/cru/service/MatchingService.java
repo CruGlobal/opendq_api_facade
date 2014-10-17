@@ -25,6 +25,7 @@ import org.cru.qualifiers.Match;
 import org.cru.qualifiers.Nickname;
 import org.cru.util.Action;
 import org.cru.util.OpenDQProperties;
+import org.cru.util.Timer;
 
 import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
@@ -42,18 +43,23 @@ public class MatchingService extends IndexingService
 {
     private DeleteService deleteService;
     private NicknameService nicknameService;
+    private AddressNormalizationService addressNormalizationService;
     private static Logger log = Logger.getLogger(MatchingService.class);
 
     @SuppressWarnings("unused")  //used by CDI
     public MatchingService() {}
 
     @Inject
-    public MatchingService(OpenDQProperties openDQProperties, @Delete DeleteService deleteService,
-        @Nickname NicknameService nicknameService)
+    public MatchingService(
+        OpenDQProperties openDQProperties,
+        @Delete DeleteService deleteService,
+        @Nickname NicknameService nicknameService,
+        AddressNormalizationService addressNormalizationService)
     {
         this.openDQProperties = openDQProperties;
         this.deleteService = deleteService;
         this.nicknameService = nicknameService;
+        this.addressNormalizationService = addressNormalizationService;
     }
 
     /**
@@ -64,30 +70,50 @@ public class MatchingService extends IndexingService
     {
         this.slotName = slotName;
 
+        standardizeFirstName(person);
         SearchResponseList searchResponseList = findPersonInIndex(person);
         if(searchResponseList == null || searchResponseList.isEmpty()) return null;
 
+        //If we only have 1 result, there is no need to go through the filtering process
+        if(searchResponseList.size() == 1) return buildOafResponseList(searchResponseList);
+
         return buildOafResponseList(filterDuplicatePartyIds(buildFilteredSearchResponseList(searchResponseList)));
+    }
+
+    void standardizeFirstName(Person person) throws ConnectException
+    {
+        long nicknameStartTime = System.nanoTime();
+        person.setFirstName(nicknameService.getStandardizedNickName(person.getFirstName()));
+        Timer.logTime(nicknameStartTime, System.nanoTime(), "get standardized first name");
     }
 
     SearchResponseList buildFilteredSearchResponseList(SearchResponseList searchResponseList)
     {
         SearchResponseList filteredResults = new SearchResponseList();
 
+        long startTime = System.nanoTime();
         for(SearchResponse response : searchResponseList)
         {
             if(!matchHasBeenDeleted(response.getId())) filteredResults.add(response);
         }
+        Timer.logTime(startTime, System.nanoTime(), "Filter deleted results");
 
+        startTime = System.nanoTime();
         filteredResults.removeDuplicateResults();
+        Timer.logTime(startTime, System.nanoTime(), "Filter duplicate results");
+        startTime = System.nanoTime();
         filteredResults.sortListByScore();
+        Timer.logTime(startTime, System.nanoTime(), "Sort by score");
+        startTime = System.nanoTime();
         filteredResults.filterLowConfidenceMatches();
+        Timer.logTime(startTime, System.nanoTime(), "Filter low confidence matches");
 
         return filteredResults;
     }
 
     SearchResponseList filterDuplicatePartyIds(SearchResponseList searchResponseList)
     {
+        long startTime = System.nanoTime();
         SearchResponseList filteredSearchResponseList = new SearchResponseList();
         List<String> usedPartyIds = Lists.newArrayList();
 
@@ -99,12 +125,14 @@ public class MatchingService extends IndexingService
                 filteredSearchResponseList.add(response);
             }
         }
+        Timer.logTime(startTime, System.nanoTime(), "Filter duplicate party ids");
 
         return filteredSearchResponseList;
     }
 
-    public List<OafResponse> buildOafResponseList(SearchResponseList filteredSearchResponseList)
+    List<OafResponse> buildOafResponseList(SearchResponseList filteredSearchResponseList)
     {
+        long startTime = System.nanoTime();
         List<OafResponse> oafResponseList = Lists.newArrayList();
 
         for(SearchResponse searchResponse : filteredSearchResponseList)
@@ -116,6 +144,7 @@ public class MatchingService extends IndexingService
 
             oafResponseList.add(matchResponse);
         }
+        Timer.logTime(startTime, System.nanoTime(), "buildOafResponseList()");
 
         return oafResponseList;
     }
@@ -199,15 +228,30 @@ public class MatchingService extends IndexingService
     {
         SearchResponseList searchResponseList = new SearchResponseList();
         this.stepName = "RtMatchAddr";
+
+        long startTime = System.nanoTime();
         RuntimeMatchWS runtimeMatchWS = configureAndRetrieveRuntimeMatchService("contact");
+        Timer.logTime(startTime, System.nanoTime(), "Configure runtime service");
 
         //If given more than one address, we need to make sure we search on all of them
         for(Address personAddress : person.getAddresses())
         {
-            SearchResponseList responses = queryIndexByNameAndAddress(
-            createNameAndAddressSearchValuesFromPerson(person, personAddress), runtimeMatchWS);
+            addressNormalizationService.normalizeAddress(personAddress);
 
-            if(responses != null) searchResponseList.addAll(responses);
+            SearchResponseList responses = queryIndexByNameAndAddress(
+                createNameAndAddressSearchValuesFromPerson(person, personAddress), runtimeMatchWS);
+
+            if(responses != null)
+            {
+                if(hasAPerfectMatch(responses))
+                {
+                    return responses;
+                }
+                else
+                {
+                    searchResponseList.addAll(responses);
+                }
+            }
         }
 
         return searchResponseList;
@@ -217,14 +261,19 @@ public class MatchingService extends IndexingService
     {
         this.stepName = "RtMatchComm";
         this.slotName = "contactCommMatch";
+
+        long startTime = System.nanoTime();
         RuntimeMatchWS runtimeMatchWS = configureAndRetrieveRuntimeMatchService("communication");
+        Timer.logTime(startTime, System.nanoTime(), "Configure runtime service");
 
         SearchResponseList searchResponseList = new SearchResponseList();
 
         for(EmailAddress emailAddress : person.getEmailAddresses())
         {
+            startTime = System.nanoTime();
             ServiceResult searchResponse =
                 runtimeMatchWS.searchSlot(slotName, createNameAndEmailSearchValuesFromPerson(person, emailAddress));
+            Timer.logTime(startTime, System.nanoTime(), "Search slot");
 
             if(searchResponse.isError())
             {
@@ -233,7 +282,17 @@ public class MatchingService extends IndexingService
             }
 
             SearchResponseList responses = buildSearchResponses(searchResponse, IndexType.COMMUNICATION);
-            if(responses != null) searchResponseList.addAll(responses);
+            if(responses != null)
+            {
+                if(hasAPerfectMatch(responses))
+                {
+                    return responses;
+                }
+                else
+                {
+                    searchResponseList.addAll(responses);
+                }
+            }
         }
 
         return searchResponseList;
@@ -243,14 +302,19 @@ public class MatchingService extends IndexingService
     {
         this.stepName = "RtMatchComm";
         this.slotName = "contactCommMatch";
+
+        long startTime = System.nanoTime();
         RuntimeMatchWS runtimeMatchWS = configureAndRetrieveRuntimeMatchService("communication");
+        Timer.logTime(startTime, System.nanoTime(), "Configure runtime service");
 
         SearchResponseList searchResponseList = new SearchResponseList();
 
         for(PhoneNumber phoneNumber : person.getPhoneNumbers())
         {
+            startTime = System.nanoTime();
             ServiceResult searchResponse =
                 runtimeMatchWS.searchSlot(slotName, createNameAndPhoneNumberSearchValuesFromPerson(person, phoneNumber));
+            Timer.logTime(startTime, System.nanoTime(), "Search slot");
 
             if(searchResponse.isError())
             {
@@ -259,7 +323,17 @@ public class MatchingService extends IndexingService
             }
 
             SearchResponseList responses = buildSearchResponses(searchResponse, IndexType.COMMUNICATION);
-            if(responses != null) searchResponseList.addAll(responses);
+            if(responses != null)
+            {
+                if(hasAPerfectMatch(responses))
+                {
+                    return responses;
+                }
+                else
+                {
+                    searchResponseList.addAll(responses);
+                }
+            }
         }
 
         return searchResponseList;
@@ -267,7 +341,9 @@ public class MatchingService extends IndexingService
 
     private SearchResponseList queryIndexByNameAndAddress(List<String> searchValues, RuntimeMatchWS runtimeMatchWS) throws ConnectException
     {
+        long startTime = System.nanoTime();
         ServiceResult searchResponse = runtimeMatchWS.searchSlot(slotName, searchValues);
+        Timer.logTime(startTime, System.nanoTime(), "Search Slot");
 
         if(searchResponse.isError())
         {
@@ -280,10 +356,11 @@ public class MatchingService extends IndexingService
 
     private List<String> createNameAndAddressSearchValuesFromPerson(Person person, Address addressToSearchOn) throws ConnectException
     {
+        long startTime = System.nanoTime();
         // Order must match the transformation file
         List<String> searchValues = new ArrayList<String>();
 
-        searchValues.add(nicknameService.getStandardizedNickName(person.getFirstName()));
+        searchValues.add(person.getFirstName());
         searchValues.add(person.getLastName());
 
         if(addressToSearchOn != null)
@@ -296,11 +373,12 @@ public class MatchingService extends IndexingService
             searchValues.add(addressToSearchOn.getCity());
             searchValues.add(addressToSearchOn.getState());
         }
+        Timer.logTime(startTime, System.nanoTime(), "createSearchValuesFromPerson()");
 
         return searchValues;
     }
 
-    private List<String> createNameAndEmailSearchValuesFromPerson(Person person, EmailAddress emailAddressToSearchOn)
+    private List<String> createNameAndEmailSearchValuesFromPerson(Person person, EmailAddress emailAddressToSearchOn) throws ConnectException
     {
         List<String> searchValues = Lists.newArrayList();
 
@@ -311,7 +389,7 @@ public class MatchingService extends IndexingService
         return searchValues;
     }
 
-    private List<String> createNameAndPhoneNumberSearchValuesFromPerson(Person person, PhoneNumber phoneNumberToSearchOn)
+    private List<String> createNameAndPhoneNumberSearchValuesFromPerson(Person person, PhoneNumber phoneNumberToSearchOn) throws ConnectException
     {
         List<String> searchValues = Lists.newArrayList();
 
@@ -407,6 +485,7 @@ public class MatchingService extends IndexingService
 
     SearchResponseList buildSearchResponses(ServiceResult searchResult, IndexType indexType)
     {
+        long startTime = System.nanoTime();
         SearchResponseList searchResponseList = new SearchResponseList();
         List<AnyTypeArray> searchResultValues = searchResult.getRows();
 
@@ -422,7 +501,17 @@ public class MatchingService extends IndexingService
         {
             searchResponseList.add(buildSearchResponse(scoreList.get(i), valueMapList.get(i), searchResult.getType()));
         }
+        Timer.logTime(startTime, System.nanoTime(), "buildSearchResponses()");
 
         return searchResponseList;
+    }
+
+    boolean hasAPerfectMatch(SearchResponseList searchResponseList)
+    {
+        for(SearchResponse response : searchResponseList)
+        {
+            if(response.getScore() == 1.0D) return true;
+        }
+        return false;
     }
 }

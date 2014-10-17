@@ -8,6 +8,7 @@ import org.ccci.postalsoft.PostalsoftService;
 import org.ccci.webservices.services.postalsoft.CorrectionResult;
 import org.cru.model.Address;
 import org.cru.util.PostalsoftServiceProperties;
+import org.cru.util.Timer;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
@@ -48,7 +49,10 @@ public class PostalsoftServiceWrapper
 
             String postalsoftUsername = postalsoftServiceProperties.getProperty("postalsoftLoginName");
             String postalsoftPassword = postalsoftServiceProperties.getProperty("postalsoftLoginPassword");
+
+            long startTime = System.nanoTime();
             CorrectionResult correctionResult = postalsoftService.correctAddress(postalsoftUsername, postalsoftPassword, pa);
+            Timer.logTime(startTime, System.nanoTime(), "Address Correction");
 
             /* if we successfully found a match and cleansed the address, update the person's address
              * with the result back from PostalSoft

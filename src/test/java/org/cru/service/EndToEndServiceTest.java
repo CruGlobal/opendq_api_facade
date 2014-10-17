@@ -60,7 +60,7 @@ public class EndToEndServiceTest
         NicknameService nicknameService = new NicknameService(openDQProperties);
 
         deleteService = new DeleteService(deletedIndexesFileIO, openDQProperties);
-        matchingService = new MatchingService(openDQProperties, deleteService, nicknameService);
+        matchingService = new MatchingService(openDQProperties, deleteService, nicknameService, addressNormalizationService);
 
         AddService addService = new AddService(openDQProperties, addressNormalizationService, nicknameService);
         matchOrAddService = new MatchOrAddService(matchingService, addService);

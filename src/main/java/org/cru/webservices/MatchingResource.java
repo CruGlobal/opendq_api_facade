@@ -11,6 +11,7 @@ import org.cru.service.MatchingService;
 import org.cru.service.PersonDeserializationService;
 import org.cru.service.AuthService;
 import org.cru.util.Action;
+import org.cru.util.Timer;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -33,8 +34,6 @@ import java.util.List;
 @Path("/")
 public class MatchingResource
 {
-    @Inject
-    private AddressNormalizationService addressNormalizationService;
     @Inject @Match
     private MatchingService matchingService;
     @Inject
@@ -51,17 +50,14 @@ public class MatchingResource
     @Produces(MediaType.APPLICATION_JSON)
     public Response findMatchingPerson(String json, @Context HttpHeaders httpHeaders)
     {
+        long fullStartTime = System.nanoTime();
+        long startTime = System.nanoTime();
         if(!authService.hasAccess(httpHeaders)) return authService.notAuthorized(httpHeaders);
+        Timer.logTime(startTime, System.nanoTime(), "Auth service");
 
+        startTime = System.nanoTime();
         Person person = personDeserializationService.deserializePerson(json);
-
-        if(person.getAddresses() != null && !person.getAddresses().isEmpty())
-        {
-            for(Address personAddress : person.getAddresses())
-            {
-                addressNormalizationService.normalizeAddress(personAddress);
-            }
-        }
+        Timer.logTime(startTime, System.nanoTime(), "Person deserialization");
 
         try
         {
@@ -70,12 +66,14 @@ public class MatchingResource
 
             if(matchResponseList != null && !matchResponseList.isEmpty())
             {
+                Timer.logTime(fullStartTime, System.nanoTime(), "Total time");
                 //Send the match back to the client
                 return Response.ok().entity(matchResponseList).build();
             }
             else
             {
                 log.info("No match found for person: " + person.getFirstName() + " " + person.getLastName());
+                Timer.logTime(fullStartTime, System.nanoTime(), "Total time");
                 return Response.status(Response.Status.NOT_FOUND).entity(buildResponseEntity()).build();
             }
         }

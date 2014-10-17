@@ -121,6 +121,8 @@ public abstract class IndexData implements Map<String, Object>
             //I want the objects to be effectively equal even if they have different party ids
             if(entry.getKey().equals(PARTY_ID_KEY)) continue;
             Object value = entry.getValue();
+            //skip nulls
+            if(value == null) continue;
             //Ignore case
             if(value instanceof String) result = 31 * result + ((String)value).toUpperCase().hashCode();
             else result = 31 * result + value.hashCode();

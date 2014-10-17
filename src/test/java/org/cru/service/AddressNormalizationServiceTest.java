@@ -9,6 +9,7 @@ import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
+import static org.testng.AssertJUnit.assertFalse;
 
 /**
  * Test the {@link AddressNormalizationService} class
@@ -52,6 +53,19 @@ public class AddressNormalizationServiceTest
         assertTrue(addressToNormalize.isNormalized());
     }
 
+    @Test
+    public void testInternationalAddress()
+    {
+        Address internationalAddress = createInternationalAddress();
+
+        boolean isNormalized = addressNormalizationService.normalizeAddress(internationalAddress);
+
+        assertFalse(isNormalized);
+        assertEquals(internationalAddress.getAddressLine1(), "1234 Int B Street");
+        assertEquals(internationalAddress.getCity(), "Chongqing");
+        assertEquals(internationalAddress.getCountry(), "China");
+    }
+
     private Address createWorkingAddress()
     {
         Address workingAddress = new Address();
@@ -76,5 +90,16 @@ public class AddressNormalizationServiceTest
         normalizedAddress.setCountry("USA");
 
         return normalizedAddress;
+    }
+
+    private Address createInternationalAddress()
+    {
+        Address internationAddress = new Address();
+
+        internationAddress.setAddressLine1("1234 Int B Street");
+        internationAddress.setCity("Chongqing");
+        internationAddress.setCountry("China");
+
+        return internationAddress;
     }
 }

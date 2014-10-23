@@ -133,4 +133,9 @@ public class DeletedIndexesFileIO
             return deletedIndexesFile.delete();
         }
     }
+
+    public String getFilename()
+    {
+        return filename;
+    }
 }

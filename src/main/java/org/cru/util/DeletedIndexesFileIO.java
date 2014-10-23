@@ -124,4 +124,13 @@ public class DeletedIndexesFileIO
             }
         }
     }
+
+    public boolean deleteFile()
+    {
+        synchronized (lock)
+        {
+            File deletedIndexesFile = new File(filename);
+            return deletedIndexesFile.delete();
+        }
+    }
 }

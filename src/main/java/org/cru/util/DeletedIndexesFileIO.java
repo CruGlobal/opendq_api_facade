@@ -39,8 +39,7 @@ public class DeletedIndexesFileIO
         {
             try
             {
-                File deletedIndexesFile = new File(filename);
-                if(deletedIndexesFile.exists())
+                if(fileExists())
                 {
                     reader = new BufferedReader(new FileReader(filename));
 
@@ -70,6 +69,11 @@ public class DeletedIndexesFileIO
                 throw new WebApplicationException(ioe);
             }
         }
+    }
+
+    public boolean fileExists()
+    {
+        return new File(filename).exists();
     }
 
     public void writeToFile(String id)
@@ -119,5 +123,19 @@ public class DeletedIndexesFileIO
                 throw new WebApplicationException(ioe);
             }
         }
+    }
+
+    public boolean deleteFile()
+    {
+        synchronized (lock)
+        {
+            File deletedIndexesFile = new File(filename);
+            return deletedIndexesFile.delete();
+        }
+    }
+
+    public String getFilename()
+    {
+        return filename;
     }
 }

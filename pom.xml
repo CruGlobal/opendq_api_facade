@@ -142,8 +142,39 @@
                     <skipTests>true</skipTests>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.jboss.as.plugins</groupId>
+                <artifactId>jboss-as-maven-plugin</artifactId>
+                <version>7.4.Final</version>
+                <configuration>
+                    <hostname>${deployments.targetServerHost}</hostname>
+                    <id>oaf-jboss</id>
+                    <port>${deployment.port}</port>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>local</id>
+            <properties>
+                <deployments.targetServerHost>localhost</deployments.targetServerHost>
+                <deployment.port>9999</deployment.port>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>production</id>
+            <properties>
+                <deployments.targetServerHost><!-- Retrieved from Jenkins Build --></deployments.targetServerHost>
+                <deployment.port><!-- Retrieved from Jenkins Build --></deployment.port>
+            </properties>
+        </profile>
+    </profiles>
 
     <properties>
         <project.short.name>oaf</project.short.name>

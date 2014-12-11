@@ -146,10 +146,10 @@
             <plugin>
                 <groupId>org.jboss.as.plugins</groupId>
                 <artifactId>jboss-as-maven-plugin</artifactId>
-                <version>7.6.Final</version>
+                <version>7.1.1.Final</version>
                 <configuration>
                     <hostname>${deployments.targetServerHost}</hostname>
-                    <username>deployer</username>
+                    <username>${env.deployerUsername}</username>
                     <password>${env.deployerPassword}</password>
                 </configuration>
             </plugin>
@@ -161,6 +161,7 @@
             <id>local</id>
             <properties>
                 <deployments.targetServerHost>localhost</deployments.targetServerHost>
+                <env.deployerUsername>deployer</env.deployerUsername>
                 <env.deployerPassword>deployer</env.deployerPassword>
             </properties>
             <activation>
@@ -171,6 +172,7 @@
             <id>production</id>
             <properties>
                 <deployments.targetServerHost><!-- Retrieved from Jenkins Build --></deployments.targetServerHost>
+                <env.deployerUsername><!-- Retrieved from Jenkins Build --></env.deployerUsername>
                 <env.deployerPassword><!-- Retrieved from Jenkins Build --></env.deployerPassword>
             </properties>
         </profile>

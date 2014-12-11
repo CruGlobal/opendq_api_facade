@@ -26,6 +26,18 @@
             <groupId>org.ccci</groupId>
             <artifactId>wsapi-postalsoft-client</artifactId>
             <version>1-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>14.0</version>
         </dependency>
 
         <dependency>

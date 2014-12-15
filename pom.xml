@@ -165,6 +165,27 @@
                     <port>${deployment.port}</port>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <copy file="${oaf.properties.url}" todir="${project.build.directory}/classes" />
+                                <copy file="${opendq.properties.url}" todir="${project.build.directory}/classes" />
+                                <copy file="${postalsoft.properties.url}" todir="${project.build.directory}/classes" />
+                                <copy file="${log4j.properties.url}" todir="${project.build.directory}/classes" />
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
@@ -174,6 +195,10 @@
             <properties>
                 <deployments.targetServerHost>localhost</deployments.targetServerHost>
                 <deployment.port>9999</deployment.port>
+                <oaf.properties.url>../../project-properties/oaf/oaf.properties</oaf.properties.url>
+                <opendq.properties.url>../../project-properties/oaf/opendq.properties</opendq.properties.url>
+                <postalsoft.properties.url>../../project-properties/oaf/PostalsoftService.properties</postalsoft.properties.url>
+                <log4j.properties.url>../../project-properties/oaf/log4j.properties</log4j.properties.url>
             </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>
@@ -184,6 +209,10 @@
             <properties>
                 <deployments.targetServerHost><!-- Retrieved from Jenkins Build --></deployments.targetServerHost>
                 <deployment.port><!-- Retrieved from Jenkins Build --></deployment.port>
+                <oaf.properties.url>/apps/apps-config/oaf/oaf.properties</oaf.properties.url>
+                <opendq.properties.url>/apps/apps-config/oaf/opendq.properties</opendq.properties.url>
+                <postalsoft.properties.url>/apps/apps-config/oaf/PostalsoftService.properties</postalsoft.properties.url>
+                <log4j.properties.url>/apps/apps-config/oaf/log4j.properties</log4j.properties.url>
             </properties>
         </profile>
     </profiles>

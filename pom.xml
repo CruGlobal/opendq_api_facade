@@ -164,6 +164,15 @@
                     <id>oaf-jboss</id>
                     <port>${deployment.port}</port>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>deploy</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>deploy</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>
